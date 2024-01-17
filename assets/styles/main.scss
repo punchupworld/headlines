@@ -1,0 +1,283 @@
+@import "@/assets/styles/mixins.scss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Maitree";
+  src: url("../fonts/Maitree-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Maitree";
+  src: url("../fonts/Maitree-Bold.ttf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Crushual";
+  src: url("../fonts/Crushual0.36-Black.otf");
+  font-weight: 900;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  white-space: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  box-sizing: border-box;
+  color: #000;
+}
+
+*,
+*:before,
+*:after {
+  margin: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+  background: #ededed;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b4b4b4;
+  border-radius: 8px;
+}
+
+.cream {
+  color: $cream;
+}
+
+.bg-cream {
+  background-color: $cream;
+}
+
+.bg-orange {
+  background-color: $orange;
+}
+
+.bg-blue {
+  background-color: $blue;
+}
+
+.bg-purple {
+  background-color: $purple;
+}
+
+.bg-rose {
+  background-color: $rose;
+}
+
+.bg-pink {
+  background-color: $pink;
+}
+
+.bg-green {
+  background-color: $green;
+}
+
+.bg-lightblue {
+  background-color: $lightblue;
+}
+
+.bg-vermillion {
+  background-color: $vermillion;
+}
+
+.bg-brown {
+  background-color: $brown;
+}
+
+.bg-yellow {
+  background-color: $yellow;
+}
+
+.bg-hotpink {
+  background-color: $hotpink;
+}
+
+// typography
+
+a {
+  text-decoration: underline;
+  word-wrap: break-word;
+}
+
+ul {
+  margin-left: 20px;
+  text-align: left;
+}
+
+.h1 {
+  font-family: "Maitree", sans-serif;
+  font-size: 72px;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 48px;
+  }
+}
+
+.h2 {
+  font-family: "Maitree", sans-serif;
+  font-size: 60px;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 36px;
+  }
+}
+
+.h3 {
+  font-family: "Maitree", sans-serif;
+  font-size: 48px;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 32px;
+  }
+}
+
+.h4 {
+  font-family: "Maitree", sans-serif;
+  font-size: 32px;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 26px;
+  }
+}
+
+.h5 {
+  font-family: "Maitree", sans-serif;
+  font-size: 28px;
+  line-height: 130%;
+
+  @include mobile {
+    font-size: 21px;
+  }
+}
+
+.b1 {
+  font-family: "Maitree", sans-serif;
+  font-size: 24px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 18px;
+  }
+}
+
+.b2 {
+  font-family: "Maitree", sans-serif;
+  font-size: 21px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 16px;
+  }
+}
+
+.b3 {
+  font-family: "Maitree", sans-serif;
+  font-size: 18px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 14px;
+  }
+}
+
+.b4 {
+  font-family: "Maitree", sans-serif;
+  font-size: 16px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 12px;
+  }
+}
+
+.b5 {
+  font-family: "Maitree", sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 10px;
+  }
+}
+
+.b6 {
+  font-family: "Maitree", sans-serif;
+  font-size: 12px;
+  line-height: 140%;
+
+  @include mobile {
+    font-size: 8px;
+  }
+}
+
+.t1 {
+  font-family: "Crushual", sans-serif;
+  font-size: 100px;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 60px;
+  }
+}
+
+.t2 {
+  font-family: "Crushual", sans-serif;
+  font-size: 72px;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 48px;
+  }
+}
+
+.t3 {
+  font-family: "Crushual", sans-serif;
+  font-size: 60px;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 36px;
+  }
+}
+
+.t4 {
+  font-family: "Crushual", sans-serif;
+  font-size: 48px;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 28px;
+  }
+}
+
+.t5 {
+  font-family: "Crushual", sans-serif;
+  font-size: 36px;
+  line-height: 110%;
+
+  @include mobile {
+    font-size: 21px;
+  }
+}
+
+.no-br {
+  @include mobile {
+    display: none;
+  }
+}
