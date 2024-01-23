@@ -59,51 +59,134 @@ const formatMonth = (inputDate, type) => {
     return `${months[inputDate - 1]}`
   }
 }
-const data = [
-  { month: 1, year: 2022, count: 3000 },
-  { month: 2, year: 2022, count: 4000 },
-  { month: 3, year: 2022, count: 5000 },
-  { month: 4, year: 2022, count: 6000 },
-  { month: 5, year: 2022, count: 7000 },
-  { month: 6, year: 2022, count: 5000 },
-  { month: 7, year: 2022, count: 4000 },
-  { month: 8, year: 2022, count: 3000 },
-  { month: 9, year: 2022, count: 2000 },
-  { month: 10, year: 2022, count: 1000 },
-  { month: 11, year: 2022, count: 2000 },
-  { month: 12, year: 2022, count: 3000 },
-  { month: 1, year: 2023, count: 4000 },
-  { month: 2, year: 2023, count: 5000 },
-  { month: 3, year: 2023, count: 6000 },
-  { month: 4, year: 2023, count: 7000 },
-  { month: 5, year: 2023, count: 8000 },
-  { month: 6, year: 2023, count: 9000 },
-  { month: 7, year: 2023, count: 10000 },
-  { month: 8, year: 2023, count: 11000 },
-  { month: 9, year: 2023, count: 12000 },
-  { month: 10, year: 2023, count: 13000 },
-  { month: 11, year: 2023, count: 14000 },
-  { month: 12, year: 2023, count: 15000 },
-]
+// const data = [
+//   { month: 1, year: 2022, count: 3000 },
+//   { month: 2, year: 2022, count: 4000 },
+//   { month: 3, year: 2022, count: 5000 },
+//   { month: 4, year: 2022, count: 6000 },
+//   { month: 5, year: 2022, count: 7000 },
+//   { month: 6, year: 2022, count: 5000 },
+//   { month: 7, year: 2022, count: 4000 },
+//   { month: 8, year: 2022, count: 3000 },
+//   { month: 9, year: 2022, count: 2000 },
+//   { month: 10, year: 2022, count: 1000 },
+//   { month: 11, year: 2022, count: 2000 },
+//   { month: 12, year: 2022, count: 3000 },
+//   { month: 1, year: 2023, count: 4000 },
+//   { month: 2, year: 2023, count: 5000 },
+//   { month: 3, year: 2023, count: 6000 },
+//   { month: 4, year: 2023, count: 7000 },
+//   { month: 5, year: 2023, count: 8000 },
+//   { month: 6, year: 2023, count: 9000 },
+//   { month: 7, year: 2023, count: 10000 },
+//   { month: 8, year: 2023, count: 11000 },
+//   { month: 9, year: 2023, count: 12000 },
+//   { month: 10, year: 2023, count: 13000 },
+//   { month: 11, year: 2023, count: 14000 },
+//   { month: 12, year: 2023, count: 15000 },
+// ]
+const data = ref()
+const exploreData = ref()
+const categorySelected = ref("การเมือง")
+const max = ref(0)
+const min = ref(0)
 
-const max = Math.max(...data.map((d) => d.count))
-const min = Math.min(...data.map((d) => d.count))
-const inputKeyword = ref("ทิม")
-const calculateHeight = (count) => {
-  const maxHeigh = 150
-  const scalePercent = (count * 100) / max
-  const scale = (scalePercent * maxHeigh) / 100
-  return Math.ceil(scale)
+const setData = () => {
+  data.value = exploreData.value.slice(1, -1)
+  max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
+  min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
 }
 
-onMounted(() => {
-  startLoop()
-  console.log("month")
-  console.log(new Date().getMonth() + 1)
+const selectCategory = (category) => {
+  categorySelected.value = category
+  max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
+  min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
+}
 
-  console.log(100 / parseInt(data.length))
-  // calculateHeight()
+const inputKeyword = ref("ทิม")
+
+const calculateHeight = (count, maxHeigh, mode) => {
+  if (mode) {
+    const scale =
+      (count * 330) / exploreData.value[exploreData.value.length - 1].Total
+    return Math.ceil(scale)
+  } else {
+    const scalePercent = (count * 100) / max.value
+    const scale = (scalePercent * maxHeigh) / 100
+    return Math.ceil(scale)
+  }
+}
+
+const fetchData = async () => {
+  try {
+    const response = await fetch("/data/ExploreMonth.csv")
+    const csvText = await response.text()
+    const rows = csvText.split("\n").map((line) => {
+      const [
+        Year,
+        Month,
+        MonthName,
+        การเมือง,
+        กีฬา,
+        ต่างประเทศ,
+        บันเทิง,
+        วิทยาศาสตร์เทคโนโลยี,
+        สังคมไทย,
+        อาชญากรรม,
+        เศรษฐกิจ,
+        สิ่งแวดล้อม,
+        Total,
+      ] = line.split(",")
+      return {
+        Year,
+        Month,
+        MonthName,
+        การเมือง,
+        กีฬา,
+        ต่างประเทศ,
+        บันเทิง,
+        วิทยาศาสตร์เทคโนโลยี,
+        สังคมไทย,
+        อาชญากรรม,
+        เศรษฐกิจ,
+        สิ่งแวดล้อม,
+        Total,
+      }
+    })
+    exploreData.value = await rows
+    setData()
+  } catch (error) {
+    console.error("Error fetching CSV data:", error)
+  }
+}
+const handleExploreMounthYear = (action) => {
+  if (action === "prev") {
+    if (categoryIndex.value !== 0) {
+      categoryIndex.value -= 1
+    }
+  } else if (action === "next") {
+    if (categoryIndex.value !== data.value.length - 1) {
+      categoryIndex.value += 1
+    }
+  }
+}
+const category = [
+  { name: "การเมือง", color: "bg-vermillion" },
+  { name: "สังคมไทย", color: "bg-lightblue" },
+  { name: "เศรษฐกิจ", color: "bg-orange" },
+  { name: "ต่างประเทศ", color: "bg-rose" },
+  { name: "บันเทิง", color: "bg-pink" },
+  { name: "อาชญากรรม", color: "bg-brown" },
+  { name: "กีฬา", color: "bg-purple" },
+  { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
+  { name: "สิ่งแวดล้อม", color: "bg-green" },
+]
+onMounted(async () => {
+  startLoop()
+  await fetchData()
 })
+
+watchEffect(() => {})
 </script>
 
 <template>
@@ -182,7 +265,7 @@ onMounted(() => {
               class="flex flex-col items-center font-bold border border-r-black border-white pr-2 b4"
             >
               <h3 class="h-[50px] b3 flex items-center">หมวดร่วม</h3>
-              <div class="group">
+              <div class="groupBlock">
                 <div class="block_categry bg-vermillion">การเมือง</div>
                 <div class="block_categry bg-lightblue">สังคมไทย</div>
                 <div class="block_categry bg-orange">เศรษฐกิจ/การเงิน</div>
@@ -200,7 +283,7 @@ onMounted(() => {
             >
               <div class="flex flex-col items-center">
                 <img src="/image/Thairath.svg" alt="" />
-                <div class="group">
+                <div class="groupBlock">
                   <div class="block_categry bg-vermillion">การเมื่อง</div>
                   <div class="block_categry bg-lightblue">ในกระแส</div>
                   <div class="block_categry bg-lightblue">ทั่วไทย</div>
@@ -216,7 +299,7 @@ onMounted(() => {
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/Today.svg" alt="" />
-                <div class="group">
+                <div class="groupBlock">
                   <div class="block_categry bg-vermillion">การเมื่อง</div>
                   <div class="block_categry bg-orange">เศรษฐกิจ</div>
                   <div class="block_categry bg-orange">การเงิน</div>
@@ -228,7 +311,7 @@ onMounted(() => {
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/ThaiPBS.svg" alt="" />
-                <div class="group">
+                <div class="groupBlock">
                   <div class="block_categry bg-vermillion">การเมื่อง</div>
                   <div class="block_categry bg-lightblue">สังคม</div>
                   <div class="block_categry bg-lightblue">ภูมิภาค</div>
@@ -246,7 +329,7 @@ onMounted(() => {
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/Standard.svg" alt="" />
-                <div class="group">
+                <div class="groupBlock">
                   <div class="block_categry bg-vermillion">Politics</div>
                   <div class="block_categry bg-lightblue">Thailand</div>
                   <div class="block_categry bg-orange">Business</div>
@@ -262,7 +345,7 @@ onMounted(() => {
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/VOICE.svg" alt="" />
-                <div class="group">
+                <div class="groupBlock">
                   <div class="block_categry bg-vermillion">การเมื่อง</div>
                   <div class="block_categry bg-orange">เศรษฐกิจ</div>
                   <div class="block_categry bg-rose">ต่างประเทศ</div>
@@ -306,6 +389,114 @@ onMounted(() => {
           </div>
         </div>
       </div>
+      <!-- <div>
+        <div class="h-screen">
+          <p class="text-center b3 font-bold py-[10px]">
+            สัดส่วนข่าวแต่ละหมวด รวม 2 ปี
+          </p>
+          <div class="relative flex flex-col-reverse">
+            <div
+              v-for="(item, index) in category"
+              class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
+              :class="item.color"
+              :style="{
+                height: `${calculateHeight(
+                  exploreData[exploreData.length - 1][item.name],
+                  330,
+                  'a'
+                )}px`,
+              }"
+            >
+              <p>xx%</p>
+            </div>
+            <div class="flex items-center justify-center">
+              <div
+                class="absolute bg-white p-[10px] top-2/3 text-center mx-[16px]"
+              >
+                <p class="b3">
+                  คนไทยเห็นพาดหัวข่าว จากข่าว
+                  <span class="font-bold bg-vermillion">การเมือง</span> และ
+                  <span class="font-bold bg-lightblue">สังคมไทย</span> มากที่สุด
+                  ในขณะที่
+                  <span class="font-bold bg-green">สิ่งแวดล้อม</span>
+                  เป็นข่าวที่ถูกนำเสนอน้อยที่สุด
+                </p>
+              </div>
+            </div>
+          </div>
+          <p class="b5 font-bold text-center py-[10px]">2022-2023</p>
+          <div class="flex flex-wrap justify-center py-[10px]">
+            <div v-for="(item, index) in category">
+              <div class="flex items-center gap-[5px] pr-[10px]">
+                <div :class="item.color" class="w-[10px] h-[10px]"></div>
+                <p class="b5">{{ item.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="h-screen">
+          <p class="text-center b3 font-bold py-[10px]">
+            สัดส่วนข่าวแต่ละหมวด แยกรายปี
+          </p>
+          <div class="relative">
+            <div class="grid grid-cols-2 w-full">
+              <div class="relative flex flex-col-reverse border-r-2 border-black">
+                <div
+                  v-for="(item, index) in category"
+                  class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
+                  :class="item.color"
+                  :style="{
+                    height: `${calculateHeight(
+                      exploreData[exploreData.length - 1][item.name],
+                      330,
+                      'a'
+                    )}px`,
+                  }"
+                >
+                  <p>xx%</p>
+                </div>
+              </div>
+              <div class="relative flex flex-col-reverse">
+                <div
+                  v-for="(item, index) in category"
+                  class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
+                  :class="item.color"
+                  :style="{
+                    height: `${calculateHeight(
+                      exploreData[exploreData.length - 1][item.name],
+                      330,
+                      'a'
+                    )}px`,
+                  }"
+                >
+                  <p>xx%</p>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-center">
+              <div
+                class="absolute bg-white p-[10px] top-2/3 text-center mx-[16px]"
+              >
+                <p class="b3">
+                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, nostrum!
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2">
+            <p class="b5 font-bold text-center py-[10px] border-r-2 border-black">2022</p>
+            <p class="b5 font-bold text-center py-[10px]">2023</p>
+          </div>
+          <div class="flex flex-wrap justify-center py-[10px]">
+            <div v-for="(item, index) in category">
+              <div class="flex items-center gap-[5px] pr-[10px]">
+                <div :class="item.color" class="w-[10px] h-[10px]"></div>
+                <p class="b5">{{ item.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
       <div id="explore" class="py-[40px]">
         <h1 class="h5 font-bold text-center">
           สำรวจเทรนด์ข่าวในปี<br />
@@ -346,19 +537,21 @@ onMounted(() => {
           >
             <p class="b4">หมวด</p>
             <select
+              v-model="categorySelected"
+              @change="selectCategory($event.target.value)"
               name=""
               id=""
               class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4"
             >
-              <option value="">การเมือง</option>
-              <option value="">สังคมไทย</option>
-              <option value="">เศรษฐกิจ/การเงิน</option>
-              <option value="">ต่างประเทศ</option>
-              <option value="">บันเทิง</option>
-              <option value="">อาชญากรรม</option>
-              <option value="">กีฬา</option>
-              <option value="">วิทยาศาสตร์/เทคโนโลยี</option>
-              <option value="">สิ่งแวดล้อม</option>
+              <option value="การเมือง">การเมือง</option>
+              <option value="สังคมไทย">สังคมไทย</option>
+              <option value="เศรษฐกิจ">เศรษฐกิจ</option>
+              <option value="ต่างประเทศ">ต่างประเทศ</option>
+              <option value="บันเทิง">บันเทิง</option>
+              <option value="อาชญากรรม">อาชญากรรม</option>
+              <option value="กีฬา">กีฬา</option>
+              <option value="วิทยาศาสตร์เทคโนโลยี">วิทยาศาสตร์เทคโนโลยี</option>
+              <option value="สิ่งแวดล้อม">สิ่งแวดล้อม</option>
             </select>
           </div>
           <div class="">
@@ -369,52 +562,129 @@ onMounted(() => {
                 <p class="b5">คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน</p>
               </div>
             </div>
-            <div class="relative items-end  justify-center w-full">
+            <div class="relative items-end justify-center w-full mt-6">
               <div class="flex items-end gap-[1px] w-full">
                 <div
                   v-for="(item, index) in data"
                   :key="index"
-                  class="flex flex-col items-center gap-2 w-full"
+                  class="flex flex-col items-center gap-2 w-[20%]"
                 >
                   <div
+                    v-if="exploreModeSelected === 'หมวดข่าว'"
+                    @click="handleCurrentIndex(index)"
                     :class="
                       index === categoryIndex
                         ? 'bg-[#FF3D00]'
                         : 'bg-[#FF3D00]/50'
                     "
-                    class="w-full"
+                    class="group z-10 relative w-full cursor-pointer"
                     :style="{
-                      height: `${calculateHeight(item.count)}px`,
+                      height: `${calculateHeight(
+                        item[categorySelected],
+                        150
+                      )}px`,
                     }"
-                  ></div>
-                  <p class="text-[#939393] -rotate-90 b6">{{ formatMonth(item.month) }}</p>
+                  >
+                    <div
+                      class="absolute top-0 left-0 hidden group-hover:inline-block w-max z-20"
+                    >
+                      <div class="bg-white p-[5px] w-[90px]">
+                        <p class="font-bold flex">{{ item.MonthName }} {{ item.Year }}</p>
+                        <p class="b5"><span class="b3 font-bold">{{ item[categorySelected] }}</span> พาดหัวข่าว</p>
+                        <div class="b4 flex flex-wrap gap-[2px]">
+                          <div class="flex items-center gap-[2px]">
+                            <div class="w-[10px] h-[10px] bg-orange"></div>
+                            <p>20</p>
+                          </div>
+                          <div class="flex items-center gap-[2px]">
+                            <div class="w-[10px] h-[10px] bg-brown"></div>
+                            <p>20</p>
+                          </div><div class="flex items-center gap-[2px]">
+                            <div class="w-[10px] h-[10px] bg-green"></div>
+                            <p>20</p>
+                          </div><div class="flex items-center gap-[2px]">
+                            <div class="w-[10px] h-[10px] bg-blue"></div>
+                            <p>20</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    v-if="exploreModeSelected === 'คีย์เวิร์ด'"
+                    class="w-full"
+                  >
+                    <div
+                      class="bg-blue"
+                      :style="{
+                        height: `${calculateHeight(item[categorySelected])}px`,
+                      }"
+                    ></div>
+                    <div
+                      class="bg-green"
+                      :style="{
+                        height: `${calculateHeight(item[categorySelected])}px`,
+                      }"
+                    ></div>
+                    <div
+                      class="bg-orange"
+                      :style="{
+                        height: `${calculateHeight(item[categorySelected])}px`,
+                      }"
+                    ></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <p class="text-[#939393] -rotate-90 b6">
+                    {{ item.MonthName }}
+                  </p>
                 </div>
               </div>
-              <div class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]">
+              <div
+                class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]"
+              >
                 <p>2022</p>
                 <p>2023</p>
               </div>
-              <div class="absolute top-0 w-full">
-                <p class="b5 border-t border-gray-500 border-dotted">
-                  {{ max }}
-                </p>
+              <div class="absolute -top-5 w-full h-full">
+                <div class="flex flex-col justify-between h-full">
+                  <p class="b5 border-t border-gray-500 border-dotted">
+                    {{ Math.ceil(max / 100) * 100 }}
+                  </p>
+                  <p class="b5 border-t border-gray-500 border-dotted">
+                    {{ min }}
+                  </p>
+                  <p class="b5 border-t border-gray-500 border-dotted">
+                    {{ min }}
+                  </p>
+                  <p class="b5 border-t border-gray-500 border-dotted">
+                    {{ min }}
+                  </p>
+                  <p></p>
+                </div>
               </div>
             </div>
             <div class="flex flex-col justify-center items-center">
               <div v-if="exploreModeSelected === 'หมวดข่าว'">
                 <div class="flex justify-center items-center">
-                  <button>
+                  <button @click="handleExploreMounthYear('prev')">
                     <img src="/image/part1/PreviousBtn.svg" alt="" />
                   </button>
                   <p class="b3 font-bold">
-                    {{ formatMonth(data[categoryIndex].month, "full") }}
-                    {{ data[categoryIndex].year }}
+                    <!-- {{ data[categoryIndex].MonthName }}
+                    {{ data[categoryIndex].Year }} -->
                   </p>
-                  <button><img src="/image/part1/NextBtn.svg" alt="" /></button>
+                  <button @click="handleExploreMounthYear('next')">
+                    <img src="/image/part1/NextBtn.svg" alt="" />
+                  </button>
                 </div>
                 <p class="b3 text-center py-[5px]">
-                  มีข่าวการเมืองทั้งหมด
-                  <span class="font-bold">x,xxx พาดหัวข่าว</span> และมักพบ 10
+                  มีข่าว{{ categorySelected }}ทั้งหมด
+                  <!-- <span class="font-bold">{{exploreData[exploreData.length-1][categorySelected] }} พาดหัวข่าว</span> และมักพบ 10 -->
                   คำเหล่านี้อยู่บ่อยๆ
                 </p>
                 <div
@@ -551,8 +821,7 @@ onMounted(() => {
             to="/"
             class="text-[#FF006B] b4 border-b-1 border-[#FF006B] w-fit mx-auto"
           >
-          <p class="my-[20px]">กลับไปหน้าแรก</p>
-            
+            <p class="my-[20px]">กลับไปหน้าแรก</p>
           </NuxtLink>
           <div class="space-y-2">
             <p class="b4">แชร์</p>
@@ -573,7 +842,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.group {
+.groupBlock {
   border-collapse: collapse;
   width: max-content;
 }

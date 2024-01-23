@@ -509,9 +509,9 @@ onMounted(() => {
         </p>
         <div class="flex flex-col gap-[20px]">
           <NuxtLink to="/part1">
-            <button class="">
+            <button class="w-full">
               <div
-                class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
+              class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
               >
                 <h1 class="t3 font-black">
                   ..‘พาดหัวข่าว’<br />
