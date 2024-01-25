@@ -130,28 +130,28 @@ const selectCategory = (category) => {
 }
 
 const calculateHeight = (count, maxHeigh, mode, max) => {
-  if (mode==="all") {
-    const scale =
-      (count * 330) / exploreData.value[exploreData.value.length - 1].Total
+  if (mode) {
+    const scalePercent =
+      (count * 100) /
+      exploreData.value[exploreData.value.length - 1][categorySelected.value]
+    const scale = (scalePercent * maxHeigh) / 100
     return Math.ceil(scale)
-  }
-  else if(mode==="month"){
-  const scalePercent = (count * 100) / max
-  const scaleAll = (scalePercent * maxHeigh) / 100
-  const scalePerCategory = c
-  return Math.ceil(scale)
-  }
-  else {
+    // const scale =
+    //   (count * maxHeigh) / exploreData.value[exploreData.value.length - 1][categorySelected.value]
+    //   console.log('hi',exploreData.value[exploreData.value.length - 1][categorySelected.value])
+    //   console.log('hi',count)
+    // return Math.ceil(scale)
+  } else {
     const scalePercent = (count * 100) / max
     const scale = (scalePercent * maxHeigh) / 100
     return Math.ceil(scale)
   }
 }
 
-const calculateHeightPerCategory = (total, count,maxHeigh, max) => {
+const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
   const scalePercent = (total * 100) / max
   const scaleAll = (scalePercent * maxHeigh) / 100
-  const scalePerCategory = (count*scaleAll)/total
+  const scalePerCategory = (count * scaleAll) / total
   return Math.ceil(scalePerCategory)
 }
 
@@ -161,6 +161,12 @@ const calculateHeight2 = (count, maxHeigh, max) => {
   return Math.ceil(scale)
 }
 
+const findMaxEachCategory = async (category) => {
+  let maxValue = Math.max(...data.value.map((d) => d[category]))
+  console.log("maxValue")
+  console.log(maxValue)
+  return parseInt(maxValue)
+}
 const fetchData = async () => {
   try {
     const response = await fetch("/data/ExploreMonth.csv")
@@ -287,11 +293,9 @@ const handleSuggestionMouseDown = (selectedValue) => {
   selectSuggestion(selectedValue)
 }
 
-const calculateHeightWithNewScale = (total, maxHeight, maxStory) => {
-  const totalValue = parseInt(total.trim(), 10)
-  const scale = maxStory / 4 // 4 เป็นจำนวนเส้นใหม่ที่ต้องการ
-  const normalizedValue = Math.min(totalValue, scale)
-  return (normalizedValue / scale) * maxHeight
+const exploreRef = ref(null)
+const scrollToSection = () => {
+  exploreRef.value.scrollIntoView({ behavior: "smooth" })
 }
 onMounted(async () => {
   startLoop()
@@ -470,8 +474,11 @@ watchEffect(() => {})
         </div>
       </div>
     </div>
-    <div id="part1" class="py-[40px] px-[16px]">
-      <div class="space-y-[10px] text-center mb-[20px]">
+    <div id="part1" class="pb-[40px] px-[16px]">
+      <div
+        id="cover"
+        class="space-y-[10px] text-center mb-[20px] h-screen flex flex-col justify-center"
+      >
         <h1 class="t2">..‘พาดหัวข่าว’<br />เล่าเรื่อง..</h1>
         <p class="h4 font-bold">คนไทยได้เจอข่าวอะไรมากที่สุด ?</p>
         <p class="b2">
@@ -484,274 +491,60 @@ watchEffect(() => {})
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
-          <img src="/image/part1/Watch.svg" alt="" class="w-[100px]" />
-          <img src="/image/part1/Color.svg" alt="" class="w-[38px]" />
+          <img src="/image/trends/Watch.svg" alt="" class="w-[100px]" />
+          <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
         </div>
       </div>
-      <div id="section1">
+      <div id="section" class="h-screen sticky top-0">
         <div
-          ref="headlineRef"
-          class="relative bg-black p-[10px] my-[40px] w-[90vw]"
+          id="section1"
+          class="opacity-1 flex justify-center items-center z-0"
         >
-          <p class="cream t2">
-            {{ currentText }}
-          </p>
-
-          <div class="overflow-y-auto">
+          <div
+            ref="headlineRef"
+            class="relative bg-black p-[10px] my-[40px] w-[90vw]"
+          >
+            <p class="cream t2">
+              {{ currentText }}
+            </p>
+          </div>
+        </div>
+        <div id="section2" class="opacity-0">
+          <div class="relative flex items-end gap-[1px] justify-center">
             <div
-              class="absolute flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-            >
-              <div class="bg-white p-[20px] w-full text-center mx-[16px]">
-                <p class="b3">
-                  ในช่วง 2 ปีที่ผ่านมา<br />
-                  สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
-                </p>
-                <p class="b1 font-bold">187,582 พาดหัวข่าว</p>
-                <p class="b5 text-[#717070]">
-                  *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
-                  PBS, Voice TV, WorkpointTODAY
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="section2">
-        <div class="relative flex items-end gap-[1px] justify-center">
-          <div
-            v-for="(item, index) in data"
-            :class="
-              index === maxStoryIndex
-                ? 'bg-black'
-                : index === minStoryIndex
-                ? 'bg-black'
-                : 'bg-[#717070]'
-            "
-            class="cursor-pointer relative"
-            :style="{
-              width: `${90 / data.length}%`,
-              height: `${calculateHeight2(item.Total, 300, maxStory)}px`,
-            }"
-          > </div>
-          <div
-            class="z-0 absolute -bottom-0 w-full h-[300px]"
-            style="pointer-events: none"
-          >
-            <div class="flex flex-col justify-between h-full p-[5px]">
-              <div>
-                <p class="b5 border-b border-black border-dotted">8000</p>
-                <p
-                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
-                >
-                  7816
-                </p>
-              </div>
-              <p class="b5 border-b border-black border-dotted">6000</p>
-              <p class="b5 border-b border-black border-dotted">4000</p>
-              <p class="b5 border-b border-black border-dotted">2000</p>
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-center py-[10px]">
-          <div v-for="(item, index) in category">
-            <div class="flex items-center gap-[5px] pr-[10px]">
-              <div :class="item.color" class="w-[10px] h-[10px]"></div>
-              <p class="b5">{{ item.name }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="section2">
-        <div class="relative flex items-end gap-[1px] justify-center">
-          <div
-            v-for="(item, index) in data"
-            :class="
-              index === maxStoryIndex
-                ? 'bg-black'
-                : index === minStoryIndex
-                ? 'bg-black'
-                : 'bg-[#717070]'
-            "
-            class="cursor-pointer relative"
-            :style="{
-              width: `${90 / data.length}%`,
-              height: `${calculateHeight2(item.Total, 300, maxStory)}px`,
-            }"
-          > </div>
-          <div
-            class="z-0 absolute -bottom-0 w-full h-[300px]"
-            style="pointer-events: none"
-          >
-            <div class="flex flex-col justify-between h-full p-[5px]">
-              <div>
-                <p class="b5 border-b border-black border-dotted">8000</p>
-                <p
-                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
-                >
-                  7816
-                </p>
-              </div>
-              <p class="b5 border-b border-black border-dotted">6000</p>
-              <p class="b5 border-b border-black border-dotted">4000</p>
-              <p class="b5 border-b border-black border-dotted">2000</p>
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-center py-[10px]">
-          <div v-for="(item, index) in category">
-            <div class="flex items-center gap-[5px] pr-[10px]">
-              <div :class="item.color" class="w-[10px] h-[10px]"></div>
-              <p class="b5">{{ item.name }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="section3">
-        <div class="relative flex items-end gap-[1px] justify-center">
-          <div
-            v-for="(item, index) in data"
-            :class="
-              index === 16
-                ? 'bg-vermillion'
-                : index === 4
-                ? 'bg-vermillion'
-                : 'bg-[#FF3D00]/50'
-            "
-            class="cursor-pointer relative"
-            :style="{
-              width: `${90 / data.length}%`,
-              height: `${calculateHeight2(item.การเมือง, 900, maxStory)}px`,
-            }"
-          >
-        </div>
-          <div
-            class="z-0 absolute -bottom-0 w-full h-[300px]"
-            style="pointer-events: none"
-          >
-            <div class="flex flex-col justify-between h-full p-[5px]">
-              <div>
-                <p class="b5 border-b border-black border-dotted">8000</p>
-                <p
-                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
-                >
-                  7816
-                </p>
-              </div>
-              <p class="b5 border-b border-black border-dotted">6000</p>
-              <p class="b5 border-b border-black border-dotted">4000</p>
-              <p class="b5 border-b border-black border-dotted">2000</p>
-              <p></p>
-            </div>
-          </div>
-        </div>
-        <div class="flex flex-wrap justify-center py-[10px]">
-          <div v-for="(item, index) in category">
-            <div class="flex items-center gap-[5px] pr-[10px]">
-              <div :class="item.color" class="w-[10px] h-[10px]"></div>
-              <p class="b5">{{ item.name }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- <div>
-        <div class="h-screen">
-          <p class="text-center b3 font-bold py-[10px]">
-            สัดส่วนข่าวแต่ละหมวด รวม 2 ปี
-          </p>
-          <div class="relative flex flex-col-reverse">
-            <div
-              v-for="(item, index) in category"
-              class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
-              :class="item.color"
+              v-for="(item, index) in data"
+              :class="
+                index === maxStoryIndex
+                  ? 'bg-black'
+                  : index === minStoryIndex
+                  ? 'bg-black'
+                  : 'bg-[#717070]'
+              "
+              class="cursor-pointer relative"
               :style="{
-                height: `${calculateHeight(
-                  exploreData[exploreData.length - 1][item.name],
-                  330,
-                  'a'
-                )}px`,
+                width: `${90 / data.length}%`,
+                height: `${calculateHeight2(item.Total, 300, maxStory)}px`,
               }"
+            ></div>
+            <div
+              class="z-0 absolute -bottom-0 w-full h-[300px]"
+              style="pointer-events: none"
             >
-              <p>xx%</p>
-            </div>
-            <div class="flex items-center justify-center">
-              <div
-                class="absolute bg-white p-[10px] top-2/3 text-center mx-[16px]"
-              >
-                <p class="b3">
-                  คนไทยเห็นพาดหัวข่าว จากข่าว
-                  <span class="font-bold bg-vermillion">การเมือง</span> และ
-                  <span class="font-bold bg-lightblue">สังคมไทย</span> มากที่สุด
-                  ในขณะที่
-                  <span class="font-bold bg-green">สิ่งแวดล้อม</span>
-                  เป็นข่าวที่ถูกนำเสนอน้อยที่สุด
-                </p>
-              </div>
-            </div>
-          </div>
-          <p class="b5 font-bold text-center py-[10px]">2022-2023</p>
-          <div class="flex flex-wrap justify-center py-[10px]">
-            <div v-for="(item, index) in category">
-              <div class="flex items-center gap-[5px] pr-[10px]">
-                <div :class="item.color" class="w-[10px] h-[10px]"></div>
-                <p class="b5">{{ item.name }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="h-screen">
-          <p class="text-center b3 font-bold py-[10px]">
-            สัดส่วนข่าวแต่ละหมวด แยกรายปี
-          </p>
-          <div class="relative">
-            <div class="grid grid-cols-2 w-full">
-              <div class="relative flex flex-col-reverse border-r-2 border-black">
-                <div
-                  v-for="(item, index) in category"
-                  class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
-                  :class="item.color"
-                  :style="{
-                    height: `${calculateHeight(
-                      exploreData[exploreData.length - 1][item.name],
-                      330,
-                      'a'
-                    )}px`,
-                  }"
-                >
-                  <p>xx%</p>
+              <div class="flex flex-col justify-between h-full p-[5px]">
+                <div>
+                  <p class="b5 border-b border-black border-dotted">8000</p>
+                  <p
+                    class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
+                  >
+                    7816
+                  </p>
                 </div>
-              </div>
-              <div class="relative flex flex-col-reverse">
-                <div
-                  v-for="(item, index) in category"
-                  class="text-center b3 font-bold flex justify-center items-center gap-2 w-full py-[3px]"
-                  :class="item.color"
-                  :style="{
-                    height: `${calculateHeight(
-                      exploreData[exploreData.length - 1][item.name],
-                      330,
-                      'a'
-                    )}px`,
-                  }"
-                >
-                  <p>xx%</p>
-                </div>
+                <p class="b5 border-b border-black border-dotted">6000</p>
+                <p class="b5 border-b border-black border-dotted">4000</p>
+                <p class="b5 border-b border-black border-dotted">2000</p>
+                <p></p>
               </div>
             </div>
-            <div class="flex items-center justify-center">
-              <div
-                class="absolute bg-white p-[10px] top-2/3 text-center mx-[16px]"
-              >
-                <p class="b3">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo, nostrum!
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="grid grid-cols-2">
-            <p class="b5 font-bold text-center py-[10px] border-r-2 border-black">2022</p>
-            <p class="b5 font-bold text-center py-[10px]">2023</p>
           </div>
           <div class="flex flex-wrap justify-center py-[10px]">
             <div v-for="(item, index) in category">
@@ -762,7 +555,545 @@ watchEffect(() => {})
             </div>
           </div>
         </div>
-      </div> -->
+        <div id="section3" class="opacity-0">
+          <div class="relative flex items-end gap-[1px] justify-center">
+            <div
+              v-for="(item, index) in data"
+              :class="
+                index === maxStoryIndex
+                  ? 'bg-black'
+                  : index === minStoryIndex
+                  ? 'bg-black'
+                  : 'bg-[#717070]'
+              "
+              :style="{
+                width: `${90 / data.length}%`,
+              }"
+              class="flex flex-col-reverse cursor-pointer relative"
+            >
+              <div
+                v-for="(ct, index) in category"
+                :class="ct.color"
+                :style="{
+                  height: `${calculateHeightPerCategory(
+                    item.Total,
+                    item[ct.name],
+                    300,
+                    maxStory
+                  )}px`,
+                }"
+              ></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <div
+              class="z-0 absolute -bottom-0 w-full h-[300px]"
+              style="pointer-events: none"
+            >
+              <div class="flex flex-col justify-between h-full p-[5px]">
+                <p class="b5 border-b border-black border-dotted">8000</p>
+                <p class="b5 border-b border-black border-dotted">6000</p>
+                <p class="b5 border-b border-black border-dotted">4000</p>
+                <p class="b5 border-b border-black border-dotted">2000</p>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-center py-[10px]">
+            <div v-for="(item, index) in category">
+              <div class="flex items-center gap-[5px] pr-[10px]">
+                <div :class="item.color" class="w-[10px] h-[10px]"></div>
+                <p class="b5">{{ item.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          id="section4"
+          v-for="(ct, index) in category"
+          class="my-[70px] opacity-0"
+        >
+          <div class="relative flex items-end gap-[1px] justify-center">
+            <div
+              v-for="(item, index) in data"
+              :class="
+                index === 16
+                  ? ct.color
+                  : index === 4
+                  ? ct.color
+                  : `${ct.color} opacity-55`
+              "
+              class="cursor-pointer relative"
+              :style="{
+                width: `${90 / data.length}%`,
+                height: `${calculateHeight2(item[ct.name], 900, maxStory)}px`,
+              }"
+            ></div>
+            <div
+              class="z-0 absolute -bottom-0 w-full h-[300px]"
+              style="pointer-events: none"
+            >
+              <div class="flex flex-col justify-between h-full p-[5px]">
+                <p class="b5 border-b border-black border-dotted">8000</p>
+                <p class="b5 border-b border-black border-dotted">6000</p>
+                <p class="b5 border-b border-black border-dotted">4000</p>
+                <p class="b5 border-b border-black border-dotted">2000</p>
+                <p></p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-center py-[10px]">
+            <div v-for="(item, index) in category">
+              <div class="flex items-center gap-[5px] pr-[10px]">
+                <div :class="item.color" class="w-[10px] h-[10px]"></div>
+                <p class="b5">{{ item.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="card" class="relative z-10">
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <p class="b3">
+              ในช่วง 2 ปีที่ผ่านมา<br />
+              สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
+            </p>
+            <p class="b1 font-bold">187,582 พาดหัวข่าว</p>
+            <p class="b5 text-[#717070]">
+              *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
+              PBS, Voice TV, WorkpointTODAY
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="b3 bg-white p-[20px] w-full text-center mx-[16px]">
+            <p class=" ">
+              <span class="text-[#FF006B] font-bold">
+                โดยเฉลี่ยแล้ว <br />
+                เรามีข่าวให้อ่านกันอย่างน้อยเดือนละ 7,816 พาดหัวข่าว</span
+              >
+              หรือตกวันละ 261 พาดหัวข่าว
+            </p>
+            <p class="font-bold">เดือนที่มีข่าวมากที่สุดคือ ก.ย. 2022</p>
+            <p>(8,781 พาดหัวข่าว)</p>
+            <p>
+              <span class="font-bold"
+                >ส่วนเดือนที่มีข่าวน้อยที่สุดคือ ธ.ค. 2023</span
+              >
+              (6,469 พาดหัวข่าว)
+            </p>
+            <p></p>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <p class="b3">
+              เมื่อเจาะดูเป็นรายหมวดพบว่า คนไทยมีโอกาสเห็นพาดหัวข่าว
+              <span class="bg-vermillion font-bold">การเมือง</span> และ
+              <span class="bg-lightblue font-bold">สังคมไทย</span> มากที่สุด
+              ในขณะที่
+              <span class="bg-green font-bold">สิ่งแวดล้อม</span>
+              เป็นข่าวที่ถูกนำเสนอน้อยที่สุด
+            </p>
+            <p class="b4 text-[#939393]">สัดส่วนข่าวแต่ละหมวด รวม 2 ปี</p>
+            <div class="flex h-[60px] my-[10px] w-full">
+              <div
+                class="stoke bg-vermillion w-[28%] flex items-center justify-center"
+              >
+                28.2%
+              </div>
+              <div
+                class="stoke bg-lightblue w-[26%] flex items-center justify-center"
+              >
+                26%
+              </div>
+              <div class="bg-orange opacity-20 w-[13%]"></div>
+              <div class="bg-rose opacity-20 w-1/12"></div>
+              <div class="bg-pink opacity-20 w-1/12"></div>
+              <div class="bg-brown opacity-20 w-1/12"></div>
+              <div class="bg-purple opacity-20 w-[4%]"></div>
+              <div class="bg-blue opacity-20 w-[3%]"></div>
+              <div
+                class="stoke bg-green w-[2%] flex items-center justify-center"
+              >
+                1.7%
+              </div>
+            </div>
+            <p class="b3 font-bold">
+              ไปดูกันว่าข่าวในแต่ละหมวดมีประเด็นอะไรที่น่าสนใจบ้าง
+            </p>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <div>
+              <div>
+                <p class="b1 font-bold">ข่าวการเมือง</p>
+                <p class="b4 text-[#717070]">
+                  รวม 52,971 ข่าว (28.2% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3">
+                <p>
+                  เป็นที่น่าสังเกตว่าจำนวนข่าวในหมวดนี้จะแปรผันตรงกับวาระทางการเมืองที่ร้อนแรง
+                  โดยเดือนที่มีข่าวสูงสุดของปี 2022 และ 2023
+                  ล้วนตรงกับวาระสำคัญทางการเมือง ได้แก่
+                </p>
+              </div>
+              <div>
+                <ul class="list-disc">
+                  <li>
+                    <span class="font-bold">พ.ค. 2022 </span>
+                    <span class="text-[#717070]"> (2,521 หัวข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#เลือกตั้งผู้ว่าฯกทม.</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">พ.ค. 2023 </span>
+                    <span class="text-[#717070]"> (3,134 ข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#การเลือกตั้ง2566</p>
+                  </li>
+                </ul>
+              </div>
+              <div class="b3">
+                <p class="font-bold">5 คีย์เวิร์ดพบบ่อย</p>
+                <p>ในพาดหัวข่าวการเมือง ได้แก่</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[2px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวสังคมไทย</p>
+                <p class="b4 text-[#717070]">
+                  รวม 48,745 ข่าว (26% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 py-[10px] border-b border-[#C5C4C4]">
+                <p>
+                  แม้จำนวนพาดหัวข่าวสังคมไทยจะมีแนวโน้มลดลงอย่างต่อเนื่องตั้งแต่
+                  ก.ย. 2022 แต่ในภาพรวม 2 ปี ยังถือว่ามีสัดส่วนมากเป็นอันดับ 2
+                  รองจากข่าวการเมือง
+                  ด้วยประเด็นข่าวที่กว้างและครอบคลุมหลายเรื่องในสังคม
+                  หลายคำที่เจอในพาดหัวข่าวบ่อยๆ
+                  จึงเป็นคำที่สามารถพบในข่าวหมวดอื่นๆ ได้เช่นกัน
+                  จำแนกเป็นประเภทต่างๆ ได้ ดังนี้
+                </p>
+              </div>
+              <div>
+                <p class="b1 font-bold pt-[10px]">เหตุการณ์สำคัญ</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    สงกรานต์(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    กราดยิงหนองบัวลำภู(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    APEC(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ลอยกระทง(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    เรือหลวงสุโขทัย(xxx)
+                  </div>
+                </div>
+              </div>
+              <div class="py-[10px] border-b border-[#C5C4C4]">
+                <p class="b1 font-bold">ภัยธรรมชาติ</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    น้ำท่วม(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ฝุ่น PM2.5(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ไต้ฝุ่นโนรู(xxx)
+                  </div>
+                </div>
+              </div>
+              <div class="border-b border-[#C5C4C4] py-[10px]">
+                <p class="b1 font-bold">โรค</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    โควิด-19(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    โอมิครอน(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ฝีดาษลิง(xxx)
+                  </div>
+                </div>
+              </div>
+              <div class="border-b border-[#C5C4C4] py-[10px]">
+                <p class="b1 font-bold">บุคคล</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    แตงโมนิดา(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ชัชชาติ(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    พิธา(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ทักษิณ(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    กำนันนก(xxx)
+                  </div>
+                </div>
+              </div>
+              <div class="pt-[10px]">
+                <p class="b3">
+                  นอกจากนี้ยังมีคำที่บ่งชี้เพศสภาพซึ่งปรากฏในพาดหัวข่าวอยู่บ่อยๆ
+                  อย่าง
+                </p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    สาว(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    หนุ่ม(xxx)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
+                <p class="b4 text-[#717070]">
+                  รวม 24,586 ข่าว (13.1% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 pt-[10px]">
+                <p>
+                  ในขณะที่ข่าวหมวดอื่นมีการเปลี่ยนแปลงสัดส่วนของจำนวนข่าวระหว่าง
+                  2 ปี บ้างลดลง บ้างเพิ่มขึ้น แต่ข่าวเศรษฐกิจ/การเงิน
+                  <span class="font-bold"
+                    >เป็นหมวดเดียวที่มีสัดส่วนข่าวเท่าเดิมเป๊ะ</span
+                  >
+                </p>
+              </div>
+              <div class="py-[10px] border-b border-[#C5C4C4]">
+                <p class="b4 text-[#717070]">
+                  สัดส่วนข่าวแต่ละหมวดต่อจำนวนข่าวทั้งหมดในแต่ละปี
+                </p>
+                <img src="/image/trends/economyChart.svg" alt="" />
+              </div>
+              <div class="b3 py-[10px]">
+                <p class="font-bold">Top10</p>
+                <p>
+                  <span class="font-bold">คีย์เวิร์ดพบบ่อย</span>
+                  ในแต่ละเดือนของข่าวหมวดนี้ไม่ค่อยแตกต่างกันมากนัก
+                  โดยจะวนเวียนอยู่กับประเด็นเหล่านี้
+                </p>
+              </div>
+              <div class="">
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    หุ้น/ตลาดหุ้น(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    จีน(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    ดอกเบี้ย(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    เงินเฟ้อ(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    กำไร(xxx)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+        >
+          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+            <div>
+              <div class="border-b border-[#C5C4C4]">
+                <p class="b1 font-bold">ข่าวต่างประเทศ</p>
+                <p class="b4 text-[#717070]">
+                  รวม 20,236 ข่าว (10.8% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3">
+                <p>
+                  เป็นที่น่าสังเกตว่าจำนวนข่าวในหมวดนี้จะแปรผันตรงกับวาระทางการเมืองที่ร้อนแรง
+                  โดยเดือนที่มีข่าวสูงสุดของปี 2022 และ 2023
+                  ล้วนตรงกับวาระสำคัญทางการเมือง ได้แก่
+                </p>
+              </div>
+              <div>
+                <ul class="list-disc">
+                  <li>
+                    <span class="font-bold">พ.ค. 2022 </span>
+                    <span class="text-[#717070]"> (2,521 หัวข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#เลือกตั้งผู้ว่าฯกทม.</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">พ.ค. 2023 </span>
+                    <span class="text-[#717070]"> (3,134 ข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#การเลือกตั้ง2566</p>
+                  </li>
+                </ul>
+              </div>
+              <div class="b3">
+                <p class="font-bold">5 คีย์เวิร์ดพบบ่อย</p>
+                <p>ในพาดหัวข่าวการเมือง ได้แก่</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[2px]"
+                >
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
+                  >
+                    keyword-1(xxx)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="explore" class="py-[40px]">
         <h1 class="h5 font-bold text-center">
           สำรวจเทรนด์ข่าวในปี<br />
@@ -796,7 +1127,7 @@ watchEffect(() => {})
             >
               <div class="flex border-b border-[#939393] w-full">
                 <img
-                  src="/image/part1/Search.svg"
+                  src="/image/trends/Search.svg"
                   alt=""
                   class="w-[16px] m-[5px]"
                 />
@@ -814,7 +1145,7 @@ watchEffect(() => {})
               </div>
 
               <img
-                src="/image/part1/Close.svg"
+                src="/image/trends/Close.svg"
                 alt=""
                 class="w-[16px] cursor-pointer border-b border-[#939393]"
                 @click="clearInput"
@@ -852,7 +1183,7 @@ watchEffect(() => {})
               @change="selectCategory($event.target.value)"
               name=""
               id=""
-              class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4"
+              class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4 focus:outline-none"
             >
               <option value="การเมือง">การเมือง</option>
               <option value="สังคมไทย">สังคมไทย</option>
@@ -869,127 +1200,156 @@ watchEffect(() => {})
             <div class="grid grid-cols-2 place-items-start my-[10px]">
               <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
               <div class="flex items-center">
-                <img src="/image/part1/Click.svg" alt="" class="w-[20px]" />
+                <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
                 <p class="b5">คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน</p>
               </div>
             </div>
-            <div class="relative items-end justify-center w-full mt-6">
-              <div class="relative w-full">
-                <div class="z-10 flex items-end gap-[1px]">
-                  <div
-                    v-for="(item, index) in data"
-                    :key="index"
-                    class="group flex flex-col items-center gap-2 w-[20%]"
-                  >
+            <div class="relative">
+              <div class="relative items-end justify-center w-full mt-6">
+                <div class="relative w-full">
+                  <div class="z-10 flex items-end gap-[1px]">
                     <div
-                      v-if="exploreModeSelected === 'หมวดข่าว'"
-                      @click="handleCurrentIndex(index)"
-                      :class="
-                        index === categoryIndex
-                          ? 'bg-[#FF3D00]'
-                          : 'bg-[#FF3D00]/50'
-                      "
-                      class="w-full cursor-pointer relative"
+                      v-for="(item, index) in data"
+                      :key="index"
+                      class="group flex flex-col items-center gap-2"
                       :style="{
-                        height: `${calculateHeight(
-                          item[categorySelected],
-                          150
-                        )}px`,
+                        width: `${90 / data.length}%`,
                       }"
+                      @click="scrollToSection()"
                     >
                       <div
-                        id="popupDetail"
-                        class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
+                        v-if="exploreModeSelected === 'หมวดข่าว'"
+                        @click="handleCurrentIndex(index)"
+                        :class="
+                          index === categoryIndex
+                            ? 'bg-[#FF3D00]'
+                            : 'bg-[#FF3D00]/50'
+                        "
+                        class="w-full cursor-pointer relative"
+                        :style="{
+                          height: `${calculateHeight(
+                            item[categorySelected],
+                            5000,
+                            'all'
+                          )}px`,
+                        }"
                       >
-                        <p class="font-bold flex">
-                          {{ item.MonthName }} {{ item.Year }}
-                        </p>
-                        <p class="b5">
-                          <span class="b3 font-bold">{{
-                            parseInt(item[categorySelected]).toLocaleString()
-                          }}</span>
-                          พาดหัวข่าว
-                        </p>
-                        <div class="b4 flex flex-wrap gap-[2px]">
-                          <div class="flex items-center gap-[2px]">
-                            <div class="w-[10px] h-[10px] bg-orange"></div>
-                            <p>20</p>
-                          </div>
-                          <div class="flex items-center gap-[2px]">
-                            <div class="w-[10px] h-[10px] bg-brown"></div>
-                            <p>20</p>
-                          </div>
-                          <div class="flex items-center gap-[2px]">
-                            <div class="w-[10px] h-[10px] bg-green"></div>
-                            <p>20</p>
-                          </div>
-                          <div class="flex items-center gap-[2px]">
-                            <div class="w-[10px] h-[10px] bg-blue"></div>
-                            <p>20</p>
+                        <div
+                          id="popupDetail"
+                          class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
+                        >
+                          <p class="font-bold flex">
+                            {{ item.MonthName }} {{ item.Year }}
+                          </p>
+                          <p class="b5">
+                            <span class="b3 font-bold">{{
+                              parseInt(item[categorySelected]).toLocaleString()
+                            }}</span>
+                            พาดหัวข่าว
+                          </p>
+                          <div class="b4 flex flex-wrap gap-[2px]">
+                            <div class="flex items-center gap-[2px]">
+                              <div class="w-[10px] h-[10px] bg-orange"></div>
+                              <p>20</p>
+                            </div>
+                            <div class="flex items-center gap-[2px]">
+                              <div class="w-[10px] h-[10px] bg-brown"></div>
+                              <p>20</p>
+                            </div>
+                            <div class="flex items-center gap-[2px]">
+                              <div class="w-[10px] h-[10px] bg-green"></div>
+                              <p>20</p>
+                            </div>
+                            <div class="flex items-center gap-[2px]">
+                              <div class="w-[10px] h-[10px] bg-blue"></div>
+                              <p>20</p>
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div
+                        v-if="exploreModeSelected === 'คีย์เวิร์ด'"
+                        class="w-full"
+                      >
+                        <div
+                          v-for="(ct, index) in category"
+                          :class="ct.color"
+                          :style="{
+                            height: `${calculateHeightPerCategory(
+                              item.Total,
+                              item[ct.name],
+                              300,
+                              maxStory
+                            )}px`,
+                          }"
+                        ></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                      </div>
+                      <p
+                        class="text-[#939393] -rotate-90 b6"
+                        style="pointer-events: none"
+                      >
+                        {{ item.MonthName }}
+                      </p>
                     </div>
-                    <div
-                      v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                      class="w-full"
-                    >
-                      <!--  -->
+                  </div>
+                  <div
+                    class="z-0 absolute -top-5 w-full h-full"
+                    style="pointer-events: none"
+                  >
+                    <div class="flex flex-col justify-between h-full">
+                      <p class="b5 border-t border-gray-500 border-dotted">
+                        xxx
+                      </p>
+                      <p class="b5 border-t border-gray-500 border-dotted">
+                        xxx
+                      </p>
+                      <p class="b5 border-t border-gray-500 border-dotted">
+                        xxx
+                      </p>
+                      <p class="b5 border-t border-gray-500 border-dotted">
+                        xxx
+                      </p>
+                      <p></p>
                     </div>
-                    <p
-                      class="text-[#939393] -rotate-90 b6"
-                      style="pointer-events: none"
-                    >
-                      {{ item.MonthName }}
-                    </p>
                   </div>
                 </div>
-                <!-- <div
-                  class="z-0 absolute -top-5 w-full h-full"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full">
-                    <p class="b5 border-t border-gray-500 border-dotted">
-                      {{ Math.ceil(max / 100) * 100 }}
-                    </p>
-                    <p class="b5 border-t border-gray-500 border-dotted">
-                      {{ min }}
-                    </p>
-                    <p class="b5 border-t border-gray-500 border-dotted">
-                      {{ min }}
-                    </p>
-                    <p class="b5 border-t border-gray-500 border-dotted">
-                      {{ min }}
-                    </p>
-                    <p></p>
-                  </div>
-                </div> -->
-              </div>
 
-              <div
-                class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]"
-              >
-                <p>2022</p>
-                <p>2023</p>
+                <div
+                  class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]"
+                >
+                  <p>2022</p>
+                  <p>2023</p>
+                </div>
               </div>
+              <div
+                class="z-0 absolute -top-2 right-[50%] transform -translate-x-[2px] w-full h-full border-r border-[#939393]"
+                style="pointer-events: none"
+              ></div>
             </div>
-            <div class="flex flex-col justify-center items-center">
+
+            <div
+              class="flex flex-col justify-center items-center"
+              ref="exploreRef"
+            >
               <div v-if="exploreModeSelected === 'หมวดข่าว'">
                 <div class="flex justify-center items-center">
                   <button @click="handleExploreMounthYear('prev')">
-                    <img src="/image/part1/PreviousBtn.svg" alt="" />
+                    <img src="/image/trends/PreviousBtn.svg" alt="" />
                   </button>
                   <p class="b3 font-bold">
-                    <!-- {{ data[categoryIndex].MonthName }}
-                    {{ data[categoryIndex].Year }} -->
+                    <!-- {{ exploreData[categoryIndex+1]?.MonthName }}
+                    {{ exploreData[categoryIndex+1]?.Year }} -->
                   </p>
                   <button @click="handleExploreMounthYear('next')">
-                    <img src="/image/part1/NextBtn.svg" alt="" />
+                    <img src="/image/trends/NextBtn.svg" alt="" />
                   </button>
                 </div>
                 <p class="b3 text-center py-[5px]">
                   มีข่าว{{ categorySelected }}ทั้งหมด
-                  <!-- <span class="font-bold">{{exploreData[exploreData.length-1][categorySelected] }} พาดหัวข่าว</span> และมักพบ 10 -->
+                  <!-- <span class="font-bold">{{exploreData[exploreData?.length-1][categorySelected] }} พาดหัวข่าว</span> และมักพบ 10 -->
                   คำเหล่านี้อยู่บ่อยๆ
                 </p>
                 <div
@@ -1172,6 +1532,10 @@ option {
   background-color: white;
 }
 
+.stoke {
+  color: var(--black, #000);
+  /* -webkit-text-stroke: 1px white; */
+}
 /* .autocomplete {
   position: relative;
 }

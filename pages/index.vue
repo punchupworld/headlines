@@ -1,6 +1,5 @@
 <script setup>
 import draggable from "vuedraggable"
-import Papa from "papaparse"
 const myArray = ref([
   {
     id: 1,
