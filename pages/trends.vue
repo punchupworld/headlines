@@ -1,6 +1,6 @@
 <script setup>
 const headlineShow = [
-  'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888" (คลิป)',
+  'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888"',
   'เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ "โควิด-19" และ "เศรษฐกิจ"',
   "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
 ]
@@ -22,7 +22,7 @@ const selectExploreMode = (mode) => {
 const startLoop = () => {
   setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % headlineShow.length
-  }, 2000)
+  }, 1000)
 }
 const formatMonth = (inputDate, type) => {
   const fullMonth = [
@@ -90,11 +90,37 @@ const exploreData = ref()
 const categorySelected = ref("การเมือง")
 const max = ref(0)
 const min = ref(0)
-
+const maxStory = ref(0)
+const maxStoryIndex = ref(0)
+const minStory = ref(0)
+const minStoryIndex = ref(0)
 const setData = () => {
   data.value = exploreData.value.slice(1, -1)
+  console.log(data.value)
   max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
   min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
+  data.value.forEach((entry, index) => {
+    const totalValue = parseInt(entry.Total.trim(), 10)
+
+    if (!isNaN(totalValue) && totalValue > maxStory.value) {
+      maxStory.value = totalValue
+      maxStoryIndex.value = index
+    }
+
+    // if (!isNaN(totalValue) && totalValue < minStory.value && totalValue !== 0) {
+
+    //     minStory.value = Math.min(...data.value.map((d) => d.Total))
+    //     minStoryIndex.value = index;
+    // }
+  })
+  minStory.value = Math.min(...data.value.map((d) => d.Total))
+  minStoryIndex.value = data.value.findIndex(
+    (d) => parseInt(d.Total.trim(), 10) === minStory.value
+  )
+
+  console.log("Max Total:", maxStory.value)
+  console.log("Min Total:", minStory.value)
+  console.log("Min Index:", minStoryIndex.value)
 }
 
 const selectCategory = (category) => {
@@ -103,18 +129,36 @@ const selectCategory = (category) => {
   min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
 }
 
-const inputKeyword = ref("ทิม")
-
-const calculateHeight = (count, maxHeigh, mode) => {
-  if (mode) {
+const calculateHeight = (count, maxHeigh, mode, max) => {
+  if (mode==="all") {
     const scale =
       (count * 330) / exploreData.value[exploreData.value.length - 1].Total
     return Math.ceil(scale)
-  } else {
-    const scalePercent = (count * 100) / max.value
+  }
+  else if(mode==="month"){
+  const scalePercent = (count * 100) / max
+  const scaleAll = (scalePercent * maxHeigh) / 100
+  const scalePerCategory = c
+  return Math.ceil(scale)
+  }
+  else {
+    const scalePercent = (count * 100) / max
     const scale = (scalePercent * maxHeigh) / 100
     return Math.ceil(scale)
   }
+}
+
+const calculateHeightPerCategory = (total, count,maxHeigh, max) => {
+  const scalePercent = (total * 100) / max
+  const scaleAll = (scalePercent * maxHeigh) / 100
+  const scalePerCategory = (count*scaleAll)/total
+  return Math.ceil(scalePerCategory)
+}
+
+const calculateHeight2 = (count, maxHeigh, max) => {
+  const scalePercent = (count * 100) / max
+  const scale = (scalePercent * maxHeigh) / 100
+  return Math.ceil(scale)
 }
 
 const fetchData = async () => {
@@ -154,6 +198,7 @@ const fetchData = async () => {
       }
     })
     exploreData.value = await rows
+    console.log(exploreData.value)
     setData()
   } catch (error) {
     console.error("Error fetching CSV data:", error)
@@ -181,6 +226,73 @@ const category = [
   { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
   { name: "สิ่งแวดล้อม", color: "bg-green" },
 ]
+
+const handleCurrentIndex = (index) => {
+  categoryIndex.value = index
+}
+
+const inputKeyword = ref("ทิม")
+const showSuggestions = ref(false)
+const isInputFocused = ref(false)
+const suggestions = ref([
+  "ทิม",
+  "พิธา",
+  "นายก",
+  "เมือง",
+  "เศรษฐกิจ",
+  "ต่างประเทศ",
+  "บันเทิง",
+  "วิทยาศาสตร์เทคโนโลยี",
+  "สังคมไทย",
+  "อาชญากรรม",
+  "กีฬา",
+  "สิ่งแวดล้อม",
+])
+
+const filteredSuggestions = computed(() => {
+  return suggestions.value.filter((suggestion) =>
+    suggestion.toLowerCase().includes(inputKeyword.value.toLowerCase())
+  )
+})
+const showTheSuggestion = () => {
+  showSuggestions.value = true
+  inputKeyword.value = ""
+  handleInputFocus()
+}
+
+const handleInputFocus = () => {
+  isInputFocused.value = !isInputFocused.value
+}
+const clearInput = () => {
+  inputKeyword.value = ""
+  showSuggestions.value = false
+}
+
+const handleInput = () => {
+  showSuggestions.value = true
+}
+
+const hideSuggestions = () => {
+  // showSuggestions.value = false
+  // handleInputFocus()
+}
+
+const selectSuggestion = (selectedValue) => {
+  console.log(selectedValue)
+  inputKeyword.value = selectedValue
+  // showSuggestions.value = false
+}
+
+const handleSuggestionMouseDown = (selectedValue) => {
+  selectSuggestion(selectedValue)
+}
+
+const calculateHeightWithNewScale = (total, maxHeight, maxStory) => {
+  const totalValue = parseInt(total.trim(), 10)
+  const scale = maxStory / 4 // 4 เป็นจำนวนเส้นใหม่ที่ต้องการ
+  const normalizedValue = Math.min(totalValue, scale)
+  return (normalizedValue / scale) * maxHeight
+}
 onMounted(async () => {
   startLoop()
   await fetchData()
@@ -376,15 +488,169 @@ watchEffect(() => {})
           <img src="/image/part1/Color.svg" alt="" class="w-[38px]" />
         </div>
       </div>
-      <div id="loop-headline">
-        <div ref="headlineRef" class="relative bg-black p-[10px] my-[40px]">
+      <div id="section1">
+        <div
+          ref="headlineRef"
+          class="relative bg-black p-[10px] my-[40px] w-[90vw]"
+        >
           <p class="cream t2">
             {{ currentText }}
           </p>
-          <div class="flex items-center justify-center">
-            <div class="absolute bg-white p-[10px] top-1/3 text-center mx-auto">
-              <p class="b3">ในช่วง 2 ปีที่ผ่านมา มีพาดหัวข่าวทั้งหมด</p>
-              <p class="b1 font-bold">xxx,xxx พาดหัวข่าว</p>
+
+          <div class="overflow-y-auto">
+            <div
+              class="absolute flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+            >
+              <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+                <p class="b3">
+                  ในช่วง 2 ปีที่ผ่านมา<br />
+                  สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
+                </p>
+                <p class="b1 font-bold">187,582 พาดหัวข่าว</p>
+                <p class="b5 text-[#717070]">
+                  *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
+                  PBS, Voice TV, WorkpointTODAY
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="section2">
+        <div class="relative flex items-end gap-[1px] justify-center">
+          <div
+            v-for="(item, index) in data"
+            :class="
+              index === maxStoryIndex
+                ? 'bg-black'
+                : index === minStoryIndex
+                ? 'bg-black'
+                : 'bg-[#717070]'
+            "
+            class="cursor-pointer relative"
+            :style="{
+              width: `${90 / data.length}%`,
+              height: `${calculateHeight2(item.Total, 300, maxStory)}px`,
+            }"
+          > </div>
+          <div
+            class="z-0 absolute -bottom-0 w-full h-[300px]"
+            style="pointer-events: none"
+          >
+            <div class="flex flex-col justify-between h-full p-[5px]">
+              <div>
+                <p class="b5 border-b border-black border-dotted">8000</p>
+                <p
+                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
+                >
+                  7816
+                </p>
+              </div>
+              <p class="b5 border-b border-black border-dotted">6000</p>
+              <p class="b5 border-b border-black border-dotted">4000</p>
+              <p class="b5 border-b border-black border-dotted">2000</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center py-[10px]">
+          <div v-for="(item, index) in category">
+            <div class="flex items-center gap-[5px] pr-[10px]">
+              <div :class="item.color" class="w-[10px] h-[10px]"></div>
+              <p class="b5">{{ item.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="section2">
+        <div class="relative flex items-end gap-[1px] justify-center">
+          <div
+            v-for="(item, index) in data"
+            :class="
+              index === maxStoryIndex
+                ? 'bg-black'
+                : index === minStoryIndex
+                ? 'bg-black'
+                : 'bg-[#717070]'
+            "
+            class="cursor-pointer relative"
+            :style="{
+              width: `${90 / data.length}%`,
+              height: `${calculateHeight2(item.Total, 300, maxStory)}px`,
+            }"
+          > </div>
+          <div
+            class="z-0 absolute -bottom-0 w-full h-[300px]"
+            style="pointer-events: none"
+          >
+            <div class="flex flex-col justify-between h-full p-[5px]">
+              <div>
+                <p class="b5 border-b border-black border-dotted">8000</p>
+                <p
+                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
+                >
+                  7816
+                </p>
+              </div>
+              <p class="b5 border-b border-black border-dotted">6000</p>
+              <p class="b5 border-b border-black border-dotted">4000</p>
+              <p class="b5 border-b border-black border-dotted">2000</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center py-[10px]">
+          <div v-for="(item, index) in category">
+            <div class="flex items-center gap-[5px] pr-[10px]">
+              <div :class="item.color" class="w-[10px] h-[10px]"></div>
+              <p class="b5">{{ item.name }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="section3">
+        <div class="relative flex items-end gap-[1px] justify-center">
+          <div
+            v-for="(item, index) in data"
+            :class="
+              index === 16
+                ? 'bg-vermillion'
+                : index === 4
+                ? 'bg-vermillion'
+                : 'bg-[#FF3D00]/50'
+            "
+            class="cursor-pointer relative"
+            :style="{
+              width: `${90 / data.length}%`,
+              height: `${calculateHeight2(item.การเมือง, 900, maxStory)}px`,
+            }"
+          >
+        </div>
+          <div
+            class="z-0 absolute -bottom-0 w-full h-[300px]"
+            style="pointer-events: none"
+          >
+            <div class="flex flex-col justify-between h-full p-[5px]">
+              <div>
+                <p class="b5 border-b border-black border-dotted">8000</p>
+                <p
+                  class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
+                >
+                  7816
+                </p>
+              </div>
+              <p class="b5 border-b border-black border-dotted">6000</p>
+              <p class="b5 border-b border-black border-dotted">4000</p>
+              <p class="b5 border-b border-black border-dotted">2000</p>
+              <p></p>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center py-[10px]">
+          <div v-for="(item, index) in category">
+            <div class="flex items-center gap-[5px] pr-[10px]">
+              <div :class="item.color" class="w-[10px] h-[10px]"></div>
+              <p class="b5">{{ item.name }}</p>
             </div>
           </div>
         </div>
@@ -523,14 +789,59 @@ watchEffect(() => {})
           </button>
         </div>
         <div class="my-[15px]">
-          <input
-            type="text"
-            name=""
-            id=""
-            v-model="inputKeyword"
-            class="text-black"
-            v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-          />
+          <div v-if="exploreModeSelected === 'คีย์เวิร์ด'" class="relative">
+            <div
+              :class="{ 'bg-white': isInputFocused }"
+              class="group-focus:bg-white bg-[#EBE8DE] flex justify-between w-full h-full"
+            >
+              <div class="flex border-b border-[#939393] w-full">
+                <img
+                  src="/image/part1/Search.svg"
+                  alt=""
+                  class="w-[16px] m-[5px]"
+                />
+                <input
+                  type="text"
+                  name="exploreKeyword"
+                  list="exploreKeyword"
+                  id="exploreKeyword"
+                  @focus="showTheSuggestion"
+                  @blur="hideSuggestions"
+                  v-model="inputKeyword"
+                  @input="handleInput"
+                  class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]"
+                />
+              </div>
+
+              <img
+                src="/image/part1/Close.svg"
+                alt=""
+                class="w-[16px] cursor-pointer border-b border-[#939393]"
+                @click="clearInput"
+                v-if="!isInputFocused"
+              />
+              <div
+                v-else
+                class="border border-[#FF006B] text-[#FF006B] b4 px-[10px] flex items-center cursor-pointer"
+              >
+                ค้นหา
+              </div>
+            </div>
+            <ul
+              v-if="showSuggestions"
+              class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0"
+            >
+              <li
+                v-for="(suggestion, index) in filteredSuggestions"
+                :key="index"
+                @mousedown="handleSuggestionMouseDown(suggestion)"
+                class="cursor-pointer"
+              >
+                {{ suggestion }}
+              </li>
+            </ul>
+          </div>
+
           <div
             class="flex items-center pb-[10px] w-full"
             v-if="exploreModeSelected === 'หมวดข่าว'"
@@ -555,7 +866,7 @@ watchEffect(() => {})
             </select>
           </div>
           <div class="">
-            <div class="grid grid-cols-2 place-items-start">
+            <div class="grid grid-cols-2 place-items-start my-[10px]">
               <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
               <div class="flex items-center">
                 <img src="/image/part1/Click.svg" alt="" class="w-[20px]" />
@@ -563,34 +874,42 @@ watchEffect(() => {})
               </div>
             </div>
             <div class="relative items-end justify-center w-full mt-6">
-              <div class="flex items-end gap-[1px] w-full">
-                <div
-                  v-for="(item, index) in data"
-                  :key="index"
-                  class="flex flex-col items-center gap-2 w-[20%]"
-                >
+              <div class="relative w-full">
+                <div class="z-10 flex items-end gap-[1px]">
                   <div
-                    v-if="exploreModeSelected === 'หมวดข่าว'"
-                    @click="handleCurrentIndex(index)"
-                    :class="
-                      index === categoryIndex
-                        ? 'bg-[#FF3D00]'
-                        : 'bg-[#FF3D00]/50'
-                    "
-                    class="group z-10 relative w-full cursor-pointer"
-                    :style="{
-                      height: `${calculateHeight(
-                        item[categorySelected],
-                        150
-                      )}px`,
-                    }"
+                    v-for="(item, index) in data"
+                    :key="index"
+                    class="group flex flex-col items-center gap-2 w-[20%]"
                   >
                     <div
-                      class="absolute top-0 left-0 hidden group-hover:inline-block w-max z-20"
+                      v-if="exploreModeSelected === 'หมวดข่าว'"
+                      @click="handleCurrentIndex(index)"
+                      :class="
+                        index === categoryIndex
+                          ? 'bg-[#FF3D00]'
+                          : 'bg-[#FF3D00]/50'
+                      "
+                      class="w-full cursor-pointer relative"
+                      :style="{
+                        height: `${calculateHeight(
+                          item[categorySelected],
+                          150
+                        )}px`,
+                      }"
                     >
-                      <div class="bg-white p-[5px] w-[90px]">
-                        <p class="font-bold flex">{{ item.MonthName }} {{ item.Year }}</p>
-                        <p class="b5"><span class="b3 font-bold">{{ item[categorySelected] }}</span> พาดหัวข่าว</p>
+                      <div
+                        id="popupDetail"
+                        class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
+                      >
+                        <p class="font-bold flex">
+                          {{ item.MonthName }} {{ item.Year }}
+                        </p>
+                        <p class="b5">
+                          <span class="b3 font-bold">{{
+                            parseInt(item[categorySelected]).toLocaleString()
+                          }}</span>
+                          พาดหัวข่าว
+                        </p>
                         <div class="b4 flex flex-wrap gap-[2px]">
                           <div class="flex items-center gap-[2px]">
                             <div class="w-[10px] h-[10px] bg-orange"></div>
@@ -599,73 +918,59 @@ watchEffect(() => {})
                           <div class="flex items-center gap-[2px]">
                             <div class="w-[10px] h-[10px] bg-brown"></div>
                             <p>20</p>
-                          </div><div class="flex items-center gap-[2px]">
+                          </div>
+                          <div class="flex items-center gap-[2px]">
                             <div class="w-[10px] h-[10px] bg-green"></div>
                             <p>20</p>
-                          </div><div class="flex items-center gap-[2px]">
+                          </div>
+                          <div class="flex items-center gap-[2px]">
                             <div class="w-[10px] h-[10px] bg-blue"></div>
                             <p>20</p>
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div
+                      v-if="exploreModeSelected === 'คีย์เวิร์ด'"
+                      class="w-full"
+                    >
+                      <!--  -->
+                    </div>
+                    <p
+                      class="text-[#939393] -rotate-90 b6"
+                      style="pointer-events: none"
+                    >
+                      {{ item.MonthName }}
+                    </p>
                   </div>
-                  <div
-                    v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                    class="w-full"
-                  >
-                    <div
-                      class="bg-blue"
-                      :style="{
-                        height: `${calculateHeight(item[categorySelected])}px`,
-                      }"
-                    ></div>
-                    <div
-                      class="bg-green"
-                      :style="{
-                        height: `${calculateHeight(item[categorySelected])}px`,
-                      }"
-                    ></div>
-                    <div
-                      class="bg-orange"
-                      :style="{
-                        height: `${calculateHeight(item[categorySelected])}px`,
-                      }"
-                    ></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                  <p class="text-[#939393] -rotate-90 b6">
-                    {{ item.MonthName }}
-                  </p>
                 </div>
+                <!-- <div
+                  class="z-0 absolute -top-5 w-full h-full"
+                  style="pointer-events: none"
+                >
+                  <div class="flex flex-col justify-between h-full">
+                    <p class="b5 border-t border-gray-500 border-dotted">
+                      {{ Math.ceil(max / 100) * 100 }}
+                    </p>
+                    <p class="b5 border-t border-gray-500 border-dotted">
+                      {{ min }}
+                    </p>
+                    <p class="b5 border-t border-gray-500 border-dotted">
+                      {{ min }}
+                    </p>
+                    <p class="b5 border-t border-gray-500 border-dotted">
+                      {{ min }}
+                    </p>
+                    <p></p>
+                  </div>
+                </div> -->
               </div>
+
               <div
                 class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]"
               >
                 <p>2022</p>
                 <p>2023</p>
-              </div>
-              <div class="absolute -top-5 w-full h-full">
-                <div class="flex flex-col justify-between h-full">
-                  <p class="b5 border-t border-gray-500 border-dotted">
-                    {{ Math.ceil(max / 100) * 100 }}
-                  </p>
-                  <p class="b5 border-t border-gray-500 border-dotted">
-                    {{ min }}
-                  </p>
-                  <p class="b5 border-t border-gray-500 border-dotted">
-                    {{ min }}
-                  </p>
-                  <p class="b5 border-t border-gray-500 border-dotted">
-                    {{ min }}
-                  </p>
-                  <p></p>
-                </div>
               </div>
             </div>
             <div class="flex flex-col justify-center items-center">
@@ -866,4 +1171,33 @@ watchEffect(() => {})
 option {
   background-color: white;
 }
+
+/* .autocomplete {
+  position: relative;
+}
+
+.autocomplete-input {
+  width: 200px;
+  padding: 5px;
+} */
+
+/* .suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.suggestion-list li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+}
+
+.suggestion-list li:last-child {
+  border-bottom: none;
+} */
 </style>
