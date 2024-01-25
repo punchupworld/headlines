@@ -4,6 +4,7 @@ const BASE_URL = "https://punchup.world/";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  ssr: true,
   postcss: {
     plugins: {
       tailwindcss: {},
