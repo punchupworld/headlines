@@ -15,8 +15,10 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
+    "intersection-observer": "^0.12.2",
     "papaparse": "^5.4.1",
     "sass": "^1.69.7",
+    "scrollama": "^3.2.0",
     "tailwindcss": "^3.4.1",
     "vue-social-sharing": "^4.0.0-alpha4",
     "vuedraggable": "^4.1.0"

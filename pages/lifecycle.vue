@@ -1,0 +1,407 @@
+<script setup>
+import scrollama from "scrollama";
+
+const isShowRefPopup = ref(false);
+const isSelectNews = ref(false);
+const typeOfNews = ref("tangmo");
+const step = ref(0);
+
+const scroller = scrollama();
+
+function selectNews(news) {
+  typeOfNews.value = news;
+  isSelectNews.value = true;
+
+  nextTick(() => {
+    scroller
+      .setup({
+        step: "#main-box .step-list .step",
+      })
+      .onStepEnter((response) => {
+        step.value = response.index;
+        // { element, index, direction }
+      })
+      .onStepExit((response) => {
+        // { element, index, direction }
+      });
+
+    document.getElementById("story").scrollIntoView();
+  });
+}
+</script>
+
+<template>
+  <div class="bg-[#EBE8DE] min-h-screen">
+    <div
+      class="max-w-[850px] mx-auto text-center px-3 relative min-h-screen py-[40px] flex justify-center items-center"
+    >
+      <div>
+        <h1 class="t2 pb-5">..‘พาดหัวข่าว’ มาราธอน..</h1>
+        <h4 class="h4 font-bold pb-5">
+          เห็นตั้งแต่กุมภาฯ เดือนกันยาฯ ก็ยังไม่หลุดเทรนด์
+        </h4>
+        <p class="b2 pb-5">
+          รวมข่าวที่ได้แอร์ไทม์นาน ข่าวไหนบ้างที่ครองพื้นที่สื่อหลายเดือน
+        </p>
+
+        <p
+          @click="isShowRefPopup = true"
+          class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer"
+        >
+          อ่านที่มาและข้อจำกัดของข้อมูล
+        </p>
+
+        <div
+          id="refPopup"
+          class="left-0 fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
+          v-show="isShowRefPopup"
+        >
+          <div
+            id="popUpScroll"
+            class="relative bg-white max-w-[900px] h-[80vh] w-full text-left"
+          >
+            <img
+              @click="isShowRefPopup = false"
+              src="/image/CanclePink.svg"
+              alt=""
+              class="absolute -top-2 -right-2 cursor-pointer"
+            />
+            <div class="overflow-y-scroll p-5 sm:p-10 h-[80vh]">
+              <p class="b1 font-bold pb-3 sm:pb-5">ที่มาและข้อจำกัดของข้อมูล</p>
+              <p class="b1 font-bold">ที่มา</p>
+              <ul class="list-disc b3">
+                <li>
+                  การหาประเด็นข่าวดัง ใช้ข้อมูลจาก
+                  <a
+                    href="https://trends.google.co.th/trends/yis/2022/TH/?hl=en-US"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Google’s search trend</a
+                  >
+                  ,
+                  <a
+                    href="https://getdaytrends.com/thailand/top/tweeted/year/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Twitter trends</a
+                  >
+                  และ
+                  <a
+                    href="https://wisesight.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Wisesight</a
+                  >’s social trends ประกอบกัน
+                </li>
+                <li>
+                  <b>ประเด็นข่าวที่ถูกคัดออก</b> คือ
+                  ประเด็นที่มีกำหนดเวลาเริ่มต้นและสิ้นสุดค่อนข้างชัดเจน เช่น
+                  เลือกตั้ง 2566, เลือกตั้ง กทม., ฟุตบอลโลก 2022, ซีเกมส์ 2021,
+                  มิสแกรนด์ไทยแลนด์
+                  เพราะความยาวนานของข่าวเหล่านี้เป็นไปตามหมุดหมายเหตุการณ์ที่ผู้จัดงานกำหนดไว้แล้ว
+                  มากกว่าจะขึ้นอยู่กับการตัดสินใจของสื่
+                </li>
+                <li>
+                  <b> การรวบรวมพาดหัวข่าวทั้งหมดที่เกี่ยวข้องกับแต่ละประเด็น</b>
+                  รวบรวมโดยใช้คีย์เวิร์ด เช่น ทุกพาดหัวข่าวที่มีคำว่า “แตงโม”
+                  จะถูกเก็บรวบรวม ภายใต้ประเด็น คดีแตงโม-นิดา
+                </li>
+                <li>
+                  <b>การคัดกรองพาดหัวข่าวที่ไม่เกี่ยวข้อง</b
+                  >คัดกรองข่าวด้วยการผสมคีย์เวิร์ดหลักและรองเพื่อหาข่าวที่เกี่ยวข้อง
+                  เช่น ข่าวแตงโม-นิดา จะต้องมีคีย์เวิร์ดหลักคือ “แตงโม” หรือ
+                  “นิดา” เท่านั้น และจะมีคีย์เวิร์ดรองเป็น “ตกเรือ” หรือ “จมน้ำ”
+                  ด้วยก็ได้ ประกอบกับการใช้วิจารณญาณของผู้จัดทำ
+                  โดยพยายามคัดข่าวที่ไม่เกี่ยวข้องอย่างชัดเจนออกไป เช่น
+                  ข่าวเกี่ยวกับผลไม้แตงโม
+                  จะไม่ถูกนำมานับรวมกับประเด็นคดีแตงโม-นิดา
+                </li>
+                <li>
+                  <b>การเลือก 10 ข่าวที่ได้พื้นที่สื่อนานที่สุด</b>
+                  ใช้เกณฑ์จำนวนวันที่มีข่าวเกี่ยวกับประเด็นนั้นอย่างน้อย 1 ข่าว
+                  (ไม่นับวันที่ไม่มีข่าว)
+                </li>
+              </ul>
+
+              <p class="b1 font-bold py-3 sm:py-5">ข้อจำกัด</p>
+              <ul class="list-disc b3">
+                <li>
+                  การหาประเด็นข่าวดังโดยใช้ Trends ฝั่งผู้เสพสื่อ
+                  อาจไม่ครอบคลุมทุกประเด็นข่าวที่ถูกนำเสนอยาวนานในฝั่งผู้ผลิตสื่อ
+                  เช่น สำนักข่าว A อาจนำเสนอข่าวเกี่ยวกับ B บ่อยมาก
+                  แต่ไม่เป็นกระแสในโลกออนไลน์
+                  ก็อาจจะไม่ติดเทรนด์และไม่ถูกนำมาแสดงในงานชิ้นนี้
+                </li>
+                <li>
+                  การรวบรวมข่าวทั้งหมดเกี่ยวกับแต่ละประเด็นโดยใช้คีย์เวิร์ด
+                  อาจไม่ครอบคลุมทุกข่าวในกรณีที่ผู้จัดทำระบุคีย์เวิร์ดไม่ครบ
+                  เช่น ประเด็นคดีแตงโม-นิดา ซึ่งใช้คีย์เวิร์ด “แตงโม”
+                  อาจทำให้ตกหล่นข่าวที่เกี่ยวข้องกับคดีนี้ แต่ไม่มีคำว่า “แตงโม”
+                  ในพาดหัวข่าว
+                </li>
+              </ul>
+
+              <p class="b3 pt-5">
+                หากมีข้อสงสัยหรือคำแนะนำเพิ่มเติมใดๆ เกี่ยวกับงานนี้
+                ทักมาหาพวกเราได้ที่
+                <a
+                  href="https://m.me/punchupworld"
+                  target="_blank"
+                  class="text-[#FF006B] font-bold"
+                  >m.me/punchupworld</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <img
+          src="/image/lifecycle/mock_part2.svg"
+          alt=""
+          class="sm:max-w-[450px] mx-auto pt-5"
+        />
+
+        <p class="b3 pt-5">
+          เมื่อพูดถึงข่าวที่สื่อนำเสนอยาวนานไม่จบไม่สิ้น ในช่วง 2 ปีที่ผ่านมา
+          คุณนึกถึงข่าวอะไรเป็นอันดับแรก
+        </p>
+
+        <div
+          @click="selectNews('pol')"
+          class="t5 cream cursor-pointer mt-5 bg-black p-[10px] mx-auto text-pretty hover:bg-[#FF006B] hover:text-[#EBE8DE]"
+        >
+          ลุงพล-น้องชมพู่-ป้าแต๋น
+        </div>
+        <div
+          @click="selectNews('tangmo')"
+          class="t5 cream cursor-pointer mt-5 bg-black p-[10px] mx-auto text-pretty hover:bg-[#FF006B] hover:text-[#EBE8DE]"
+        >
+          แตงโมตกเรือ
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
+      <div class="relative">
+        <div
+          class="sticky top-0 h-screen flex items-center justify-center overflow-x-auto"
+          v-if="step > 0 && isSelectNews"
+        >
+          <img src="/image/lifecycle/date.svg" alt="" class="w-[3650px]" />
+        </div>
+        <div
+          id="main-box"
+          class="flex flex-col lg:flex-row max-w-[850px] mx-auto"
+        >
+          <div
+            class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
+          >
+            <div class="max-w-[450px] px-3">
+              <template v-if="step == 0">
+                <img
+                  src="/image/lifecycle/tangmo.svg"
+                  alt=""
+                  v-if="typeOfNews == 'tangmo'"
+                />
+                <img src="/image/lifecycle/tangmo_pol.svg" alt="" v-else />
+              </template>
+              <template v-if="step < 7 && step > 0">
+                <div
+                  class="t5 cream mt-[35vh] max-w-[500px] bg-black p-[10px] mx-auto text-pretty text-left"
+                >
+                  <p class="b4 font-bold">25 ก.พ. 22</p>
+                  <h1 class="t4">
+                    เร่งค้นหา "แตงโม" พลัดตกสปีดโบ๊ตกลางแม่น้ำเจ้าพระยา
+                  </h1>
+                  <p class="b4 pt-3">ที่มา: Thai PBS</p>
+                </div>
+              </template>
+            </div>
+          </div>
+          <div
+            class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none"
+          >
+            <div class="step" data-step="1">
+              <div class="bg-white p-5 h-fit">
+                <template v-if="typeOfNews == 'tangmo'">
+                  <p class="b1 font-bold">ใช่เลย!</p>
+                  <p class="b3 font-bold">“คดีแตงโม-นิดา”</p>
+                  <p class="b3">
+                    เป็นข่าวที่ได้พื้นที่สื่อนานมากในช่วงปี 2022-2023
+                  </p>
+                </template>
+                <template v-else>
+                  <p class="b1 font-bold">ก็ใช่นะ..</p>
+                  <p class="b3">
+                    ข่าว <b>“ลุงพล-น้องชมพู่-ป้าแต๋น”</b> ได้พื้นที่สื่อในช่วงปี
+                    2022-2023 นานพอสมควร แต่กระแสของข่าวนี้ เกิดขึ้นใน<a
+                      href="https://www.thaipbs.or.th/news/content/333262"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >ปี 2020-2021</a
+                    >
+                    มากกว่า ทำให้หากนับเฉพาะช่วง 2 ปีที่ผ่านมา
+                    ยังสู้ความยาวนานของข่าว <b>“คดีแตงโม-นิดา”</b> ไม่ได้
+                  </p>
+                </template>
+              </div>
+            </div>
+            <div class="step" data-step="2">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  <b>“คดีแตงโม-นิดา”</b> พลัดตกเรือเริ่มต้นในเช้ามืดของวันที่ 25
+                  ม.ค. 2022!
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="3">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  มีจำนวนข่าววันแรกทั้งวันรวมกัน 85 ข่าว โดยเป็นข่าวในหมวด
+                  อาชญากรรม บันเทิง และ สังคมไทย
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="4">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  ก่อนจะแผ่ขยายไปสู่หมวด การเมืองในวันต่อมา
+                  เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="5">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  <b> 100 วันผ่านไป</b> เทรนด์ข่าว "คดีแตงโม-นิดา" ค่อยๆ ลดลง
+                  แต่ยังไม่มีทีท่าจะหายไปจากหน้าสื่อ เพราะมีเหตุการณ์ใหม่ๆ
+                  คอยหล่อเลี้ยงกระแส
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="6">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  ข่าวการไว้อาลัย
+                  ควบคู่ไปกับการเปิดโปงพยานหลักฐานเพิ่มเติมจากตำรวจ
+                  และคนใกล้ชิดยังคงดำเนิน<b>ต่อเนื่องไปอีกราว 2 เดือน</b>
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="7">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  แม้หลังจากเดือนกรกฎาคม 2022 จำนวนข่าว “คดีแตงโม-นิดา”
+                  จะเบาบางลงมาก
+                  <b
+                    >แต่แทบทุกเดือนก็ยังมีข่าวเกี่ยวกับเรื่องนี้ให้เห็นอยู่เป็นระยะ</b
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="8">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  <b>ยกเว้นเดือนกรกฎาคม 2023</b>
+                  เดือนเดียวนับตั้งแต่เกิดเหตุการณ์ที่ไม่มีข่าว “คดีแตงโม-นิดา”
+                  ปรากฏในสื่อออนไลน์กระแสหลัก*เลย
+                </p>
+                <p class="b5">
+                  *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
+                  PBS, Voice TV, WorkpointTODAY
+                </p>
+              </div>
+            </div>
+            <div class="step" data-step="9">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  โดยสรุปแล้ว
+                  <b
+                    >ใน 2 ปีซึ่งมี 730 วัน คนไทยได้เห็นข่าว “คดีแตงโม-นิดา”
+                    ไปแล้ว 202 วัน* หรือราว 28%</b
+                  >
+                  และไม่แน่ว่า
+                  ข่าวนี้อาจจะยังสิงสถิตในหน้าสื่อให้เราเห็นต่อในปีถัดไป
+                </p>
+                <p class="b5">*นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว</p>
+              </div>
+            </div>
+            <div class="step" data-step="10">
+              <div class="bg-white p-5 h-fit">
+                <p class="b3">
+                  นอกจาก “คดีแตงโม-นิดา” แล้ว
+                  <b
+                    >ไปสำรวจกันว่ามีข่าวอะไรอีกบ้าง ที่ได้พื้นที่สื่อนานในปี
+                    2022-2023</b
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-[850px] mx-auto text-center">
+        <p class="b3 font-bold pb-5">สำรวจประเด็นที่เหลือ</p>
+
+        <NuxtLink to="/part1">
+          <button class="max-w-[440px]">
+            <div
+              class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
+            >
+              <h1 class="t3 font-black">
+                ..‘พาดหัวข่าว’<br />
+                เล่าเรื่อง..
+              </h1>
+              <h2 class="h5 font-bold">คนไทยได้เจอข่าวอะไรมากที่สุด ?</h2>
+              <p class="b2">
+                สำรวจเทรนด์ข่าวรายเดือน<br />
+                พร้อมคีย์เวิร์ดที่ปรากฏบ่อยในช่วง 2 ปี
+              </p>
+              <p
+                class="text-[#FF006B] b3 flex gap-1 items-center justify-center"
+              >
+                อ่านต่อ
+                <img src="/image/ArrowRight.svg" alt="" />
+              </p>
+            </div></button
+        ></NuxtLink>
+
+        <NuxtLink to="/">
+          <p
+            class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer py-5"
+          >
+            กลับไปหน้าแรก
+          </p>
+        </NuxtLink>
+
+        <div class="space-y-2">
+          <p class="b4">แชร์</p>
+          <div class="flex gap-[5px] justify-center">
+            <img src="/image/Facebook.svg" alt="" class="h-[30px]" />
+            <img src="/image/X.svg" alt="" />
+            <img src="/image/Line.svg" alt="" />
+          </div>
+        </div>
+        <div class="flex flex-col justify-center mt-5">
+          <p class="b4 pb-3">Produced by</p>
+          <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.content {
+}
+.step {
+  max-width: 350px;
+  width: 100%;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
