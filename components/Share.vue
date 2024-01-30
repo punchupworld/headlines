@@ -5,8 +5,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="space-y-2">
-    <p class="b4">แชร์</p>
+  <div class="flex flex-col md:flex-row justify-center items-center">
+    <p class="b4 mr-2">แชร์</p>
     <div class="flex gap-[5px] justify-center">
       <ShareNetwork
         network="facebook"
@@ -31,13 +31,13 @@ defineProps({
       </ShareNetwork>
     </div>
   </div>
-  <div class="flex flex-col justify-center mt-5">
+  <div class="flex flex-col md:flex-row justify-center mt-5 items-center">
     <p class="b4">Produced by</p>
 
     <a
       href="https://punchup.world/"
       target="_blank"
-      class="text-[#FF006B] font-bold mx-auto"
+      class="text-[#FF006B] font-bold mx-2"
     >
       <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]"
     /></a>

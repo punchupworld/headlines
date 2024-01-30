@@ -183,7 +183,7 @@ function selectNews(news) {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          class="sticky top-0 h-screen flex items-center overflow-x-auto"
+          class="sticky top-0 h-screen flex items-center overflow-x-auto chart-wrapper"
           v-if="step > 0 && isSelectNews"
         >
           <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
@@ -195,7 +195,7 @@ function selectNews(news) {
           <div
             class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
           >
-            <div class="max-w-[450px] px-3">
+            <div class="md:max-w-[450px] px-3">
               <template v-if="step == 0">
                 <img
                   src="/image/lifecycle/tangmo.svg"
@@ -351,7 +351,18 @@ function selectNews(news) {
         </div>
       </div>
 
-      <div class="max-w-[850px] mx-auto text-center">
+      <ExploreNews/>
+
+      <div class="max-w-[850px] mx-auto text-center px-4" >
+        <p
+          @click="isShowRefPopup = true"
+          class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer pb-10"
+        >
+          อ่านที่มาและข้อจำกัดของข้อมูล
+        </p>
+
+        <hr class="border-[#C5C4C4] my-5" />
+
         <p class="b3 font-bold pb-5">สำรวจประเด็นที่เหลือ</p>
 
         <SectionBtn link="/trends" />
@@ -364,23 +375,8 @@ function selectNews(news) {
           </p>
         </NuxtLink>
 
-        <div class="space-y-2">
-          <p class="b4">แชร์</p>
-          <div class="flex gap-[5px] justify-center">
-            <img src="/image/Facebook.svg" alt="" class="h-[30px]" />
-            <img src="/image/X.svg" alt="" />
-            <img src="/image/Line.svg" alt="" />
-          </div>
-        </div>
-        <div class="flex flex-col justify-center mt-5">
-          <p class="b4 pb-3">Produced by</p>
-          <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]" />
-        </div>
+        <Share :hasMsgerLink="false" />
       </div>
-    </div>
-
-    <div class="max-w-[850px] mx-auto text-center">
-      <ExploreNews/>
     </div>
   </div>
 </template>
@@ -396,5 +392,9 @@ function selectNews(news) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.chart-wrapper::-webkit-scrollbar {
+  display: none;
 }
 </style>
