@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const BASE_URL = "https://punchup.world/";
+const BASE_URL = "https://headlines-3bc.pages.dev/";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -69,7 +69,7 @@ export default defineNuxtConfig({
         },
       ],
       htmlAttrs: { lang: "en" },
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
     },
   },
   css: [

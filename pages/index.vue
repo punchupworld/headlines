@@ -1,5 +1,5 @@
 <script setup>
-import draggable from "vuedraggable"
+import draggable from "vuedraggable";
 const myArray = ref([
   {
     id: 1,
@@ -26,58 +26,58 @@ const myArray = ref([
   //   name: '"อิ๊งค์" ชัด "เพื่อไทย" เสนอ "เศรษฐา" เป็นนายกฯ มั่นใจ คุย ส.ส. รู้เรื่อง',
   //   date: "2021-06-30",
   // },
-])
+]);
 
-const isShowAnswer = ref(false)
-const resultTextHead = ref("")
-const resultTextDesc = ref()
-const numOfCorrect = ref(0)
-const isShowContent = ref(false)
-const isShowQuiz = ref(true)
-const isShowRefPopup = ref(false)
-const quizData = ref([])
-const reference = ref(null)
-const quizSet = ref(1)
-const quiz = ref([])
+const isShowAnswer = ref(false);
+const resultTextHead = ref("");
+const resultTextDesc = ref();
+const numOfCorrect = ref(0);
+const isShowContent = ref(false);
+const isShowQuiz = ref(true);
+const isShowRefPopup = ref(false);
+const quizData = ref([]);
+const reference = ref(null);
+const quizSet = ref(1);
+const quiz = ref([]);
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 const showContent = () => {
-  isShowContent.value = true
-  isShowQuiz.value = false
-}
+  isShowContent.value = true;
+  isShowQuiz.value = false;
+};
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date)
-  })
-})
+    return new Date(a.date) - new Date(b.date);
+  });
+});
 
 const checkAnswer = () => {
-  console.log(quiz.value)
+  console.log(quiz.value);
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name
-  }).length
+    return item.name === answer.value[index].name;
+  }).length;
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%"
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
+      "%";
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงผิดหมดเลย"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+    resultTextHead.value = "คุณเรียงผิดหมดเลย";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+      "%";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   }
-  isShowAnswer.value = true
-  isShowContent.value = true
-}
+  isShowAnswer.value = true;
+  isShowContent.value = true;
+};
 const formatDate = (inputDate) => {
   const months = [
     "ม.ค.",
@@ -92,64 +92,63 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ]
-  const dateObject = new Date(inputDate)
-  const day = dateObject.getDate()
-  const monthIndex = dateObject.getMonth()
-  const year = dateObject.getFullYear() % 100
-  return `${day} ${months[monthIndex]} ${year}`
-}
+  ];
+  const dateObject = new Date(inputDate);
+  const day = dateObject.getDate();
+  const monthIndex = dateObject.getMonth();
+  const year = dateObject.getFullYear() % 100;
+  return `${day} ${months[monthIndex]} ${year}`;
+};
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
-    console.log(quiz.value)
-    quizSet.value++
+    );
+    console.log(quiz.value);
+    quizSet.value++;
   } else {
-    quizSet.value = 1
+    quizSet.value = 1;
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
-    
+    );
   }
   const addFieldToObject = (obj, fieldName, fieldValue) => {
-      obj[fieldName] = fieldValue
-    }
-    addFieldToObject(quiz.value[0], "no", 1)
-    addFieldToObject(quiz.value[1], "no", 2)
-    addFieldToObject(quiz.value[2], "no", 3)
-}
+    obj[fieldName] = fieldValue;
+  };
+  addFieldToObject(quiz.value[0], "no", 1);
+  addFieldToObject(quiz.value[1], "no", 2);
+  addFieldToObject(quiz.value[2], "no", 3);
+};
 const restartQuiz = async () => {
-  isShowAnswer.value = false
-  isShowContent.value = false
-  await setQuiz()
-}
+  isShowAnswer.value = false;
+  isShowContent.value = false;
+  await setQuiz();
+};
 
 const scrollToReference = () => {
-  reference.value.scrollIntoView({ behavior: "smooth" })
-}
+  reference.value.scrollIntoView({ behavior: "smooth" });
+};
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv")
-    const csvText = await response.text()
+    const response = await fetch("/data/quiz.csv");
+    const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
-      const [id, name, link, date] = line.split(",")
-      return { id, name, link, date }
-    })
-    quizData.value = rows
-    console.log(quizData.value)
-    setQuiz()
+      const [id, name, link, date] = line.split(",");
+      return { id, name, link, date };
+    });
+    quizData.value = rows;
+    console.log(quizData.value);
+    setQuiz();
   } catch (error) {
-    console.error("Error fetching CSV data:", error)
+    console.error("Error fetching CSV data:", error);
   }
-}
+};
 
 onMounted(() => {
-  fetchData()
-  quizSet.value = 1
-})
+  fetchData();
+  quizSet.value = 1;
+});
 </script>
 
 <template>
@@ -507,70 +506,10 @@ onMounted(() => {
           หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา <br />‘พาดหัวข่าว’ ที่คุณสนใจ
         </p>
         <div class="flex flex-col gap-[20px]">
-          <NuxtLink to="/trends">
-            <button class="w-full">
-              <div
-              class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
-              >
-                <h1 class="t3 font-black">
-                  ..‘พาดหัวข่าว’<br />
-                  เล่าเรื่อง..
-                </h1>
-                <h2 class="h5 font-bold">คนไทยได้เจอข่าวอะไรมากที่สุด ?</h2>
-                <p class="b2">
-                  สำรวจเทรนด์ข่าวรายเดือน<br />
-                  พร้อมคีย์เวิร์ดที่ปรากฏบ่อยในช่วง 2 ปี
-                </p>
-                <p
-                  class="text-[#FF006B] b3 flex gap-1 items-center justify-center"
-                >
-                  อ่านต่อ
-                  <img src="/image/ArrowRight.svg" alt="" />
-                </p>
-              </div></button
-          ></NuxtLink>
-          <NuxtLink to="/">
-            <button>
-              <div
-                class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
-              >
-                <h1 class="t3 font-black">
-                  ..‘พาดหัวข่าว’<br />
-                  มาราธอน..
-                </h1>
-                <h2 class="h5 font-bold">
-                  เห็นตั้งแต่กุมภา เดือนกันยาก็ยังไม่หลุดเทรนด์
-                </h2>
-                <p class="b2">
-                  รวมข่าวที่ได้แอร์ไทม์นาน
-                  <br />ข่าวไหนบ้างที่ครองพื้นที่สื่อหลายเดือน
-                </p>
-                <p
-                  class="text-[#FF006B] b3 flex gap-1 items-center justify-center"
-                >
-                  อ่านต่อ
-                  <img src="/image/ArrowRight.svg" alt="" />
-                </p>
-              </div></button
-          ></NuxtLink>
+          <SectionBtn link="/trends" />
+          <SectionBtn link="/lifecycle" />
         </div>
-        <div class="space-y-2">
-          <p class="b4">แชร์</p>
-          <div class="flex gap-[5px] justify-center">
-            <img src="/image/Facebook.svg" alt="" class="h-[30px]" />
-            <img src="/image/X.svg" alt="" />
-            <img src="/image/Line.svg" alt="" />
-          </div>
-        </div>
-        <div class="flex flex-col justify-center mt-5">
-          <p class="b4">Produced by</p>
-          <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]" />
-        </div>
-        <p class="b3 px-[16px] pb-[40px]">
-          หากมีข้อสงสัยหรือคำแนะนำเพิ่มเติมใดๆ เกี่ยวกับงานนี้
-          ทักมาหาพวกเราได้ที่
-          <a href="" class="text-[#FF006B] font-bold">m.me/punchupworld</a>
-        </p>
+        <Share :hasMsgerLink="true" />
       </div>
     </div>
   </div>
