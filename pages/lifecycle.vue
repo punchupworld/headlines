@@ -1,5 +1,7 @@
 <script setup>
 import scrollama from "scrollama";
+import { Vue3Lottie } from "vue3-lottie";
+import lottie_part2 from "public/lottie/lottie-2.json";
 
 const isShowRefPopup = ref(false);
 const isSelectNews = ref(false);
@@ -16,6 +18,7 @@ function selectNews(news) {
     scroller
       .setup({
         step: "#main-box .step-list .step",
+        offset: 0.8,
       })
       .onStepEnter((response) => {
         step.value = response.index;
@@ -58,7 +61,7 @@ function selectNews(news) {
         >
           <div
             id="popUpScroll"
-            class="relative bg-white max-w-[900px] h-[80vh] w-full text-left"
+            class="relative bg-white max-w-[900px] h-[81vh] w-full text-left p-1"
           >
             <img
               @click="isShowRefPopup = false"
@@ -155,11 +158,7 @@ function selectNews(news) {
           </div>
         </div>
 
-        <img
-          src="/image/lifecycle/mock_part2.svg"
-          alt=""
-          class="sm:max-w-[450px] mx-auto pt-5"
-        />
+        <Vue3Lottie :animationData="lottie_part2" class="max-w-[450px] py-5" />
 
         <p class="b3 pt-5">
           เมื่อพูดถึงข่าวที่สื่อนำเสนอยาวนานไม่จบไม่สิ้น ในช่วง 2 ปีที่ผ่านมา
@@ -184,10 +183,10 @@ function selectNews(news) {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          class="sticky top-0 h-screen flex items-center justify-center overflow-x-auto"
+          class="sticky top-0 h-screen flex items-center overflow-x-auto"
           v-if="step > 0 && isSelectNews"
         >
-          <img src="/image/lifecycle/date.svg" alt="" class="w-[3650px]" />
+          <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
         </div>
         <div
           id="main-box"
@@ -201,20 +200,18 @@ function selectNews(news) {
                 <img
                   src="/image/lifecycle/tangmo.svg"
                   alt=""
+                  class="max-w-[450px]"
                   v-if="typeOfNews == 'tangmo'"
                 />
-                <img src="/image/lifecycle/tangmo_pol.svg" alt="" v-else />
+                <img
+                  class="max-w-[450px]"
+                  src="/image/lifecycle/tangmo_pol.svg"
+                  alt=""
+                  v-else
+                />
               </template>
               <template v-if="step < 7 && step > 0">
-                <div
-                  class="t5 cream mt-[35vh] max-w-[500px] bg-black p-[10px] mx-auto text-pretty text-left"
-                >
-                  <p class="b4 font-bold">25 ก.พ. 22</p>
-                  <h1 class="t4">
-                    เร่งค้นหา "แตงโม" พลัดตกสปีดโบ๊ตกลางแม่น้ำเจ้าพระยา
-                  </h1>
-                  <p class="b4 pt-3">ที่มา: Thai PBS</p>
-                </div>
+                <RandomNews :current_step="step" />
               </template>
             </div>
           </div>
@@ -255,17 +252,30 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="3">
-              <div class="bg-white p-5 h-fit">
-                <p class="b3">
-                  มีจำนวนข่าววันแรกทั้งวันรวมกัน 85 ข่าว โดยเป็นข่าวในหมวด
-                  อาชญากรรม บันเทิง และ สังคมไทย
+              <div class="bg-white p-5 h-fit b3">
+                <p class="">
+                  มีจำนวนข่าววันแรกทั้งวันรวมกัน
+                  <b> 85 ข่าว</b> โดยเป็นข่าวในหมวด
+                  <b>
+                    <div class="w-[8px] h-[8px] bg-brown inline-block"></div>
+                    อาชญากรรม
+                    <div class="w-[8px] h-[8px] bg-pink inline-block"></div>
+                    บันเทิง</b
+                  >
+                  และ
+                  <b
+                    ><div
+                      class="w-[8px] h-[8px] bg-lightblue inline-block"
+                    ></div>
+                    สังคมไทย</b
+                  >
                 </p>
               </div>
             </div>
             <div class="step" data-step="4">
-              <div class="bg-white p-5 h-fit">
-                <p class="b3">
-                  ก่อนจะแผ่ขยายไปสู่หมวด การเมืองในวันต่อมา
+              <div class="bg-white p-5 h-fit b3">
+                <p class="">
+                  ก่อนจะแผ่ขยายไปสู่หมวด <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div> <b>การเมือง</b>ในวันต่อมา
                   เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
                 </p>
               </div>
@@ -306,7 +316,7 @@ function selectNews(news) {
                   เดือนเดียวนับตั้งแต่เกิดเหตุการณ์ที่ไม่มีข่าว “คดีแตงโม-นิดา”
                   ปรากฏในสื่อออนไลน์กระแสหลัก*เลย
                 </p>
-                <p class="b5">
+                <p class="b5 text-[#717070]">
                   *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
                   PBS, Voice TV, WorkpointTODAY
                 </p>
@@ -323,7 +333,7 @@ function selectNews(news) {
                   และไม่แน่ว่า
                   ข่าวนี้อาจจะยังสิงสถิตในหน้าสื่อให้เราเห็นต่อในปีถัดไป
                 </p>
-                <p class="b5">*นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว</p>
+                <p class="b5 text-[#717070]">*นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว</p>
               </div>
             </div>
             <div class="step" data-step="10">
@@ -344,28 +354,7 @@ function selectNews(news) {
       <div class="max-w-[850px] mx-auto text-center">
         <p class="b3 font-bold pb-5">สำรวจประเด็นที่เหลือ</p>
 
-        <NuxtLink to="/part1">
-          <button class="max-w-[440px]">
-            <div
-              class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
-            >
-              <h1 class="t3 font-black">
-                ..‘พาดหัวข่าว’<br />
-                เล่าเรื่อง..
-              </h1>
-              <h2 class="h5 font-bold">คนไทยได้เจอข่าวอะไรมากที่สุด ?</h2>
-              <p class="b2">
-                สำรวจเทรนด์ข่าวรายเดือน<br />
-                พร้อมคีย์เวิร์ดที่ปรากฏบ่อยในช่วง 2 ปี
-              </p>
-              <p
-                class="text-[#FF006B] b3 flex gap-1 items-center justify-center"
-              >
-                อ่านต่อ
-                <img src="/image/ArrowRight.svg" alt="" />
-              </p>
-            </div></button
-        ></NuxtLink>
+        <SectionBtn link="/trends" />
 
         <NuxtLink to="/">
           <p
@@ -388,6 +377,10 @@ function selectNews(news) {
           <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]" />
         </div>
       </div>
+    </div>
+
+    <div class="max-w-[850px] mx-auto text-center">
+      <ExploreNews/>
     </div>
   </div>
 </template>

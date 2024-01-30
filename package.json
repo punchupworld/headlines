@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "nuxt build && nuxt generate",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
@@ -20,6 +20,7 @@
     "scrollama": "^3.2.0",
     "tailwindcss": "^3.4.1",
     "vue-social-sharing": "^4.0.0-alpha4",
+    "vue3-lottie": "^3.2.0",
     "vuedraggable": "^4.1.0"
   }
 }
