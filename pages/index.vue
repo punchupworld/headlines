@@ -1,83 +1,57 @@
 <script setup>
-import draggable from "vuedraggable";
-const myArray = ref([
-  {
-    id: 1,
-    name: 'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888" (คลิป)',
-    date: "2021-06-30",
-  },
-  {
-    id: 2,
-    name: "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-    date: "2021-06-30",
-  },
-  {
-    id: 3,
-    name: "เช็กตารางบอลโลก 2022 ทรูโฟร์ยูถ่ายทอดสด 32 คู่",
-    date: "2021-06-30",
-  },
-  // {
-  //   id: 4,
-  //   name: "คึกคัก! บุพเพสันนิวาส ๒ ฉาย 3 วัน กวาดรายได้ทั่วไทย 134 ล้าน",
-  //   date: "2021-06-30",
-  // },
-  // {
-  //   id: 5,
-  //   name: '"อิ๊งค์" ชัด "เพื่อไทย" เสนอ "เศรษฐา" เป็นนายกฯ มั่นใจ คุย ส.ส. รู้เรื่อง',
-  //   date: "2021-06-30",
-  // },
-]);
-
-const isShowAnswer = ref(false);
-const resultTextHead = ref("");
-const resultTextDesc = ref();
-const numOfCorrect = ref(0);
-const isShowContent = ref(false);
-const isShowQuiz = ref(true);
-const isShowRefPopup = ref(false);
-const quizData = ref([]);
-const reference = ref(null);
-const quizSet = ref(1);
-const quiz = ref([]);
+import draggable from "vuedraggable"
+import { Vue3Lottie } from "vue3-lottie"
+import lottie_intro from "public/lottie/lottie-0.json"
+const isShowAnswer = ref(false)
+const resultTextHead = ref("")
+const resultTextDesc = ref()
+const numOfCorrect = ref(0)
+const isShowContent = ref(false)
+const isShowQuiz = ref(true)
+const isShowRefPopup = ref(false)
+const quizData = ref([])
+const reference = ref(null)
+const quizSet = ref(1)
+const quiz = ref([])
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value;
-};
+  isShowRefPopup.value = !isShowRefPopup.value
+}
 const showContent = () => {
-  isShowContent.value = true;
-  isShowQuiz.value = false;
-};
+  isShowContent.value = true
+  isShowQuiz.value = false
+}
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
-  });
-});
+    return new Date(a.date) - new Date(b.date)
+  })
+})
 
 const checkAnswer = () => {
-  console.log(quiz.value);
+  console.log(quiz.value)
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name;
-  }).length;
+    return item.name === answer.value[index].name
+  }).length
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%";
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
+      "%"
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงผิดหมดเลย";
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
+    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย"
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%";
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
+      "%"
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
   }
-  isShowAnswer.value = true;
-  isShowContent.value = true;
-};
+  isShowAnswer.value = true
+  isShowContent.value = true
+}
 const formatDate = (inputDate) => {
   const months = [
     "ม.ค.",
@@ -92,82 +66,108 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ];
-  const dateObject = new Date(inputDate);
-  const day = dateObject.getDate();
-  const monthIndex = dateObject.getMonth();
-  const year = dateObject.getFullYear() % 100;
-  return `${day} ${months[monthIndex]} ${year}`;
-};
+  ]
+  const dateObject = new Date(inputDate)
+  const day = dateObject.getDate()
+  const monthIndex = dateObject.getMonth()
+  const year = dateObject.getFullYear() % 100
+  return `${day} ${months[monthIndex]} ${year}`
+}
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    );
-    console.log(quiz.value);
-    quizSet.value++;
+    )
+    console.log(quiz.value)
+    quizSet.value++
   } else {
-    quizSet.value = 1;
+    quizSet.value = 1
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    );
+    )
   }
   const addFieldToObject = (obj, fieldName, fieldValue) => {
-    obj[fieldName] = fieldValue;
-  };
-  addFieldToObject(quiz.value[0], "no", 1);
-  addFieldToObject(quiz.value[1], "no", 2);
-  addFieldToObject(quiz.value[2], "no", 3);
-};
+    obj[fieldName] = fieldValue
+  }
+  addFieldToObject(quiz.value[0], "no", 1)
+  addFieldToObject(quiz.value[1], "no", 2)
+  addFieldToObject(quiz.value[2], "no", 3)
+}
 const restartQuiz = async () => {
-  isShowAnswer.value = false;
-  isShowContent.value = false;
-  await setQuiz();
-};
+  isShowAnswer.value = false
+  isShowContent.value = false
+  await setQuiz()
+}
 
 const scrollToReference = () => {
-  reference.value.scrollIntoView({ behavior: "smooth" });
-};
+  reference.value.scrollIntoView({ behavior: "smooth" })
+}
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv");
-    const csvText = await response.text();
+    const response = await fetch("/data/quiz.csv")
+    const csvText = await response.text()
     const rows = csvText.split("\n").map((line) => {
-      const [id, name, link, date] = line.split(",");
-      return { id, name, link, date };
-    });
-    quizData.value = rows;
-    console.log(quizData.value);
-    setQuiz();
+      const [id, name, link, date] = line.split(",")
+      return { id, name, link, date }
+    })
+    quizData.value = rows
+    console.log(quizData.value)
+    setQuiz()
   } catch (error) {
-    console.error("Error fetching CSV data:", error);
+    console.error("Error fetching CSV data:", error)
   }
-};
+}
 
+const bgLoopIndex = ref(0)
+const bgColor = [
+  "bg-vermillion",
+  "bg-lightblue",
+  "bg-orange",
+  "bg-rose",
+  "bg-pink",
+  "bg-brown",
+  "bg-purple",
+  "bg-blue",
+  "bg-green",
+]
+const startLoop = () => {
+  setInterval(() => {
+    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length
+  }, 1000)
+}
+
+const blockCategryStyle =
+  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center"
 onMounted(() => {
-  fetchData();
-  quizSet.value = 1;
-});
+  fetchData()
+  startLoop()
+  quizSet.value = 1
+})
 </script>
 
 <template>
-  <div class="max-w-screen-sm bg-[#EBE8DE] flex flex-col justify-center h-full">
+  <div
+    class="max-w-screen-sm lg:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
+  >
     <div
       id="refPopup"
       class="max-w-screen-sm fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
       v-show="isShowRefPopup"
     >
-      <div id="popUpScroll" class="relative bg-white w-full h-[335px] p-1">
+      <div
+        id="popUpScroll"
+        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1"
+      >
         <img
           @click="showRefPopup"
           src="/image/CanclePink.svg"
           alt=""
           class="absolute -top-2 -right-2"
         />
-        <div id="ref" class="p-[15px] text-center overflow-y-auto h-full">
+        <div id="ref" class="p-[20px] text-center overflow-y-auto h-full">
           <div class="pb-5">
-            <h1 class="h5 font-bold py-4" ref="reference">
+            <h1 class="h5 font-bold pb-[20px]" ref="reference">
               ที่มาและข้อจำกัดของข้อมูล
             </h1>
             <p class="b3">
@@ -177,10 +177,10 @@ onMounted(() => {
               <span class="font-bold"
                 >Reuters Institute for the Study of Journalism</span
               >
-              ในปี 2023
-              และมีการจัดโครงสร้างเว็บไซต์ที่เป็นระบบที่ทำให้สามารถเก็บรวบรวมข้อมูลได้
-              ข้อมูลในงานชิ้นนี้ จึงไม่ได้ครอบคลุมข่าวทั้งหมดที่มีในประเทศไทย
-              แต่มาจาก 5 เว็บไซต์ข่าวออนไลน์ที่สำคัญ
+              ในปี 2023 และมีการจัดโครงสร้างเว็บไซต์ที่เป็นระบบ
+              ทำให้สามารถเก็บรวบรวมข้อมูลได้ ข้อมูลในงานชิ้นนี้
+              จึงไม่ได้ครอบคลุมข่าวทั้งหมดที่มีในประเทศไทย แต่มาจาก 5
+              เว็บไซต์ข่าวออนไลน์ที่สำคัญ
             </p>
           </div>
 
@@ -193,7 +193,7 @@ onMounted(() => {
           </p>
           <div class="flex flex-col items-center">
             <img src="/image/NewsAgency.svg" alt="" />
-            <div class="grid grid-cols-2 py-5 px-[37px]">
+            <div class="flex gap-[5px] py-5 content-center">
               <div>
                 <ol class="b4 font-bold list-decimal text-start">
                   <li>ไทยรัฐ ออนไลน์</li>
@@ -205,10 +205,10 @@ onMounted(() => {
               </div>
               <div class="b4">
                 <p>55.8 %</p>
-                <p>55.8 %</p>
-                <p>55.8 %</p>
-                <p>55.8 %</p>
-                <p>55.8 %</p>
+                <p>21.1 %</p>
+                <p>12.3 %</p>
+                <p>7.7 %</p>
+                <p>3.0 %</p>
               </div>
             </div>
           </div>
@@ -216,28 +216,43 @@ onMounted(() => {
             หมวดข่าวจากแต่ละสำนัก
           </h2>
           <p class="b3 leading-[19.6px]">
-            จากประเภทข่าวที่แต่ละสำนักข่าวได้แบ่งไว้เป็นหมวดหมู่
-            เราได้รวบรวมและจำแนกหมวดหมู่ประเภทข่าวให้ใหม่ เป็น 9 ประเภทข่าว
-            เพื่อความสะดวกในการศึกษาและง่ายต่อการนำเสนอข้อมูล
-            โดยเราไม่ได้หยิบใช้ข่าวในบางหมวดหมู่
-            เนื่องด้วยจำนวนข่าวที่มีไม่มากและไม่มีส่วนเกียวข้องกับหมวดหมู่หลัก
+            สำนักข่าวแต่ละแห่งได้แบ่งประเภทข่าวไว้เป็นหมวดหมู่
+            เราได้รวบรวมและจำแนกหมวดหมู่ข่าวเหล่านี้ใหม่เป็น 9 ประเภท
+            เพื่อให้ทำการศึกษาได้สะดวกและนำเสนอข้อมูลออกมาได้ง่ายขึ้น
+            ทั้งนี้เราไม่ได้หยิบข่าวในบางหมวดหมู่มาใช้
+            เนื่องจากจำนวนข่าวมีไม่มากและไม่เกี่ยวข้องกับหมวดหมู่หลัก
           </p>
-          <div class="flex justify-center gap-2">
+          <div class="flex justify-center gap-[5px] py-[20px]">
             <div
-              class="flex flex-col items-center font-bold border border-r-black border-white pr-2 b4"
+              class="flex flex-col items-center font-bold border border-r-black border-white pr-[5px] b4"
             >
               <h3 class="h-[50px] b3 flex items-center">หมวดร่วม</h3>
               <div class="group">
-                <div class="block_categry bg-vermillion">การเมือง</div>
-                <div class="block_categry bg-lightblue">สังคมไทย</div>
-                <div class="block_categry bg-orange">เศรษฐกิจ/การเงิน</div>
-                <div class="block_categry bg-rose">ต่างประเทศ</div>
-                <div class="block_categry bg-pink">บันเทิง</div>
-                <div class="block_categry bg-brown">อาชญกรรม</div>
-                <div class="block_categry bg-purple">กีฬา</div>
-                <div class="block_categry bg-blue">วิทยาศาสตร์/เทคโนโลยี</div>
-                <div class="block_categry bg-green">สิ่งแวดล้อม</div>
-                <div class="block_categry not-use">หมวดอื่นๆที่ไม่ได้ใช้</div>
+                <div :class="blockCategryStyle" class="bg-vermillion">
+                  การเมือง
+                </div>
+                <div :class="blockCategryStyle" class="bg-lightblue">
+                  สังคมไทย
+                </div>
+                <div :class="blockCategryStyle" class="bg-orange">
+                  เศรษฐกิจ/การเงิน
+                </div>
+                <div :class="blockCategryStyle" class="bg-rose">ต่างประเทศ</div>
+                <div :class="blockCategryStyle" class="bg-pink">บันเทิง</div>
+                <div :class="blockCategryStyle" class="bg-brown">อาชญกรรม</div>
+                <div :class="blockCategryStyle" class="bg-purple">กีฬา</div>
+                <div :class="blockCategryStyle" class="bg-blue">
+                  วิทยาศาสตร์/เทคโนโลยี
+                </div>
+                <div :class="blockCategryStyle" class="border-b-[1px] bg-green">
+                  สิ่งแวดล้อม
+                </div>
+                <div
+                  :class="blockCategryStyle"
+                  class="not-use border-b-[1px] !border-[#C5C4C4]"
+                >
+                  หมวดอื่นๆที่ไม่ได้ใช้
+                </div>
               </div>
             </div>
             <div
@@ -246,73 +261,179 @@ onMounted(() => {
               <div class="flex flex-col items-center">
                 <img src="/image/Thairath.svg" alt="" />
                 <div class="group">
-                  <div class="block_categry bg-vermillion">การเมื่อง</div>
-                  <div class="block_categry bg-lightblue">ในกระแส</div>
-                  <div class="block_categry bg-lightblue">ทั่วไทย</div>
-                  <div class="block_categry bg-orange">money</div>
-                  <div class="block_categry bg-rose">ต่างประเทศ</div>
-                  <div class="block_categry bg-pink">บันเทิง</div>
-                  <div class="block_categry bg-brown">อาชญกรรม</div>
-                  <div class="block_categry bg-blue">เทคโนโลยี</div>
-                  <div class="block_categry bg-green">ความยั่งยืน</div>
-                  <div class="block_categry not-use">ยานยนต์</div>
-                  <div class="block_categry not-use">พระราชสำนัก</div>
+                  <div :class="blockCategryStyle" class="bg-vermillion">
+                    การเมื่อง
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-lightblue">
+                    ในกระแส
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-lightblue">
+                    ทั่วไทย
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">money</div>
+                  <div :class="blockCategryStyle" class="bg-rose">
+                    ต่างประเทศ
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-pink">บันเทิง</div>
+                  <div :class="blockCategryStyle" class="bg-brown">
+                    อาชญกรรม
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-blue">
+                    เทคโนโลยี
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="border-b-[1px] bg-green"
+                  >
+                    ความยั่งยืน
+                  </div>
+                  <div :class="blockCategryStyle" class="not-use">ยานยนต์</div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
+                    พระราชสำนัก
+                  </div>
+                  <div
+                    class="flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
+                  >
+                    <img src="/image/SlideIcon.svg" alt="" />
+                    <p>เลื่อน</p>
+                  </div>
                 </div>
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/Today.svg" alt="" />
                 <div class="group">
-                  <div class="block_categry bg-vermillion">การเมื่อง</div>
-                  <div class="block_categry bg-orange">เศรษฐกิจ</div>
-                  <div class="block_categry bg-orange">การเงิน</div>
-                  <div class="block_categry bg-purple">กีฬา</div>
-                  <div class="block_categry bg-blue">Tech</div>
-                  <div class="block_categry bg-green">สิ่งแวดล้อม</div>
-                  <div class="block_categry not-use">สิทธิมนุษยชน</div>
+                  <div :class="blockCategryStyle" class="bg-vermillion">
+                    การเมื่อง
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">
+                    เศรษฐกิจ
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">
+                    การเงิน
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-purple">กีฬา</div>
+                  <div :class="blockCategryStyle" class="bg-blue">Tech</div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="border-b-[1px] bg-green"
+                  >
+                    สิ่งแวดล้อม
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
+                    สิทธิมนุษยชน
+                  </div>
                 </div>
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/ThaiPBS.svg" alt="" />
                 <div class="group">
-                  <div class="block_categry bg-vermillion">การเมื่อง</div>
-                  <div class="block_categry bg-lightblue">สังคม</div>
-                  <div class="block_categry bg-lightblue">ภูมิภาค</div>
-                  <div class="block_categry bg-orange">เศรษฐกิจ</div>
-                  <div class="block_categry bg-rose">ต่างประเทศ</div>
-                  <div class="block_categry bg-pink">ศิลปะ-บันเทิง</div>
-                  <div class="block_categry bg-brown">อาชญกรรม</div>
-                  <div class="block_categry bg-purple">กีฬา</div>
-                  <div class="block_categry bg-blue">วิทยาศาสตร์/เทคโนโลยี</div>
-                  <div class="block_categry bg-green">สิ่งแวดล้อม</div>
-                  <div class="block_categry bg-green">ภัยพิบัติ</div>
-                  <div class="block_categry not-use">พระราชสำนัก</div>
-                  <div class="block_categry not-use">ไลฟ์สไตล์</div>
+                  <div :class="blockCategryStyle" class="bg-vermillion">
+                    การเมื่อง
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-lightblue">
+                    สังคม
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-lightblue">
+                    ภูมิภาค
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">
+                    เศรษฐกิจ
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-rose">
+                    ต่างประเทศ
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-pink">
+                    ศิลปะ-บันเทิง
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-brown">
+                    อาชญกรรม
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-purple">กีฬา</div>
+                  <div :class="blockCategryStyle" class="bg-blue">
+                    วิทยาศาสตร์/เทคโนโลยี
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-green">
+                    สิ่งแวดล้อม
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="border-b-[1px] bg-green"
+                  >
+                    ภัยพิบัติ
+                  </div>
+                  <div :class="blockCategryStyle" class="not-use">
+                    พระราชสำนัก
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
+                    ไลฟ์สไตล์
+                  </div>
                 </div>
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/Standard.svg" alt="" />
                 <div class="group">
-                  <div class="block_categry bg-vermillion">Politics</div>
-                  <div class="block_categry bg-lightblue">Thailand</div>
-                  <div class="block_categry bg-orange">Business</div>
-                  <div class="block_categry bg-rose">World</div>
-                  <div class="block_categry bg-rose">China</div>
-                  <div class="block_categry bg-purple">Sport</div>
-                  <div class="block_categry bg-blue">Science</div>
-                  <div class="block_categry bg-blue">Tech</div>
-                  <div class="block_categry bg-green">Environment</div>
-                  <div class="block_categry not-use">LGBTQ+</div>
-                  <div class="block_categry not-use">On this day</div>
+                  <div :class="blockCategryStyle" class="bg-vermillion">
+                    Politics
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-lightblue">
+                    Thailand
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">
+                    Business
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-rose">World</div>
+                  <div :class="blockCategryStyle" class="bg-rose">China</div>
+                  <div :class="blockCategryStyle" class="bg-purple">Sport</div>
+                  <div :class="blockCategryStyle" class="bg-blue">Science</div>
+                  <div :class="blockCategryStyle" class="bg-blue">Tech</div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="border-b-[1px] bg-green"
+                  >
+                    Environment
+                  </div>
+                  <div :class="blockCategryStyle" class="not-use">LGBTQ+</div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
+                    On this day
+                  </div>
                 </div>
               </div>
               <div class="flex flex-col items-center">
                 <img src="/image/VOICE.svg" alt="" />
                 <div class="group">
-                  <div class="block_categry bg-vermillion">การเมื่อง</div>
-                  <div class="block_categry bg-orange">เศรษฐกิจ</div>
-                  <div class="block_categry bg-rose">ต่างประเทศ</div>
-                  <div class="block_categry bg-pink">บันเทิง</div>
-                  <div class="block_categry not-use">คุณภาพชีวิต</div>
+                  <div :class="blockCategryStyle" class="bg-vermillion">
+                    การเมื่อง
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-orange">
+                    เศรษฐกิจ
+                  </div>
+                  <div :class="blockCategryStyle" class="bg-rose">
+                    ต่างประเทศ
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="border-b-[1px] bg-pink"
+                  >
+                    บันเทิง
+                  </div>
+                  <div
+                    :class="blockCategryStyle"
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
+                    คุณภาพชีวิต
+                  </div>
                 </div>
               </div>
             </div>
@@ -322,12 +443,13 @@ onMounted(() => {
     </div>
     <div
       id="quiz"
-      class="flex flex-col h-screen py-[30px] px-[16px] max-w-[850px]"
+      :class="!isShowAnswer? 'h-screen':' '"
+      class="flex flex-col py-[30px]  max-w-[850px] w-[90vw] items-center justify-center mx-auto "
       v-show="isShowQuiz"
     >
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
         <h5
-          :class="numOfCorrect === 0 ? 'bg-[#FF3D00]' : 'bg-[#4ADADA]'"
+          :class="numOfCorrect === 0 ? 'bg-[#FF3D00] cream' : 'bg-[#4ADADA]'"
           class="h5 font-bold mx-auto w-fit"
         >
           {{ resultTextHead }}
@@ -335,19 +457,19 @@ onMounted(() => {
         <p class="b2" v-if="numOfCorrect !== 0">
           ในการเรียงลำดับ<span v-if="numOfCorrect === 3">เหตุการณ์</span>ข่าว
         </p>
-        <h5 v-html="resultTextDesc" class="h5 font-bold"></h5>
+        <h5 v-html="resultTextDesc"  class="h5 font-bold"></h5>
       </div>
       <div class="flex flex-col space-y-[10px] pb-[15px]" v-else>
         <div>
-          <h1 class="h5 font-bold text-2xl text-center">
-            คุณจำข่าวในช่วง 2 <br />ปีที่ผ่านมาได้แม่นแค่ไหน
+          <h1 class="h5 font-bold text-2xl text-center px-[45px]">
+            คุณจำข่าวในช่วง 2 ปี ได้ดีแค่ไหน
           </h1>
           <p class="b2 font-bold text-[#717070] text-center">
             บอกได้มั้ย ข่าวไหนเกิดก่อน
           </p>
         </div>
 
-        <div class="flex gap-[2px] mx-auto px-7">
+        <div class="flex gap-[2px] mx-auto px-7 items-center">
           <img src="/image/Frame.svg" alt="" class="w-[33px]" />
           <p class="b4">
             กดที่พาดหัวข่าวด้านล่าง แล้วลากขึ้น-ลง
@@ -363,7 +485,7 @@ onMounted(() => {
       >
         <template #item="{ element, index }">
           <div
-            class="t5 cream cursor-grab space-y-[15px] relative bg-black w-[256px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]"
+            class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]"
           >
             <div>
               <p v-if="isShowAnswer" class="b4">
@@ -416,77 +538,149 @@ onMounted(() => {
       </div>
     </div>
     <div id="intro" class="text-center" v-show="isShowContent">
-      <img src="/image/Head.svg" alt="" class="w-full" />
-      <div class="px-[16px] py-[40px] text-pretty space-y-[20px]">
-        <div class="b3">
-          <p>
-            เนื้อหาข่าวจาก
-            <span class="font-bold">สื่อกระแสหลัก</span
-            >ยังคงเป็นแหล่งข้อมูลสำคัญที่ทำให้คนไทยรับรู้เรื่องราวปัญหาบ้านเมือง
-          </p>
-          <p class="pt-4">
-            งานศึกษา Reuters Institute Digital News Report 2023
-          </p>
-          <p>
-            ชี้ให้เห็นว่าคนไทยเสพข่าวสารจาก<span
-              class="text-[#5773DC] font-bold"
-              >สื่อข่าวออนไลน์</span
+      <div id="cover">
+        <div class="hidden md:block">
+          <div class="grid grid-cols-2 p-[20px]">
+            <div
+              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
             >
-            มากเป็นอันดับแรก (รวมถึงข่าวสารจาก Social Media) โดย 88%
-            ของผู้ตอบแบบสอบถามทั้งหมดให้ความเชื่อมั่นและบริโภคข่าวจากสื่อข่าวออนไลน
-          </p>
-          <p class="pt-4">
-            ในขณะที่ช่องทาง<span class="font-bold">สื่อโทรทัศน์</span
-            >ถูกอ้างอิงเป็นแหล่งที่มาของข่าวแค่ 50% ของจำนวนผู้ตอบแบบสอบถาม
-          </p>
+              ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?
+            </div>
+            <div>
+              <div class="grid grid-cols-2">
+                <div>
+                  <img src="/image/DotBg.svg" alt="" class="h-full w-full" />
+                </div>
+                <div
+                  class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]"
+                >
+                  <div
+                    class="w-full h-full border-b-[2px] border-black"
+                    :class="bgColor[bgLoopIndex]"
+                  ></div>
+                  <div
+                    class="h5 bg-[#FFF8B5] font-bold py-[40px] px-[20px] flex items-center justify-center"
+                  >
+                    ย้อนดูเทรนด์ข่าวออนไลน์ไทย ช่วงปี
+                  </div>
+                </div>
+              </div>
+              <div class="grid grid-cols-9 bg-white t3 font-black">
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  0
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  -
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  0
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  3
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <img src="/image/Media.svg" alt="" class="h-[110px] px-[28px]" />
-        <div class="b3 space-y-[20px]">
-          <div>
-            <p>
-              สื่อข่าวออนไลน์จึงเป็นแพลตฟอร์มยอดฮิตที่คนไทยใช้เข้าถึงข้อมูลข่าวสาร
-            </p>
-            <p>
-              โดยในเนื้อหาจะมี<span class="font-bold">พาดหัวข่าว</span
-              >เป็นบทนำในการเล่าเรื่องราวให้ผู้อ่านข่าวรับทราบ
+
+        <img src="/image/Head.svg" alt="" class="w-full md:hidden block" />
+      </div>
+
+      <div class="px-[16px] py-[40px] text-pretty space-y-[20px]">
+        <div class="b3 space-y-[10px]">
+          <div class="flex flex-col items-center justify-center gap-[5px]">
+            <p class="bg-vermillion w-fit text-white">BREAKING NEWS:</p>
+            <p class="b1 font-bold">
+              เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
             </p>
           </div>
-          <p>
-            เมื่อชีวิตติดคอนเทนต์ เราขอชวนคุณมาสำรวจ คอนเทนต์
-            <span class="font-bold">‘พาดหัวข่าว’</span>
-            บนเว็บไซต์ข่าวออนไลน์ไทย เพื่อหาคำตอบว่า
-          </p>
-        </div>
-        <h3 class="b2 font-bold">
-          2 ปีมานี้ ‘พาดหัวข่าว’ <br />เล่าอะไรให้คนไทยฟังบ้าง?
-        </h3>
 
+          <p>
+            รายงานข่าวของ Reuters Institute Digital News Report 2023
+            ชี้คนไทยเสพข่าวจากสื่อข่าวออนไลน์มากเป็นอันดับหนึ่ง (รวมถึงข่าวใน
+            Social Media) ผลลัพธ์จากแบบสอบถามในงานศึกษาพบว่า
+          </p>
+          <p class="text-[#5773DC] font-bold">
+            88%
+            ของผู้ตอบแบบสอบถามให้ความเชื่อมั่นและบริโภคข่าวจากสื่อข่าวออนไลน์
+          </p>
+          <p>ในขณะที่ 50% ของผู้ตอบแบบสอบถาม บริโภคข่าวจากสื่อโทรทัศน์</p>
+
+          <Vue3Lottie :animationData="lottie_intro" class="max-w-[450px]" />
+          <p>
+            ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
+            เป็นบทนำในการเล่าเรื่อง ที่ล้วนต้องสั้นกระชับ
+            และเกริ่นใจความสำคัญของคอนเทนต์ข่าวได้แทบครบถ้วน
+          </p>
+          <p>
+            เมื่อ
+            <span class="text-[#5773DC]">#ชีวิตติดคอนเทนต์</span>
+            เราขอชวนคุณมาสำรวจ คอนเทนต์ ‘พาดหัวข่าว’ บนเว็บไซต์ข่าวออนไลน์ไทย
+            เพื่อหาคำตอบว่า
+          </p>
+          <h3 class="b2 font-bold">
+            2 ปีมานี้ ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟังบ้าง?
+          </h3>
+        </div>
         <div
           class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
         >
           <p class="b3 font-bold text-[#717070]">ที่มาและข้อจำกัดของข้อมูล</p>
           <p class="b4">
             ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
-            แต่เลือกมา 5 สำนักข่าว จากทั้งหมด xx
-            สำนักข่าวที่ถูกจัดอันดับด้วยความน่าเชื่อถือของ Reuters Institute for
-            the Study of Journalism ในปี 2023 ประกอบด้วย
+            แต่เลือกมา 5 สำนักข่าว จากทั้งหมด 16 สำนักข่าว
+            จากการจัดอันดับเว็บไซต์ข่าวที่ถูกเข้าถึงมากที่สุดในไทยโดย Reuters
+            Institute for the Study of Journalism ในปี 2023 ประกอบด้วย
           </p>
-          <div class="grid grid-cols-2 px-[40px]">
-            <div>
-              <ol class="b4 font-bold list-decimal text-start">
-                <li>ไทยรัฐ ออนไลน์</li>
-                <li>The Standard</li>
-                <li>Thai PBS</li>
-                <li>Voice TV</li>
-                <li>WorkpointTODAY</li>
-              </ol>
-            </div>
-            <div class="b4">
+          <div class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto">
+            <ol
+              class="b4 font-bold list-decimal text-start flex flex-col items-start"
+            >
+              <li>ไทยรัฐ ออนไลน์</li>
+              <li>The Standard</li>
+              <li>Thai PBS</li>
+              <li>Voice TV</li>
+              <li>WorkpointTODAY</li>
+            </ol>
+            <div class="b4 flex flex-col items-end">
               <p>55.8 %</p>
-              <p>55.8 %</p>
-              <p>55.8 %</p>
-              <p>55.8 %</p>
-              <p>55.8 %</p>
+              <p>21.1 %</p>
+              <p>12.3 %</p>
+              <p>7.7 %</p>
+              <p>3.0 %</p>
             </div>
           </div>
           <button
@@ -517,23 +711,14 @@ onMounted(() => {
 
 <style scoped>
 .group {
-  border-collapse: collapse;
-  width: max-content;
+  width: 150px;
 }
 
 .not-use {
-  border: 1px solid #c5c4c4 !important;
+  border-top: 1px solid #c5c4c4 !important;
+  border-left: 1px solid #c5c4c4 !important;
+  border-right: 1px solid #c5c4c4 !important;
   color: #939393 !important;
 }
-.block_categry {
-  border-collapse: collapse;
-  width: 130px;
-  height: 30px;
-  border: 1px solid black;
-  text-align: center;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+
 </style>

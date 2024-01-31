@@ -52,7 +52,7 @@ const formatMonth = (inputDate) => {
     "พ.ย.",
     "ธ.ค.",
   ]
-  const dateParts = inputDate.split('-')
+  const dateParts = inputDate.split("-")
   const day = parseInt(dateParts[2])
   const month = parseInt(dateParts[1])
   const year = parseInt(dateParts[0])
@@ -93,12 +93,21 @@ const fetchAggregateKW = async () => {
   // console.log(suggestions.value)
 }
 const dataForKW = ref()
-const selectExploreMode = (mode) => {
+
+const maxOfMonthly = ref()
+const findMaxOfMonthly = () => {
+  let dataValues = dataForKW.value.montly
+  console.log(dataValues)
+  let maxValue = Math.max(...dataValues.map((d) => d.total))
+  maxOfMonthly.value = maxValue
+  console.log(maxOfMonthly.value)
+}
+const selectExploreMode = async (mode) => {
   exploreModeSelected.value = mode
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
-    dataForKW.value = keywords.value[inputKeyword.value]
+    dataForKW.value = await keywords.value[inputKeyword.value]
     console.log(dataForKW.value)
-    console.log(Object.keys(dataForKW.value.categories))
+    findMaxOfMonthly()
   }
 }
 
@@ -125,7 +134,7 @@ const getCategoryColorClass = (category) => {
   }
 }
 
-const getCategoryBorderColor = (category)=>{
+const getCategoryBorderColor = (category) => {
   switch (category) {
     case "การเมือง":
       return "border-[#FF3D00]"
@@ -434,8 +443,6 @@ const handleSuggestionMouseDown = (selectedValue) => {
   showSuggestions.value = false
 }
 
-
-
 const highlightKeyword = (headline, keyword) => {
   return headline.replace(
     new RegExp(`(${keyword})`, "gi"),
@@ -598,7 +605,11 @@ watchEffect(() => {})
             style="transition: opacity 0.5s ease"
             class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center"
           >
-            <div
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวรายเดือน
+            </p>
+            <div class="relative">
+              <div
               class="relative flex items-end gap-[1px] justify-center w-[90vw] max-w-[600px]"
             >
               <div
@@ -632,25 +643,43 @@ watchEffect(() => {})
                 </p>
               </div>
               <div
-                class="z-0 absolute -bottom-0 w-full h-[300px]"
+                class="z-0 absolute bottom-0 w-full h-full"
                 style="pointer-events: none"
               >
                 <div class="flex flex-col justify-between h-full p-[5px]">
-                  <div>
+         
+                  <div class="space-y-2">
                     <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p
-                      class="b5 border-b border-[#FF006B] text-[#FF006B] font-bold"
+                    <div class="border-b border-[#FF006B] relative">
+                      <p
+                      class="absolute -top-1.5 b5  text-[#FF006B] font-bold stoke"
                     >
                       7816
                     </p>
+                    </div>
+                    
                   </div>
                   <p class="b5 border-b border-black border-dotted">6000</p>
                   <p class="b5 border-b border-black border-dotted">4000</p>
                   <p class="b5 border-b border-black border-dotted">2000</p>
+      
                   <p></p>
+                  
                 </div>
               </div>
             </div>
+            <div
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
+              >
+                <p>2022</p>
+                <p>2023</p>
+              </div>
+              <div
+                class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
+                style="pointer-events: none"
+              ></div>
+            </div>
+            
             <div class="flex flex-wrap justify-center py-[10px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
@@ -665,7 +694,11 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center"
             style="transition: opacity 0.5s ease"
           >
-            <div
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวรายเดือน แบ่งตามหมวด
+            </p>
+            <div class="relative">
+              <div
               class="relative flex items-end gap-[1px] justify-center w-[90vw] max-w-[600px]"
             >
               <div
@@ -676,7 +709,7 @@ watchEffect(() => {})
                 class="flex flex-col-reverse cursor-pointer relative"
               >
                 <p
-                  class="text-[#939393] -rotate-90 b6"
+                  class="text-[#939393] -rotate-90 b6 py-[10px]"
                   style="pointer-events: none"
                 >
                   {{ convertToMonthShortTH(item.MonthName) }}
@@ -695,18 +728,35 @@ watchEffect(() => {})
                 ></div>
               </div>
               <div
-                class="z-0 absolute -bottom-0 w-full h-[300px]"
+                class="z-0 absolute bottom-0 w-full h-full"
                 style="pointer-events: none"
               >
                 <div class="flex flex-col justify-between h-full p-[5px]">
-                  <p class="b5 border-b border-black border-dotted">8000</p>
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">8000</p>
+                  </div>
                   <p class="b5 border-b border-black border-dotted">6000</p>
                   <p class="b5 border-b border-black border-dotted">4000</p>
                   <p class="b5 border-b border-black border-dotted">2000</p>
+      
                   <p></p>
+                  
                 </div>
               </div>
             </div>
+            <div
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
+              >
+                <p>2022</p>
+                <p>2023</p>
+              </div>
+              <div
+                class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
+                style="pointer-events: none"
+              ></div>
+            </div>
+            
             <div class="flex flex-wrap justify-center py-[10px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
@@ -721,7 +771,7 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
               จำนวนข่าวการเมืองรายเดือน
             </p>
             <div class="relative">
@@ -758,26 +808,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[300px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
                     <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">6000</p>
+                  <p class="b5 border-b border-black border-dotted">4000</p>
+                  <p class="b5 border-b border-black border-dotted">2000</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -802,7 +858,7 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
               จำนวนข่าวสังคมไทยรายเดือน
             </p>
             <div class="relative">
@@ -821,7 +877,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.สังคมไทย,
-                          300,
+                          findWidthandHeight('section5'),
                           'สังคมไทย'
                         )}px`,
                       }"
@@ -830,26 +886,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -874,8 +936,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวเศรษฐกิจ/การเงินรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -893,7 +955,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.เศรษฐกิจ,
-                          300,
+                          findWidthandHeight('section6'),
                           'เศรษฐกิจ'
                         )}px`,
                       }"
@@ -902,26 +964,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -946,8 +1014,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวต่างประเทศรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -975,7 +1043,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.ต่างประเทศ,
-                          300,
+                          findWidthandHeight('section7'),
                           'ต่างประเทศ'
                         )}px`,
                       }"
@@ -984,26 +1052,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -1028,8 +1102,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวบันเทิงรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -1047,7 +1121,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.บันเทิง,
-                          300,
+                          findWidthandHeight('section8'),
                           'บันเทิง'
                         )}px`,
                       }"
@@ -1056,26 +1130,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -1100,8 +1180,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวอาชญากรรมรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -1124,7 +1204,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.อาชญากรรม,
-                          300,
+                          findWidthandHeight('section9'),
                           'อาชญากรรม'
                         )}px`,
                       }"
@@ -1133,26 +1213,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -1177,8 +1263,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวกีฬารายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -1199,33 +1285,42 @@ watchEffect(() => {})
                           : 'bg-purple opacity-50'
                       "
                       :style="{
-                        height: `${calculateHeight2(item.กีฬา, 300, 'กีฬา')}px`,
+                        height: `${calculateHeight2(
+                          item.กีฬา,
+                          findWidthandHeight('section10'),
+                          'กีฬา'
+                        )}px`,
                       }"
                     ></div>
                     <p
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
-
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -1250,8 +1345,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าววิทยาศาสตร์/เทคโนโลยีรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -1269,7 +1364,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.วิทยาศาสตร์เทคโนโลยี,
-                          300,
+                          findWidthandHeight('section11'),
                           'วิทยาศาสตร์เทคโนโลยี'
                         )}px`,
                       }"
@@ -1278,26 +1373,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -1322,8 +1423,8 @@ watchEffect(() => {})
             class="opacity-0 absolute pointer-events-none"
             style="transition: opacity 0.5s ease"
           >
-            <p class="b4 font-bold text-[#717070] text-center pb-[10px]">
-              จำนวนข่าวสังคมไทยรายเดือน
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              จำนวนข่าวสิ่งแวดล้อมรายเดือน
             </p>
             <div class="relative">
               <div class="relative flex items-end gap-[1px] justify-center">
@@ -1342,7 +1443,7 @@ watchEffect(() => {})
                       :style="{
                         height: `${calculateHeight2(
                           item.สิ่งแวดล้อม,
-                          300,
+                          findWidthandHeight('section12'),
                           'สิ่งแวดล้อม'
                         )}px`,
                       }"
@@ -1351,26 +1452,32 @@ watchEffect(() => {})
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ item.MonthName }}
+                    {{ convertToMonthShortTH(item.MonthName) }}
                     </p>
                   </div>
                 </div>
 
                 <div
-                  class="absolute -bottom-0 w-full h-[250px]"
-                  style="pointer-events: none"
-                >
-                  <div class="flex flex-col justify-between h-full p-[5px]">
-                    <p class="b5 border-b border-black border-dotted">8000</p>
-                    <p class="b5 border-b border-black border-dotted">6000</p>
-                    <p class="b5 border-b border-black border-dotted">4000</p>
-                    <p class="b5 border-b border-black border-dotted">2000</p>
-                    <p></p>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
                 </div>
               </div>
+              </div>
               <div
-                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center py-[10px]"
+                class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
               >
                 <p>2022</p>
                 <p>2023</p>
@@ -2387,13 +2494,15 @@ watchEffect(() => {})
             </select>
           </div>
           <div class="">
-            <div class="grid grid-cols-2  my-[10px]">
+            <div class="grid grid-cols-2 my-[10px]">
               <div class="flex items-center">
                 <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
               </div>
               <div class="flex items-center justify-end">
                 <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
-                <p class="b5" v-if="exploreModeSelected === 'หมวดข่าว'">คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน</p>
+                <p class="b5" v-if="exploreModeSelected === 'หมวดข่าว'">
+                  คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน
+                </p>
                 <p class="b5" v-else>คลิกแต่ละแท่งเพื่อดูจำนวน</p>
               </div>
             </div>
@@ -2525,26 +2634,29 @@ watchEffect(() => {})
                     </div>
                     <div
                       v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                      class="group flex flex-col items-end gap-[1px]"
+                      class="group flex flex-col items-end"
                     >
-                      <div class="w-full cursor-pointer relative flex flex-col-reverse">
+                      <div
+                        class="cursor-pointer relative flex gap-[1px] w-[90vw]"
+                      >
                         <div
-                          v-for="(ct, index) in Object.keys(
-                            dataForKW.categories
-                          )"
-                          class="flex flex-row gap-[1px] items-end w-[90vw]"
+                          v-for="(item, index) in dataForKW.montly"
+                          class="flex flex-col-reverse cursor-pointer relative"
+                          :style="{
+                            width: `${90 / dataForKW.montly.length}%`,
+                          }"
                         >
                           <div
-                            v-for="(item, index) in dataForKW.categories[ct]
-                              .monthly"
+                            v-for="(ct, index) in Object.keys(
+                              dataForKW.categories_total
+                            )"
                             :class="getCategoryColorClass(ct)"
-                            class="w-[20px]"
                             :style="{
                               height: `${calculateHeightPerCategory(
-                                dataForKW.categories[ct].category_total,
-                                item,
-                                300,
-                                57
+                                dataForKW.total,
+                                item[ct],
+                                findWidthandHeight('section12'),
+                                maxOfMonthly
                               )}px`,
                             }"
                           ></div>
@@ -2554,7 +2666,7 @@ watchEffect(() => {})
                             class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
                           >
                             <p class="font-bold flex">
-                              <!-- {{ item.MonthName }} {{ item.Year }} -->
+                              {{ monthShortTH }}
                             </p>
                             <p class="b5">
                               <!-- <span class="b3 font-bold">{{
@@ -2592,34 +2704,33 @@ watchEffect(() => {})
                         class="text-[#939393] -rotate-90 b6"
                         style="pointer-events: none"
                       >
-                        <!-- {{ convertToMonthShortTH(item.MonthName) }} -->
+                        {{ monthShortTH[1] }}
                       </p>
                     </div>
                   </div>
+
                   <div
-                    class="z-0 absolute -top-5 w-full h-full"
-                    style="pointer-events: none"
-                  >
-                    <div class="flex flex-col justify-between h-full">
-                      <p class="b5 border-t border-gray-500 border-dotted">
-                        xxx
-                      </p>
-                      <p class="b5 border-t border-gray-500 border-dotted">
-                        xxx
-                      </p>
-                      <p class="b5 border-t border-gray-500 border-dotted">
-                        xxx
-                      </p>
-                      <p class="b5 border-t border-gray-500 border-dotted">
-                        xxx
-                      </p>
-                      <p></p>
-                    </div>
+                class="z-0 absolute bottom-0 w-full h-full"
+                style="pointer-events: none"
+              >
+                <div class="flex flex-col justify-between h-full p-[5px]">
+         
+                  <div>
+                    <p class="b5 border-b border-black border-dotted">xxx</p>
                   </div>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+                  <p class="b5 border-b border-black border-dotted">xxx</p>
+      
+                  <p></p>
+                  <p></p>
+                  
+                </div>
+              </div>
                 </div>
 
                 <div
-                  class="b5 text-[#939393] grid grid-cols-2 place-items-center py-[5px]"
+                  class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[10 px]"
                 >
                   <p>2022</p>
                   <p>2023</p>
@@ -2682,24 +2793,27 @@ watchEffect(() => {})
                 <div
                   class="flex flex-wrap items-center justify-center gap-[5px] py-[5px]"
                 >
-                  <div v-for="(ct, index) in Object.keys(dataForKW.categories)">
+                  <div
+                    v-for="(ct, index) in Object.keys(
+                      dataForKW.categories_total
+                    )"
+                  >
                     <p :class="getCategoryColorClass(ct)" class="b3 px-2">
                       {{ ct
                       }}<span class="b4">
-                        ({{ dataForKW.categories[ct].category_total }})</span
+                        ({{ dataForKW.categories_total[ct] }})</span
                       >
                     </p>
                   </div>
                 </div>
               </div>
               <p class="b3 py-[5px]">เช่น</p>
-              <div id="sampleNewsCategory"
-              v-if="exploreModeSelected === 'หมวดข่าว'"
+              <div
+                id="sampleNewsCategory"
+                v-if="exploreModeSelected === 'หมวดข่าว'"
                 class="bg-black border-l-[5px] border-red-500 text-white p-[10px] space-y-[5px]"
               >
-                <p class="b4 font-bold">
-                  22 07 2545
-                </p>
+                <p class="b4 font-bold">22 07 2545</p>
                 <!-- <h1
                   class="t4 font-black"
                   v-html="
@@ -2716,13 +2830,25 @@ watchEffect(() => {})
                   }}</a>
                 </p> -->
               </div>
-              <div id="sampleNewsKW"
-              :class="getCategoryBorderColor(dataForKW.sample_headlines[sampleIndex].category)"
-              v-if="dataForKW && dataForKW.sample_headlines && dataForKW.sample_headlines[sampleIndex] && exploreModeSelected === 'คีย์เวิร์ด'"
-                class="bg-black border-l-[5px]  text-white p-[10px] space-y-[5px]"
+              <div
+                id="sampleNewsKW"
+                :class="
+                  getCategoryBorderColor(
+                    dataForKW.sample_headlines[sampleIndex].category
+                  )
+                "
+                v-if="
+                  dataForKW &&
+                  dataForKW.sample_headlines &&
+                  dataForKW.sample_headlines[sampleIndex] &&
+                  exploreModeSelected === 'คีย์เวิร์ด'
+                "
+                class="bg-black border-l-[5px] text-white p-[10px] space-y-[5px]"
               >
                 <p class="b4 font-bold">
-                  {{ formatMonth(dataForKW.sample_headlines[sampleIndex].date) }}
+                  {{
+                    formatMonth(dataForKW.sample_headlines[sampleIndex].date)
+                  }}
                 </p>
                 <h1
                   class="t4 font-black"
@@ -2759,48 +2885,14 @@ watchEffect(() => {})
           <p class="b3 font-bold py-[20px] border-t-2 border-[#C5C4C4]">
             สำรวจประเด็นที่เหลือ
           </p>
-          <NuxtLink to="/">
-            <button>
-              <div
-                class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
-              >
-                <h1 class="t3 font-black">
-                  ..‘พาดหัวข่าว’<br />
-                  มาราธอน..
-                </h1>
-                <h2 class="h5 font-bold">
-                  เห็นตั้งแต่กุมภา เดือนกันยาก็ยังไม่หลุดเทรนด์
-                </h2>
-                <p class="b2">
-                  รวมข่าวที่ได้แอร์ไทม์นาน
-                  <br />ข่าวไหนบ้างที่ครองพื้นที่สื่อหลายเดือน
-                </p>
-                <p
-                  class="text-[#FF006B] b3 flex gap-1 items-center justify-center"
-                >
-                  อ่านต่อ
-                  <img src="/image/ArrowRight.svg" alt="" />
-                </p>
-              </div></button
-          ></NuxtLink>
+          <SectionBtn link="/lifecycle" />
           <NuxtLink
             to="/"
             class="text-[#FF006B] b4 border-b-1 border-[#FF006B] w-fit mx-auto"
           >
             <p class="my-[20px]">กลับไปหน้าแรก</p>
           </NuxtLink>
-          <div class="space-y-2">
-            <p class="b4">แชร์</p>
-            <div class="flex gap-[5px] justify-center">
-              <img src="/image/Facebook.svg" alt="" class="h-[30px]" />
-              <img src="/image/X.svg" alt="" />
-              <img src="/image/Line.svg" alt="" />
-            </div>
-          </div>
-          <div class="flex flex-col justify-center mt-5">
-            <p class="b4">Produced by</p>
-            <img src="/image/PunchUpLogo.svg" alt="" class="h-[40px]" />
-          </div>
+          <Share :hasMsgerLink="false" />
         </div>
       </div>
     </div>
@@ -2808,31 +2900,12 @@ watchEffect(() => {})
 </template>
 
 <style scoped>
-.groupBlock {
-  border-collapse: collapse;
-  width: max-content;
-}
-.not-use {
-  border: 1px solid #c5c4c4 !important;
-  color: #939393 !important;
-}
-.block_categry {
-  border-collapse: collapse;
-  width: 130px;
-  height: 30px;
-  border: 1px solid black;
-  text-align: center;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 option {
   background-color: white;
 }
 
 .stoke {
-  color: var(--black, #000);
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: white;
 }
 </style>
