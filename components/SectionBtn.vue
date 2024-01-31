@@ -8,7 +8,7 @@ defineProps({
   <NuxtLink :to="link">
     <button>
       <div
-        class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px]"
+        class="flex flex-col border-[2px] border-black hover:border-[#FF006B] bg-[#FFF8B5] p-[20px] gap-[5px] max-w-[500px]"
       >
         <h1 class="t3 font-black">
           ..‘พาดหัวข่าว’<br />
