@@ -1,6 +1,7 @@
 <script setup>
 import scrollama from "scrollama"
-
+import { Vue3Lottie } from "vue3-lottie"
+import lottie_1 from "public/lottie/lottie-1.json"
 const headlineRef = ref(null)
 const currentIndex = ref(0)
 const currentText = computed(() => headlineShow[currentIndex.value])
@@ -43,7 +44,7 @@ const filterSampleHeadlineCategory = async (category) => {
         )
       }
     })
-  console.log(filteredSampleHeadlineCategory.value)
+  // console.log(filteredSampleHeadlineCategory.value)
 }
 const fetchSampleHeadlineCategory = async () => {
   const response = await fetch("/data/HeadlinesSample.json")
@@ -130,16 +131,17 @@ const maxOfMonthly = computed(() => {
 })
 const findMaxOfMonthly = () => {
   let dataValues = dataForKW.value.montly
-  console.log(dataValues)
+  // console.log(dataValues)
   let maxValue = Math.max(...dataValues.map((d) => d.total))
   maxOfMonthly.value = maxValue
-  console.log(maxOfMonthly.value)
+  // console.log(maxOfMonthly.value)
 }
 const selectExploreMode = async (mode) => {
   exploreModeSelected.value = mode
   sampleIndex.value = 0
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
     dataForKW.value = await keywords.value[inputKeyword.value]
+    console.log(dataForKW.value?.length)
     console.log(dataForKW.value)
     findMaxOfMonthly()
   }
@@ -469,6 +471,7 @@ const clearInput = () => {
 
 const handleInput = () => {
   showSuggestions.value = true
+  isInputFocused.value = true
 }
 
 const hideSuggestions = () => {
@@ -486,14 +489,20 @@ const searchKeyword = () => {
   showSuggestions.value = false
   handleInputFocus()
 }
+
+const handleTyping = ()=>{
+  isInputFocused.value = true
+}
 const handleSuggestionMouseDown = (selectedValue) => {
   selectSuggestion(selectedValue)
+  searchKeyword()
   showSuggestions.value = false
+  isInputFocused.value = false
 }
 
 const highlightKeyword = (headline, keyword) => {
   if (exploreModeSelected.value === "หมวดข่าว") {
-    console.log(top10Keywords.value)
+    // console.log(top10Keywords.value)
     const keywordsRegex = new RegExp(
       `(${top10Keywords.value
         .map((k) => k.keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"))
@@ -511,6 +520,20 @@ const highlightKeyword = (headline, keyword) => {
     )
   }
 }
+
+const highlightMatchedText =(suggestion)=> {
+    // นับจำนวนตัวอักษรที่ผู้ใช้พิมพ์
+    const typedText = inputKeyword.value.toLowerCase();
+    const suggestionLower = suggestion.toLowerCase();
+    const index = suggestionLower.indexOf(typedText);
+    
+    // หาตัวอักษรที่ตรงกับที่ผู้ใช้พิมพ์และให้มีลักษณะตัวหนา
+    const highlightedText = suggestion.substring(0, index) +
+      '<b>' + suggestion.substring(index, index + typedText.length) + '</b>' +
+      suggestion.substring(index + typedText.length);
+    
+    return highlightedText;
+  }
 
 const sampleIndex = ref(0)
 const handleNewSample = () => {
@@ -545,9 +568,11 @@ onMounted(async () => {
           sections[i].style.opacity = 1
           sections[i+1].style.opacity = 0
         }
-      } else if(currentSection===1){
-        sections[1].style.opacity = 1
-    }
+      }
+    //    else if(i === currentSection-1){
+    //     sections[1].style.opacity = 1
+    //     sections[2].style.opacity = 0
+    // }
   }
   }
   const handleStepEnter = (response) => {
@@ -557,7 +582,7 @@ onMounted(async () => {
   const init = () => {
     scroller
       .setup({
-        step: "#card2, #card3, #card4, #card5, #card6 ,#card7, #card8, #card9, #card10, #card11, #card12",
+        step: "#card1, #card2, #card3, #card4, #card5, #card6 ,#card7, #card8, #card9, #card10, #card11, #card12",
         offset: 0.9,
         debug: false,
       })
@@ -571,10 +596,10 @@ watchEffect(() => {})
 </script>
 
 <template>
-  <div class="bg-[#EBE8DE] max-w-screen-sm">
+  <div class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center">
     <div
       id="refPopup"
-      class="max-w-screen-sm fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
+      class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
       v-show="isShowRefPopup"
     >
       <div
@@ -631,7 +656,7 @@ watchEffect(() => {})
         </div>
       </div>
     </div>
-    <div id="part1" class="pb-[40px] px-[16px] max-w-[850px]">
+    <div id="part1" class="pb-[40px] px-[16px] max-w-[850px] md:max-w-full md:mx-[15vw]">
       <div
         id="cover"
         class="space-y-[10px] text-center mb-[20px] h-screen flex flex-col justify-center"
@@ -643,17 +668,21 @@ watchEffect(() => {})
         </p>
         <p
           @click="showRefPopup"
-          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px] border-[#EBE8DE]"
+          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px] border-[#EBE8DE] cursor-pointer"
         >
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
-        <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
+        <div class="">
+          <Vue3Lottie :animationData="lottie_1" class="max-w-[450px] w-[90vw]" />
+          </div>
+        
+        <!-- <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
           <img src="/image/trends/Watch.svg" alt="" class="w-[100px]" />
           <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
-        </div>
+        </div> -->
       </div>
-      <div id="section" class="h-screen sticky top-0">
-        <div class="flex flex-col items-center h-screen justify-center">
+      <div id="section" class="h-screen sticky top-0 overflow-hidden">
+        <div class="flex flex-col items-center lg:items-start h-screen justify-center">
           <div
             id="section1"
             style="opacity: 1; transition: opacity 0.5s ease"
@@ -661,7 +690,7 @@ watchEffect(() => {})
           >
             <div
               ref="headlineRef"
-              class="relative bg-black p-[10px] w-[90vw] h-3/4 max-w-[600px]"
+              class="relative bg-black p-[10px] w-[90vw]  max-w-[600px]"
             >
               <p class="cream t2">
                 {{ currentText }}
@@ -671,18 +700,18 @@ watchEffect(() => {})
           <div
             id="section2"
             style="transition: opacity 0.5s ease"
-            class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center"
+            class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center lg:justify-start lg:items-start"
           >
-            <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+            <p class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto">
               จำนวนข่าวรายเดือน
             </p>
-            <div class="relative">
+            <div class="relative ">
               <div
-                class="relative flex items-end gap-[1px] justify-center w-[90vw] max-w-[600px]"
+                class="relative flex items-end gap-[1px] justify-center w-[90vw] lg:max-w-[700px]"
               >
                 <div
                   v-for="(item, index) in data"
-                  class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center"
+                  class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center "
                   :style="{
                     width: `${90 / data.length}%`,
                   }"
@@ -745,7 +774,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center py-[10px]">
+            <div class="flex flex-wrap justify-center py-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -820,7 +849,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center py-[10px]">
+            <div class="flex flex-wrap justify-center py-[10px]  lg:max-w-[600px]" >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -838,7 +867,7 @@ watchEffect(() => {})
               จำนวนข่าวการเมืองรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div
                   class="flex items-end gap-[1px] w-[90vw] justify-center pointer-events-none"
                 >
@@ -905,7 +934,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -923,7 +952,7 @@ watchEffect(() => {})
               จำนวนข่าวสังคมไทยรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -981,7 +1010,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -999,7 +1028,7 @@ watchEffect(() => {})
               จำนวนข่าวเศรษฐกิจ/การเงินรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1057,7 +1086,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1075,7 +1104,7 @@ watchEffect(() => {})
               จำนวนข่าวต่างประเทศรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1143,7 +1172,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1161,7 +1190,7 @@ watchEffect(() => {})
               จำนวนข่าวบันเทิงรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1219,7 +1248,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1237,7 +1266,7 @@ watchEffect(() => {})
               จำนวนข่าวอาชญากรรมรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1300,7 +1329,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1318,7 +1347,7 @@ watchEffect(() => {})
               จำนวนข่าวกีฬารายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1380,7 +1409,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1398,7 +1427,7 @@ watchEffect(() => {})
               จำนวนข่าววิทยาศาสตร์/เทคโนโลยีรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1456,7 +1485,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1474,7 +1503,7 @@ watchEffect(() => {})
               จำนวนข่าวสิ่งแวดล้อมรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center">
+              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1533,7 +1562,7 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]">
+            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1544,12 +1573,12 @@ watchEffect(() => {})
           </div>
         </div>
       </div>
-      <div id="card" class="relative z-10">
+      <div id="card" class="relative z-10  flex flex-col">
         <div
           id="card1"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] lg:w-2/5 w-full text-center mx-[16px]">
             <p class="b3">
               ในช่วง 2 ปีที่ผ่านมา<br />
               สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
@@ -1563,9 +1592,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card2"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="b3 bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="b3 bg-white p-[20px] lg:w-2/5 w-full text-center mx-[16px]">
             <p class=" ">
               <span class="text-[#FF006B] font-bold">
                 โดยเฉลี่ยแล้ว <br />
@@ -1586,9 +1615,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card3"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <p class="b3 leading-[1000px]">
               เมื่อเจาะดูเป็นรายหมวดพบว่า คนไทยมีโอกาสเห็นพาดหัวข่าว
               <span class="bg-vermillion font-bold my-2">การเมือง</span> และ
@@ -1628,9 +1657,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card4"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div>
                 <p class="b1 font-bold">ข่าวการเมือง</p>
@@ -1699,9 +1728,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card5"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวสังคมไทย</p>
@@ -1853,9 +1882,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card6"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
@@ -1922,9 +1951,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card7"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวต่างประเทศ</p>
@@ -1990,9 +2019,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card8"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวบันเทิง</p>
@@ -2105,9 +2134,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card9"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวอาชญากรรม</p>
@@ -2254,9 +2283,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card10"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวกีฬา</p>
@@ -2298,9 +2327,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card11"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
@@ -2350,9 +2379,9 @@ watchEffect(() => {})
         </div>
         <div
           id="card12"
-          class="flex items-center justify-center top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full text-center mx-[16px]">
+          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
@@ -2476,6 +2505,8 @@ watchEffect(() => {})
                   id="exploreKeyword"
                   @focus="showTheSuggestion"
                   @blur="hideSuggestions"
+                  @keydown.enter="searchKeyword"
+                  @keydown.down="handleTyping"
                   v-model="inputKeyword"
                   @input="handleInput"
                   class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]"
@@ -2498,7 +2529,7 @@ watchEffect(() => {})
               </div>
             </div>
             <ul
-              v-if="showSuggestions"
+              v-if="showSuggestions && filteredSuggestions.length > 0"
               class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0"
             >
               <li
@@ -2507,7 +2538,7 @@ watchEffect(() => {})
                 @mousedown="handleSuggestionMouseDown(suggestion)"
                 class="cursor-pointer"
               >
-                {{ suggestion }}
+              <span v-html="highlightMatchedText(suggestion)"></span>
               </li>
             </ul>
           </div>
@@ -2535,7 +2566,7 @@ watchEffect(() => {})
               <option value="สิ่งแวดล้อม">สิ่งแวดล้อม</option>
             </select>
           </div>
-          <div class="">
+          <div class="" v-if="exploreModeSelected==='คีย์เวิร์ด'&& dataForKW || exploreModeSelected==='หมวดข่าว'">
             <div class="grid grid-cols-2 my-[10px]">
               <div class="flex items-center">
                 <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
@@ -2683,22 +2714,17 @@ watchEffect(() => {})
                       >
                         <div
                           v-for="(item, itemIndex) in dataForKW.montly"
-                          class="group flex flex-col-reverse cursor-pointer relative"
+                          class=" flex flex-col cursor-pointer relative justify-end"
                           :style="{
                             width: `${90 / dataForKW.montly.length}%`,
                           }"
                         >
-                          <p
-                            class="text-[#939393] -rotate-90 b6 py-[10px]"
-                            style="pointer-events: none"
-                          >
-                            {{ monthShortTH[item.month - 1] }}
-                          </p>
+                        
                           <div
-                            class=""
+                            class="group relative"
                             v-for="(ct, ctNo) in Object.keys(
                               dataForKW.categories_total
-                            )"
+                            ).reverse()"
                             :class="getCategoryColorClass(ct)"
                             :style="{
                               height: `${calculateHeightPerCategory2(
@@ -2744,6 +2770,12 @@ watchEffect(() => {})
                               </div>
                             </div>
                           </div>
+                          <p
+                            class="text-[#939393] -rotate-90 b6 py-[10px]"
+                            style="pointer-events: none"
+                          >
+                            {{ monthShortTH[item.month - 1] }}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -2795,8 +2827,6 @@ watchEffect(() => {})
                     <img src="/image/trends/PreviousBtn.svg" alt="" />
                   </button>
                   <p class="b3 font-bold">
-                    <!-- {{ exploreData[categoryIndex+1]?.MonthName }}
-                    {{ exploreData[categoryIndex+1]?.Year }} -->
                     {{ fullMonthAndYear }}
                   </p>
                   <button
@@ -2810,14 +2840,14 @@ watchEffect(() => {})
                   มีข่าว{{ categorySelected }}ทั้งหมด
                   <span class="font-bold" v-if="exploreData"
                     >{{
-                      exploreData[exploreData?.length - 1][categorySelected]
+                      parseInt(exploreData[exploreData?.length - 1][categorySelected]).toLocaleString()
                     }}
                     พาดหัวข่าว</span
                   >
                   และมักพบ 10 คำ*เหล่านี้อยู่บ่อยๆ
                 </p>
                 <div
-                  class="grid grid-cols-2 gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center"
+                  class="grid grid-cols-2 lg:flex lg:flex-wrap lg:justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center"
                 >
                   <div
                     v-for="(kw, index) in top10Keywords"
@@ -2869,7 +2899,7 @@ watchEffect(() => {})
                     filteredSampleHeadlineCategory[sampleIndex].news_category
                   )
                 "
-                class="bg-black border-l-[5px] text-white p-[10px] space-y-[5px]"
+                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]"
               >
                 <p class="b4 font-bold">
                   {{
@@ -2907,7 +2937,7 @@ watchEffect(() => {})
                   dataForKW.sample_headlines[sampleIndex] &&
                   exploreModeSelected === 'คีย์เวิร์ด'
                 "
-                class="bg-black border-l-[5px] text-white p-[10px] space-y-[5px]"
+                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px]  w-[288px] lg:w-[400px]"
               >
                 <p class="b4 font-bold">
                   {{
@@ -2943,6 +2973,8 @@ watchEffect(() => {})
               </p>
             </div>
           </div>
+          <div class="h-[90vh]" v-else
+          > <p class="b3 text-center p-[25px] h-3/4">ไม่พบพาดหัวข่าวที่มีคีย์เวิร์ดที่คุณค้นหา ลองเปลี่ยนคำใหม่ดู</p></div>
         </div>
         <p
           @click="showRefPopup"

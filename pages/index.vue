@@ -148,11 +148,11 @@ onMounted(() => {
 
 <template>
   <div
-    class="max-w-screen-sm lg:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
+    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
   >
     <div
       id="refPopup"
-      class="max-w-screen-sm fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
+      class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
       v-show="isShowRefPopup"
     >
       <div
@@ -192,7 +192,8 @@ onMounted(() => {
             จึงทำให้เทรนด์ที่พบในงานนี้ได้รับอิทธิพลจากสำนักข่าวที่มีจำนวนข่าวเยอะเป็นพิเศษ
           </p>
           <div class="flex flex-col items-center">
-            <img src="/image/NewsAgency.svg" alt="" />
+            <img src="/image/NewsAgency.svg" alt="" class="block lg:hidden"/>
+            <img src="/image/NewsAgencyDesktop.svg" alt="" class="hidden lg:block"/>
             <div class="flex gap-[5px] py-5 content-center">
               <div>
                 <ol class="b4 font-bold list-decimal text-start">
@@ -256,7 +257,7 @@ onMounted(() => {
               </div>
             </div>
             <div
-              class="flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4"
+              class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4"
             >
               <div class="flex flex-col items-center">
                 <img src="/image/Thairath.svg" alt="" />
@@ -293,12 +294,6 @@ onMounted(() => {
                     class="not-use border-b-[1px] !border-[#C5C4C4]"
                   >
                     พระราชสำนัก
-                  </div>
-                  <div
-                    class="flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
-                  >
-                    <img src="/image/SlideIcon.svg" alt="" />
-                    <p>เลื่อน</p>
                   </div>
                 </div>
               </div>
@@ -436,6 +431,12 @@ onMounted(() => {
                   </div>
                 </div>
               </div>
+              <div
+                    class="absolute bottom-10 lg:left-1/2 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
+                  >
+                    <img src="/image/SlideIcon.svg" alt="" />
+                    <p>เลื่อน</p>
+                  </div>
             </div>
           </div>
         </div>
@@ -502,7 +503,7 @@ onMounted(() => {
                     : 'bg-[#FF3D00]'
                   : 'bg-[#FFF8B5]'
               "
-              class="absolute -top-6 -left-2 b4 text-black border rounded-full w-[20px] h-[20px] text-center border-black"
+              class="absolute -top-6 -left-2 b4 md:-left-4 md:-top-7 text-black border rounded-full w-[20px] h-[20px] md:w-[30px] md:h-[30px] text-center border-black flex items-center justify-center"
             >
               {{ element.no }}
             </div>
@@ -539,7 +540,7 @@ onMounted(() => {
     </div>
     <div id="intro" class="text-center" v-show="isShowContent">
       <div id="cover">
-        <div class="hidden md:block">
+        <div class="hidden lg:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
             <div
               class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
@@ -615,14 +616,82 @@ onMounted(() => {
             </div>
           </div>
         </div>
-
-        <img src="/image/Head.svg" alt="" class="w-full md:hidden block" />
+        <!-- <div class="w-full lg:hidden block h-[100vh]">
+          <div class="flex flex-col p-[20px]">
+            <div
+              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
+            >
+              ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?
+            </div>
+            <div>
+              <div class="grid grid-cols-2">
+                <div>
+                  <img src="/image/DotBgMobile.svg" alt="" class="h-full w-full" />
+                </div>
+           
+                  <div
+                    class="h5 text-pretty bg-[#FFF8B5] font-bold  flex items-center justify-center border-black border"
+                  >
+                    ย้อนดูเทรนด์ข่าวออนไลน์ไทย ช่วงปี
+                  </div>
+              </div>
+              <div class="grid grid-cols-9 bg-white t3 font-black">
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  0
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  -
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  0
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  2
+                </div>
+                <div
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
+                  3
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <img src="/image/Head.svg" alt="" class="w-full lg:hidden block" />
       </div>
 
-      <div class="px-[16px] py-[40px] text-pretty space-y-[20px]">
+      <div class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto">
         <div class="b3 space-y-[10px]">
           <div class="flex flex-col items-center justify-center gap-[5px]">
-            <p class="bg-vermillion w-fit text-white">BREAKING NEWS:</p>
+            <p class="bg-vermillion w-fit text-white px-[10px]">BREAKING NEWS:</p>
             <p class="b1 font-bold">
               เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
             </p>
@@ -696,10 +765,10 @@ onMounted(() => {
           />
         </div>
 
-        <p class="b3 font-bold">
-          หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา <br />‘พาดหัวข่าว’ ที่คุณสนใจ
+        <p class="b3 font-bold px-[20px]">
+          หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา ‘พาดหัวข่าว’ ที่คุณสนใจ
         </p>
-        <div class="flex flex-col gap-[20px]">
+        <div class="flex flex-col lg:flex-row gap-[20px]">
           <SectionBtn link="/trends" />
           <SectionBtn link="/lifecycle" />
         </div>
