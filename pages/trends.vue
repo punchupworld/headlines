@@ -4,7 +4,20 @@ import { Vue3Lottie } from "vue3-lottie"
 import lottie_1 from "public/lottie/lottie-1.json"
 const headlineRef = ref(null)
 const currentIndex = ref(0)
-const currentText = computed(() => headlineShow[currentIndex.value])
+const headlineShow = [
+  'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888"',
+  'เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ "โควิด-19" และ "เศรษฐกิจ"',
+  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
+  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
+  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
+  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
+  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
+  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
+  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
+]
+
+const currentText = ref(headlineShow[currentIndex.value])
+// const currentText = computed(() => headlineShow[currentIndex.value])
 const exploreModeSelected = ref("หมวดข่าว")
 const isShowRefPopup = ref(false)
 const categoryIndex = ref(0)
@@ -53,21 +66,15 @@ const fetchSampleHeadlineCategory = async () => {
   await filterSampleHeadlineCategory(categorySelected.value)
 }
 
-const headlineShow = [
-  'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888"',
-  'เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ "โควิด-19" และ "เศรษฐกิจ"',
-  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-]
-
 const showRefPopup = () => {
   isShowRefPopup.value = !isShowRefPopup.value
 }
 
-const startLoop = () => {
-  setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % headlineShow.length
-  }, 1000)
-}
+// const startLoop = () => {
+//       setInterval(() => {
+//         currentIndex.value = (currentIndex.value + 1) % headlineShow.length;
+//       }, 1000);
+//     };
 
 const formatMonth = (inputDate) => {
   const months = [
@@ -192,7 +199,7 @@ const getCategoryBorderColor = (category) => {
       return "border-[#9BB95A]"
   }
 }
-const calculateHeight = (count, maxHeigh, mode, max) => {
+const calculateHeight1 = (count, maxHeigh, mode, max) => {
   if (mode) {
     const scalePercent =
       (count * 100) /
@@ -490,7 +497,7 @@ const searchKeyword = () => {
   handleInputFocus()
 }
 
-const handleTyping = ()=>{
+const handleTyping = () => {
   isInputFocused.value = true
 }
 const handleSuggestionMouseDown = (selectedValue) => {
@@ -521,19 +528,22 @@ const highlightKeyword = (headline, keyword) => {
   }
 }
 
-const highlightMatchedText =(suggestion)=> {
-    // นับจำนวนตัวอักษรที่ผู้ใช้พิมพ์
-    const typedText = inputKeyword.value.toLowerCase();
-    const suggestionLower = suggestion.toLowerCase();
-    const index = suggestionLower.indexOf(typedText);
-    
-    // หาตัวอักษรที่ตรงกับที่ผู้ใช้พิมพ์และให้มีลักษณะตัวหนา
-    const highlightedText = suggestion.substring(0, index) +
-      '<b>' + suggestion.substring(index, index + typedText.length) + '</b>' +
-      suggestion.substring(index + typedText.length);
-    
-    return highlightedText;
-  }
+const highlightMatchedText = (suggestion) => {
+  // นับจำนวนตัวอักษรที่ผู้ใช้พิมพ์
+  const typedText = inputKeyword.value.toLowerCase()
+  const suggestionLower = suggestion.toLowerCase()
+  const index = suggestionLower.indexOf(typedText)
+
+  // หาตัวอักษรที่ตรงกับที่ผู้ใช้พิมพ์และให้มีลักษณะตัวหนา
+  const highlightedText =
+    suggestion.substring(0, index) +
+    "<b>" +
+    suggestion.substring(index, index + typedText.length) +
+    "</b>" +
+    suggestion.substring(index + typedText.length)
+
+  return highlightedText
+}
 
 const sampleIndex = ref(0)
 const handleNewSample = () => {
@@ -542,9 +552,14 @@ const handleNewSample = () => {
   }
   sampleIndex.value += 1
 }
-
+watchEffect(() => {
+  setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % headlineShow.length
+    currentText.value = headlineShow[currentIndex.value]
+  }, 1000)
+})
 onMounted(async () => {
-  startLoop()
+  // startLoop()
   await fetchData()
   await fetchExploreData10Keyword()
   await filterCategoryKeyword(categorySelected.value)
@@ -557,23 +572,23 @@ onMounted(async () => {
     )
 
     for (let i = 0; i < sections.length; i++) {
-      if (i === currentSection-1) {
-        if(direction==='down'){
+      if (i === currentSection - 1) {
+        if (direction === "down") {
           sections[i].style.opacity = 1
-          sections[i-1].style.opacity = 0
-        }else if(direction==='up'){
+          sections[i - 1].style.opacity = 0
+        } else if (direction === "up") {
           sections[i].style.opacity = 1
-          sections[i+1].style.opacity = 0
-        }else{
+          sections[i + 1].style.opacity = 0
+        } else {
           sections[i].style.opacity = 1
-          sections[i+1].style.opacity = 0
+          sections[i + 1].style.opacity = 0
         }
       }
-    //    else if(i === currentSection-1){
-    //     sections[1].style.opacity = 1
-    //     sections[2].style.opacity = 0
-    // }
-  }
+      //    else if(i === currentSection-1){
+      //     sections[1].style.opacity = 1
+      //     sections[2].style.opacity = 0
+      // }
+    }
   }
   const handleStepEnter = (response) => {
     const currentSection = parseInt(response.element.id.replace("card", ""), 10)
@@ -591,12 +606,12 @@ onMounted(async () => {
   }
   init()
 })
-
-watchEffect(() => {})
 </script>
 
 <template>
-  <div class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center">
+  <div
+    class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center"
+  >
     <div
       id="refPopup"
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
@@ -656,7 +671,10 @@ watchEffect(() => {})
         </div>
       </div>
     </div>
-    <div id="part1" class="pb-[40px] px-[16px] max-w-[850px] md:max-w-full md:mx-[15vw]">
+    <div
+      id="part1"
+      class="pb-[40px] px-[16px] max-w-[850px] md:max-w-full md:mx-[15vw]"
+    >
       <div
         id="cover"
         class="space-y-[10px] text-center mb-[20px] h-screen flex flex-col justify-center"
@@ -673,16 +691,21 @@ watchEffect(() => {})
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="">
-          <Vue3Lottie :animationData="lottie_1" class="max-w-[450px] w-[90vw]" />
-          </div>
-        
+          <Vue3Lottie
+            :animationData="lottie_1"
+            class="max-w-[450px] w-[90vw]"
+          />
+        </div>
+
         <!-- <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
           <img src="/image/trends/Watch.svg" alt="" class="w-[100px]" />
           <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
         </div> -->
       </div>
       <div id="section" class="h-screen sticky top-0 overflow-hidden">
-        <div class="flex flex-col items-center lg:items-start h-screen justify-center">
+        <div
+          class="flex flex-col items-center lg:items-start h-screen justify-center"
+        >
           <div
             id="section1"
             style="opacity: 1; transition: opacity 0.5s ease"
@@ -690,7 +713,7 @@ watchEffect(() => {})
           >
             <div
               ref="headlineRef"
-              class="relative bg-black p-[10px] w-[90vw]  max-w-[600px]"
+              class="relative bg-black p-[10px] w-[90vw] max-w-[600px] lg:pr-[60px] lg:h-[450px] flex items-center"
             >
               <p class="cream t2">
                 {{ currentText }}
@@ -702,16 +725,18 @@ watchEffect(() => {})
             style="transition: opacity 0.5s ease"
             class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center lg:justify-start lg:items-start"
           >
-            <p class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto">
+            <p
+              class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto"
+            >
               จำนวนข่าวรายเดือน
             </p>
-            <div class="relative ">
+            <div class="relative">
               <div
-                class="relative flex items-end gap-[1px] justify-center w-[90vw] lg:max-w-[700px]"
+                class="relative flex items-end gap-[1px] justify-center w-[90vw] lg:max-w-[600px]"
               >
                 <div
                   v-for="(item, index) in data"
-                  class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center "
+                  class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center"
                   :style="{
                     width: `${90 / data.length}%`,
                   }"
@@ -774,7 +799,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center py-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center py-[10px] lg:max-w-[600px] mx-auto"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -849,7 +876,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center py-[10px]  lg:max-w-[600px]" >
+            <div
+              class="flex flex-wrap justify-center py-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -867,7 +896,9 @@ watchEffect(() => {})
               จำนวนข่าวการเมืองรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div
                   class="flex items-end gap-[1px] w-[90vw] justify-center pointer-events-none"
                 >
@@ -934,7 +965,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -952,7 +985,9 @@ watchEffect(() => {})
               จำนวนข่าวสังคมไทยรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1010,7 +1045,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1028,7 +1065,9 @@ watchEffect(() => {})
               จำนวนข่าวเศรษฐกิจ/การเงินรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1086,7 +1125,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1104,7 +1145,9 @@ watchEffect(() => {})
               จำนวนข่าวต่างประเทศรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1172,7 +1215,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1190,7 +1235,9 @@ watchEffect(() => {})
               จำนวนข่าวบันเทิงรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1248,7 +1295,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1266,7 +1315,9 @@ watchEffect(() => {})
               จำนวนข่าวอาชญากรรมรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1329,7 +1380,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1347,7 +1400,9 @@ watchEffect(() => {})
               จำนวนข่าวกีฬารายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1409,7 +1464,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1427,7 +1484,9 @@ watchEffect(() => {})
               จำนวนข่าววิทยาศาสตร์/เทคโนโลยีรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1485,7 +1544,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1503,7 +1564,9 @@ watchEffect(() => {})
               จำนวนข่าวสิ่งแวดล้อมรายเดือน
             </p>
             <div class="relative">
-              <div class="relative flex items-end gap-[1px] justify-center  lg:max-w-[600px]">
+              <div
+                class="relative flex items-end gap-[1px] justify-center lg:max-w-[600px]"
+              >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
                     v-for="(item, index) in data"
@@ -1562,7 +1625,9 @@ watchEffect(() => {})
               ></div>
             </div>
 
-            <div class="flex flex-wrap justify-center pt-[10px]  lg:max-w-[600px]">
+            <div
+              class="flex flex-wrap justify-center pt-[10px] lg:max-w-[600px]"
+            >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
                   <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1573,12 +1638,14 @@ watchEffect(() => {})
           </div>
         </div>
       </div>
-      <div id="card" class="relative z-10  flex flex-col">
+      <div id="card" class="relative z-10 flex flex-col">
         <div
           id="card1"
           class="flex items-center justify-center lg:items-end lg:justify-end w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] lg:w-2/5 w-full text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
+          >
             <p class="b3">
               ในช่วง 2 ปีที่ผ่านมา<br />
               สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
@@ -1594,7 +1661,9 @@ watchEffect(() => {})
           id="card2"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="b3 bg-white p-[20px] lg:w-2/5 w-full text-center mx-[16px]">
+          <div
+            class="b3 bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
+          >
             <p class=" ">
               <span class="text-[#FF006B] font-bold">
                 โดยเฉลี่ยแล้ว <br />
@@ -1617,7 +1686,9 @@ watchEffect(() => {})
           id="card3"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <p class="b3 leading-[1000px]">
               เมื่อเจาะดูเป็นรายหมวดพบว่า คนไทยมีโอกาสเห็นพาดหัวข่าว
               <span class="bg-vermillion font-bold my-2">การเมือง</span> และ
@@ -1659,7 +1730,9 @@ watchEffect(() => {})
           id="card4"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div>
                 <p class="b1 font-bold">ข่าวการเมือง</p>
@@ -1699,27 +1772,27 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                   <span class="font-bold">นายกฯ</span>(7,884)
+                    <span class="font-bold">นายกฯ</span>(7,884)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">เลือกตั้ง2566</span>(6,521)
+                    <span class="font-bold">เลือกตั้ง2566</span>(6,521)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ประยุทธ์</span>(3,539)
+                    <span class="font-bold">ประยุทธ์</span>(3,539)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">รัฐบาล</span>(4,681)
+                    <span class="font-bold">รัฐบาล</span>(4,681)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">เพื่อไทย</span>(4,617)
+                    <span class="font-bold">เพื่อไทย</span>(4,617)
                   </div>
                 </div>
               </div>
@@ -1730,7 +1803,9 @@ watchEffect(() => {})
           id="card5"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวสังคมไทย</p>
@@ -1757,27 +1832,28 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">สงกรานต์</span>(478)
-                  </div>
-                 <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
-                  <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
-                  </div><div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
-                  <span class="font-bold"> ลอยกระทง</span>(148)
+                    <span class="font-bold">สงกรานต์</span>(478)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> APEC</span>(105)
+                    <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
                   </div>
-                  
-                   <div
+                  <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
+                    <span class="font-bold"> ลอยกระทง</span>(148)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                  >
+                    <span class="font-bold"> APEC</span>(105)
+                  </div>
+
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                  >
+                    <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
                   </div>
                 </div>
               </div>
@@ -1789,17 +1865,17 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> น้ำท่วม</span>(1,153)
+                    <span class="font-bold"> น้ำท่วม</span>(1,153)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ฝุ่น PM2.5</span>(505)
+                    <span class="font-bold">ฝุ่น PM2.5</span>(505)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
+                    <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
                   </div>
                 </div>
               </div>
@@ -1811,17 +1887,17 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> โควิด-19</span>(2,703)
+                    <span class="font-bold"> โควิด-19</span>(2,703)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">โอมิครอน</span>(301)
+                    <span class="font-bold">โอมิครอน</span>(301)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ฝีดาษลิง</span>(254)
+                    <span class="font-bold">ฝีดาษลิง</span>(254)
                   </div>
                 </div>
               </div>
@@ -1830,30 +1906,30 @@ watchEffect(() => {})
                 <div
                   class="b4 flex flex-wrap items-center justify-center gap-[5px]"
                 >
-                  
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ชัชชาติ</span>(912)
+                    <span class="font-bold">ชัชชาติ</span>(912)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> พิธา</span>(177)
+                    <span class="font-bold"> พิธา</span>(177)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> ทักษิณ</span>(146)
-                  </div><div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
-                  <span class="font-bold"> แตงโมนิดา</span>(104)
+                    <span class="font-bold"> ทักษิณ</span>(146)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> กำนันนก</span>(54)
+                    <span class="font-bold"> แตงโมนิดา</span>(104)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                  >
+                    <span class="font-bold"> กำนันนก</span>(54)
                   </div>
                 </div>
               </div>
@@ -1868,12 +1944,12 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">สาว</span>(2,283)
+                    <span class="font-bold">สาว</span>(2,283)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">หนุ่ม</span>(1,736)
+                    <span class="font-bold">หนุ่ม</span>(1,736)
                   </div>
                 </div>
               </div>
@@ -1884,7 +1960,9 @@ watchEffect(() => {})
           id="card6"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
@@ -1922,27 +2000,27 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">หุ้น</span>(4,024)
+                    <span class="font-bold">หุ้น</span>(4,024)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> จีน</span>(1,555)
+                    <span class="font-bold"> จีน</span>(1,555)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ดอกเบี้ย</span>(1,296)
+                    <span class="font-bold">ดอกเบี้ย</span>(1,296)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">กำไร</span>(1,067)
+                    <span class="font-bold">กำไร</span>(1,067)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">สหรัฐ</span>(976)
+                    <span class="font-bold">สหรัฐ</span>(976)
                   </div>
                 </div>
               </div>
@@ -1953,7 +2031,9 @@ watchEffect(() => {})
           id="card7"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวต่างประเทศ</p>
@@ -2021,7 +2101,9 @@ watchEffect(() => {})
           id="card8"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวบันเทิง</p>
@@ -2052,22 +2134,22 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">แตงโม-นิดา</span>(199)
+                    <span class="font-bold">แตงโม-นิดา</span>(199)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">อิงฟ้า</span>(180)
+                    <span class="font-bold">อิงฟ้า</span>(180)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ดิว-อริสรา</span>(97)
+                    <span class="font-bold">ดิว-อริสรา</span>(97)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
+                    <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
                   </div>
                 </div>
               </div>
@@ -2078,54 +2160,55 @@ watchEffect(() => {})
                 </p>
                 <div
                   class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]"
-                ><div
+                >
+                  <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">รัก</span>(1,347)
+                    <span class="font-bold">รัก</span>(1,347)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">โพสต์</span>(978)
+                    <span class="font-bold">โพสต์</span>(978)
                   </div>
-                  
+
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">แซ่บ</span>(646)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
-                  <span class="font-bold">โชว์</span>(517)
-                  </div><div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
-                  <span class="font-bold">สวย</span>(512)
+                    <span class="font-bold">แซ่บ</span>(646)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">อวด</span>(440)
+                    <span class="font-bold">โชว์</span>(517)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">เลิก</span>(437)
+                    <span class="font-bold">สวย</span>(512)
                   </div>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ดราม่า</span>(423)
+                    <span class="font-bold">อวด</span>(440)
                   </div>
-                  
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                  >
+                    <span class="font-bold">เลิก</span>(437)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                  >
+                    <span class="font-bold">ดราม่า</span>(423)
+                  </div>
                 </div>
                 <div class="flex flex-col items-center">
                   <p class="b3 pb-[10px]">หรือแม้แต่</p>
                   <div
                     class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">ติดโควิด</span>(148)
+                    <span class="font-bold">ติดโควิด</span>(148)
                   </div>
                 </div>
               </div>
@@ -2136,7 +2219,9 @@ watchEffect(() => {})
           id="card9"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวอาชญากรรม</p>
@@ -2273,8 +2358,12 @@ watchEffect(() => {})
 
                 <div class="">
                   <p class="b3 pb-[10px]">
-                    ข่าวอาชญากรรมมักหลีกหนีไม่พ้นตัวละคร<span class="font-bold">ตำรวจ</span>ที่ต้องทำ<span class="font-bold">คดี</span>เมื่อมีคน<span class="font-bold">ยิง</span>กัน เพราะ 3
-                    คำนี้โผล่ให้เห็นใน Top 10 คีย์เวิร์ดของทุกเดือน
+                    ข่าวอาชญากรรมมักหลีกหนีไม่พ้นตัวละคร<span class="font-bold"
+                      >ตำรวจ</span
+                    >ที่ต้องทำ<span class="font-bold">คดี</span>เมื่อมีคน<span
+                      class="font-bold"
+                      >ยิง</span
+                    >กัน เพราะ 3 คำนี้โผล่ให้เห็นใน Top 10 คีย์เวิร์ดของทุกเดือน
                   </p>
                 </div>
               </div>
@@ -2285,7 +2374,9 @@ watchEffect(() => {})
           id="card10"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวกีฬา</p>
@@ -2329,7 +2420,9 @@ watchEffect(() => {})
           id="card11"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
@@ -2351,25 +2444,25 @@ watchEffect(() => {})
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold"> อีลอน มัสก์ </span>(288)
+                    <span class="font-bold"> อีลอน มัสก์ </span>(288)
                   </div>
                   <p class="b3 font-bold">แพลตฟอร์ม</p>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">Twitter/X</span>(459)
+                    <span class="font-bold">Twitter/X</span>(459)
                   </div>
                   <p class="b3 font-bold">สมาร์ตโฟน</p>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">iPhone15</span> (63)
+                    <span class="font-bold">iPhone15</span> (63)
                   </div>
                   <p class="b3 font-bold">ประเทศ</p>
                   <div
                     class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                   >
-                  <span class="font-bold">รัสเซีย</span>(75)
+                    <span class="font-bold">รัสเซีย</span>(75)
                   </div>
                 </div>
                 <div class="b4 flex flex-col items-start gap-[5px]"></div>
@@ -2381,7 +2474,9 @@ watchEffect(() => {})
           id="card12"
           class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
-          <div class="bg-white p-[20px] w-full lg:w-2/5 text-center mx-[16px]">
+          <div
+            class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
+          >
             <div>
               <div class="border-b border-[#C5C4C4] pb-[10px]">
                 <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
@@ -2403,38 +2498,39 @@ watchEffect(() => {})
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">น้ำท่วม</span>(256)
+                  <span class="font-bold">น้ำท่วม</span>(256)
                 </div>
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">ฝนตกหนัก</span>(196)
+                  <span class="font-bold">ฝนตกหนัก</span>(196)
                 </div>
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">ฝุ่น PM2.5</span>(94)
+                  <span class="font-bold">ฝุ่น PM2.5</span>(94)
                 </div>
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">น้ำป่า</span>(66)
+                  <span class="font-bold">น้ำป่า</span>(66)
                 </div>
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">ฝนถล่ม</span>(34)
-                </div><div
-                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                >
-                <span class="font-bold">คราบน้ำมัน</span>(34)
+                  <span class="font-bold">ฝนถล่ม</span>(34)
                 </div>
                 <div
                   class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
                 >
-                <span class="font-bold">มลพิษ</span>(33)
+                  <span class="font-bold">คราบน้ำมัน</span>(34)
                 </div>
-                
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
+                >
+                  <span class="font-bold">มลพิษ</span>(33)
+                </div>
+
                 <div class="b4 flex flex-col items-start gap-[5px]"></div>
               </div>
               <div class="b3 pt-[10px] space-y-[10px]">
@@ -2538,7 +2634,7 @@ watchEffect(() => {})
                 @mousedown="handleSuggestionMouseDown(suggestion)"
                 class="cursor-pointer"
               >
-              <span v-html="highlightMatchedText(suggestion)"></span>
+                <span v-html="highlightMatchedText(suggestion)"></span>
               </li>
             </ul>
           </div>
@@ -2566,7 +2662,13 @@ watchEffect(() => {})
               <option value="สิ่งแวดล้อม">สิ่งแวดล้อม</option>
             </select>
           </div>
-          <div class="" v-if="exploreModeSelected==='คีย์เวิร์ด'&& dataForKW || exploreModeSelected==='หมวดข่าว'">
+          <div
+            class=""
+            v-if="
+              (exploreModeSelected === 'คีย์เวิร์ด' && dataForKW) ||
+              exploreModeSelected === 'หมวดข่าว'
+            "
+          >
             <div class="grid grid-cols-2 my-[10px]">
               <div class="flex items-center">
                 <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
@@ -2582,7 +2684,9 @@ watchEffect(() => {})
             <div class="relative">
               <div class="relative items-end justify-center w-full mt-6">
                 <div class="relative w-full">
-                  <div class="z-10 flex items-end gap-[1px] justify-center">
+                  <div
+                    class="z-10 flex items-end gap-[1px] justify-center lg:w-full"
+                  >
                     <div
                       v-if="exploreModeSelected === 'หมวดข่าว'"
                       v-for="(item, index) in data"
@@ -2603,101 +2707,13 @@ watchEffect(() => {})
                         "
                         class="w-full cursor-pointer relative"
                         :style="{
-                          height: `${calculateHeight(
-                            item[categorySelected],
-                            3000,
-                            'all'
+                          height: `${calculateHeight2(
+                            item.Total,
+                            200,
+                            'Total'
                           )}px`,
                         }"
-                      >
-                        <!-- <div
-                          id="popupDetail"
-                          class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
-                        >
-                          <p class="font-bold flex">
-                            {{ item.MonthName }} {{ item.Year }}
-                          </p>
-                          <p class="b5">
-                            <span class="b3 font-bold">{{
-                              parseInt(item[categorySelected]).toLocaleString()
-                            }}</span>
-                            พาดหัวข่าว
-                          </p>
-                          <div class="b4 flex flex-wrap gap-[2px]">
-                            <div class="flex items-center gap-[2px]">
-                              <div class="w-[10px] h-[10px] bg-orange"></div>
-                              <p>20</p>
-                            </div>
-                            <div class="flex items-center gap-[2px]">
-                              <div class="w-[10px] h-[10px] bg-brown"></div>
-                              <p>20</p>
-                            </div>
-                            <div class="flex items-center gap-[2px]">
-                              <div class="w-[10px] h-[10px] bg-green"></div>
-                              <p>20</p>
-                            </div>
-                            <div class="flex items-center gap-[2px]">
-                              <div class="w-[10px] h-[10px] bg-blue"></div>
-                              <p>20</p>
-                            </div>
-                          </div>
-                        </div> -->
-                      </div>
-                      <!-- <div
-                        v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                        class="w-full cursor-pointer relative"
-                      >
-                        <div
-                          v-for="(ct, index) in category"
-                          :class="ct.color"
-                          :style="{
-                            height: `${calculateHeightPerCategory(
-                              item.Total,
-                              item[ct.name],
-                              300,
-                              maxStory
-                            )}px`,
-                          }"
-                        >
-                          <div
-                            id="popupDetail"
-                            class="absolute bg-white p-[5px] top-10 left-0 hidden group-hover:inline-block w-max z-20"
-                          >
-                            <p class="font-bold flex">
-                              {{ item.MonthName }} {{ item.Year }}
-                            </p>
-                            <p class="b5">
-                              <span class="b3 font-bold">{{
-                                parseInt(
-                                  item[categorySelected]
-                                ).toLocaleString()
-                              }}</span>
-                              พาดหัวข่าว
-                            </p>
-                            <div class="b4 flex flex-wrap gap-[2px]">
-                              <div class="flex items-center gap-[2px]">
-                                <div class="w-[10px] h-[10px] bg-orange"></div>
-                                <p>20</p>
-                              </div>
-                              <div class="flex items-center gap-[2px]">
-                                <div class="w-[10px] h-[10px] bg-brown"></div>
-                                <p>20</p>
-                              </div>
-                              <div class="flex items-center gap-[2px]">
-                                <div class="w-[10px] h-[10px] bg-green"></div>
-                                <p>20</p>
-                              </div>
-                              <div class="flex items-center gap-[2px]">
-                                <div class="w-[10px] h-[10px] bg-blue"></div>
-                                <p>20</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                      </div> -->
+                      ></div>
                       <p
                         class="text-[#939393] -rotate-90 b6"
                         style="pointer-events: none"
@@ -2710,16 +2726,15 @@ watchEffect(() => {})
                       class="flex flex-col items-end"
                     >
                       <div
-                        class="cursor-pointer relative flex gap-[1px] w-[90vw] justify-center"
+                        class="cursor-pointer relative flex gap-[1px] w-[90vw] lg:px-[8vw] justify-center"
                       >
                         <div
                           v-for="(item, itemIndex) in dataForKW.montly"
-                          class=" flex flex-col cursor-pointer relative justify-end"
+                          class="flex flex-col cursor-pointer relative justify-end"
                           :style="{
                             width: `${90 / dataForKW.montly.length}%`,
                           }"
                         >
-                        
                           <div
                             class="group relative"
                             v-for="(ct, ctNo) in Object.keys(
@@ -2738,11 +2753,11 @@ watchEffect(() => {})
                             <div
                               id="popupDetail"
                               :class="itemIndex > 12 ? 'right-0' : 'left-0'"
-                              class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-max"
+                              class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]"
                             >
                               <p class="font-bold flex b5">
                                 {{ monthShortTH[item.month - 1] }}
-                                {{ item.year }}
+                                {{ item.year % 100 }}
                               </p>
                               <p class="b5">
                                 <span class="b3 font-bold">{{
@@ -2750,7 +2765,7 @@ watchEffect(() => {})
                                 }}</span>
                                 พาดหัวข่าว
                               </p>
-                              <div class="b4 flex flex-wrap gap-[2px]">
+                              <div class="b4 flex flex-wrap gap-[5px]">
                                 <div
                                   v-for="(cate, cateNo) in Object.keys(
                                     dataForKW.categories_total
@@ -2771,7 +2786,7 @@ watchEffect(() => {})
                             </div>
                           </div>
                           <p
-                            class="text-[#939393] -rotate-90 b6 py-[10px]"
+                            class="text-[#939393] -rotate-90 b5 py-[10px]"
                             style="pointer-events: none"
                           >
                             {{ monthShortTH[item.month - 1] }}
@@ -2782,6 +2797,7 @@ watchEffect(() => {})
                   </div>
 
                   <div
+                    v-if="exploreModeSelected === 'หมวดข่าว'"
                     class="z-0 absolute bottom-0 w-full h-full"
                     style="pointer-events: none"
                   >
@@ -2802,7 +2818,7 @@ watchEffect(() => {})
                 </div>
 
                 <div
-                  class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[px] font-bold"
+                  class="b5 text-[#939393] grid grid-cols-2 place-items-center lg:pt-[30px] lg:mb-[10px] font-bold"
                 >
                   <p>2022</p>
                   <p>2023</p>
@@ -2840,7 +2856,9 @@ watchEffect(() => {})
                   มีข่าว{{ categorySelected }}ทั้งหมด
                   <span class="font-bold" v-if="exploreData"
                     >{{
-                      parseInt(exploreData[exploreData?.length - 1][categorySelected]).toLocaleString()
+                      parseInt(
+                        exploreData[exploreData?.length - 1][categorySelected]
+                      ).toLocaleString()
                     }}
                     พาดหัวข่าว</span
                   >
@@ -2937,7 +2955,7 @@ watchEffect(() => {})
                   dataForKW.sample_headlines[sampleIndex] &&
                   exploreModeSelected === 'คีย์เวิร์ด'
                 "
-                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px]  w-[288px] lg:w-[400px]"
+                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]"
               >
                 <p class="b4 font-bold">
                   {{
@@ -2973,8 +2991,11 @@ watchEffect(() => {})
               </p>
             </div>
           </div>
-          <div class="h-[90vh]" v-else
-          > <p class="b3 text-center p-[25px] h-3/4">ไม่พบพาดหัวข่าวที่มีคีย์เวิร์ดที่คุณค้นหา ลองเปลี่ยนคำใหม่ดู</p></div>
+          <div class="h-[90vh]" v-else>
+            <p class="b3 text-center p-[25px] h-3/4">
+              ไม่พบพาดหัวข่าวที่มีคีย์เวิร์ดที่คุณค้นหา ลองเปลี่ยนคำใหม่ดู
+            </p>
+          </div>
         </div>
         <p
           @click="showRefPopup"
