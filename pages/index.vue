@@ -165,7 +165,7 @@ onMounted(() => {
           alt=""
           class="absolute -top-2 -right-2"
         />
-        <div id="ref" class="p-[20px] text-center overflow-y-auto h-full">
+        <div id="ref" class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full">
           <div class="pb-5">
             <h1 class="h5 font-bold pb-[20px]" ref="reference">
               ที่มาและข้อจำกัดของข้อมูล
@@ -187,7 +187,7 @@ onMounted(() => {
           <h2 class="b2 font-bold py-5 border border-t-[#C5C4C4] border-white">
             สัดส่วนข่าวจากแต่ละสำนัก
           </h2>
-          <p class="b3 pb-5">
+          <p class="b3 pb-5 lg:px-[100px]">
             เนื่องจากแต่ละสำนักข่าวมีจำนวนข่าวที่ไม่เท่ากัน
             จึงทำให้เทรนด์ที่พบในงานนี้ได้รับอิทธิพลจากสำนักข่าวที่มีจำนวนข่าวเยอะเป็นพิเศษ
           </p>
@@ -432,7 +432,7 @@ onMounted(() => {
                 </div>
               </div>
               <div
-                    class="absolute bottom-10 lg:left-1/2 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
+                    class="absolute bottom-10 lg:left-1/3 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
                   >
                     <img src="/image/SlideIcon.svg" alt="" />
                     <p>เลื่อน</p>
@@ -444,8 +444,7 @@ onMounted(() => {
     </div>
     <div
       id="quiz"
-      :class="!isShowAnswer? 'h-screen':' '"
-      class="flex flex-col py-[30px]  max-w-[850px] w-[90vw] items-center justify-center mx-auto "
+      class="flex flex-col py-[30px]  max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
       v-show="isShowQuiz"
     >
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
@@ -538,7 +537,7 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <div id="intro" class="text-center" v-show="isShowContent">
+    <div id="intro" class="text-center" v-if="isShowContent">
       <div id="cover">
         <div class="hidden lg:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
@@ -688,7 +687,7 @@ onMounted(() => {
         <img src="/image/Head.svg" alt="" class="w-full lg:hidden block" />
       </div>
 
-      <div class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto">
+      <div class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
         <div class="b3 space-y-[10px]">
           <div class="flex flex-col items-center justify-center gap-[5px]">
             <p class="bg-vermillion w-fit text-white px-[10px]">BREAKING NEWS:</p>

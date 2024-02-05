@@ -4,20 +4,8 @@ import { Vue3Lottie } from "vue3-lottie"
 import lottie_1 from "public/lottie/lottie-1.json"
 const headlineRef = ref(null)
 const currentIndex = ref(0)
-const headlineShow = [
-  'ดิว อริสรา มาตามนัด เข้าให้ปากคำตำรวจไซเบอร์ คดีเว็บพนัน "มาเก๊า 888"',
-  'เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ "โควิด-19" และ "เศรษฐกิจ"',
-  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
-  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
-  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-  "เปิดเผย! คนไทยเจอข่าวอะไรมากที่สุด คือ 'โควิด-19' และ 'เศรษฐกิจ'",
-  "“ทิม” มอง “หมออ๋อง” ไม่มีเจตนาโฆษณาคราฟต์เบียร์ แต่คงภูมิใจสินค้าบ้านเกิด",
-]
-
+let headlineShow = []
 const currentText = ref(headlineShow[currentIndex.value])
-// const currentText = computed(() => headlineShow[currentIndex.value])
 const exploreModeSelected = ref("หมวดข่าว")
 const isShowRefPopup = ref(false)
 const categoryIndex = ref(0)
@@ -36,6 +24,77 @@ const isInputFocused = ref(false)
 const keywords = ref()
 const sampleHeadlineCategory = ref()
 const filteredSampleHeadlineCategory = ref()
+const exploreCategoryHeadlineData = ref()
+let totalDataEachMonth = []
+let totalDataEachCategory = []
+
+const category = [
+  { name: "การเมือง", color: "bg-vermillion" },
+  { name: "สังคมไทย", color: "bg-lightblue" },
+  { name: "เศรษฐกิจ", color: "bg-orange" },
+  { name: "ต่างประเทศ", color: "bg-rose" },
+  { name: "บันเทิง", color: "bg-pink" },
+  { name: "อาชญากรรม", color: "bg-brown" },
+  { name: "กีฬา", color: "bg-purple" },
+  { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
+  { name: "สิ่งแวดล้อม", color: "bg-green" },
+]
+
+const fetchExploreCategoryHeadline = async () => {
+  const response = await fetch("/data/sample_news_headlines.json")
+  const data = await response.json()
+  exploreCategoryHeadlineData.value = data
+  console.log(exploreCategoryHeadlineData.value["การเมือง"]["monthly"])
+
+  for (let year = 2022; year <= 2023; year++) {
+    for (let month = 1; month <= 12; month++) {
+      let totalForMonth = 0
+
+      Object.keys(data).forEach((categoryName) => {
+        const monthlyData = data[categoryName].monthly
+
+        const totalForCategoryMonth =
+          monthlyData.find((item) => item.year === year && item.month === month)
+            ?.total || 0
+
+        totalForMonth += totalForCategoryMonth
+      })
+
+      totalDataEachMonth.push({ year, month, total: totalForMonth })
+    }
+  }
+
+  maxStory.value = Math.max(...totalDataEachMonth.map((d) => d.total))
+  console.log(maxStory.value)
+
+  const categorySums = {}
+  let overallTotal = 0
+
+  for (let year = 2022; year <= 2023; year++) {
+    for (let month = 1; month <= 12; month++) {
+      Object.keys(data).forEach((categoryName) => {
+        const monthlyData = data[categoryName].monthly
+        const totalForCategoryMonth =
+          monthlyData.find((item) => item.year === year && item.month === month)
+            ?.total || 0
+
+        categorySums[categoryName] =
+          (categorySums[categoryName] || 0) + totalForCategoryMonth
+        overallTotal += totalForCategoryMonth
+      })
+    }
+  }
+
+  Object.keys(categorySums).forEach((categoryName) => {
+    totalDataEachCategory.push({
+      category: categoryName,
+      total: categorySums[categoryName],
+    })
+  })
+
+  totalDataEachCategory.push({ category: "Total", total: overallTotal })
+}
+
 const filterSampleHeadlineCategory = async (category) => {
   let year
   filteredSampleHeadlineCategory.value =
@@ -57,24 +116,20 @@ const filterSampleHeadlineCategory = async (category) => {
         )
       }
     })
-  // console.log(filteredSampleHeadlineCategory.value)
 }
 const fetchSampleHeadlineCategory = async () => {
   const response = await fetch("/data/HeadlinesSample.json")
   const data = await response.json()
   sampleHeadlineCategory.value = data
   await filterSampleHeadlineCategory(categorySelected.value)
+  headlineShow = sampleHeadlineCategory.value.map((item) => item.headline)
+  headlineShow = headlineShow.slice(0, 10)
+  // console.log(headlineShow)
 }
 
 const showRefPopup = () => {
   isShowRefPopup.value = !isShowRefPopup.value
 }
-
-// const startLoop = () => {
-//       setInterval(() => {
-//         currentIndex.value = (currentIndex.value + 1) % headlineShow.length;
-//       }, 1000);
-//     };
 
 const formatMonth = (inputDate) => {
   const months = [
@@ -102,20 +157,14 @@ const setData = () => {
   data.value = exploreData.value.slice(1, -1)
   max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
   min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
-  data.value.forEach((entry, index) => {
-    const totalValue = parseInt(entry.Total.trim(), 10)
+  // data.value.forEach((entry, index) => {
+  //   const totalValue = parseInt(entry.Total.trim(), 10)
 
-    if (!isNaN(totalValue) && totalValue > maxStory.value) {
-      maxStory.value = totalValue
-      maxStoryIndex.value = index
-    }
-
-    // if (!isNaN(totalValue) && totalValue < minStory.value && totalValue !== 0) {
-
-    //     minStory.value = Math.min(...data.value.map((d) => d.Total))
-    //     minStoryIndex.value = index;
-    // }
-  })
+  //   if (!isNaN(totalValue) && totalValue > maxStory.value) {
+  //     maxStory.value = totalValue
+  //     maxStoryIndex.value = index
+  //   }
+  // })
   minStory.value = Math.min(...data.value.map((d) => d.Total))
   minStoryIndex.value = data.value.findIndex(
     (d) => parseInt(d.Total.trim(), 10) === minStory.value
@@ -199,26 +248,6 @@ const getCategoryBorderColor = (category) => {
       return "border-[#9BB95A]"
   }
 }
-const calculateHeight1 = (count, maxHeigh, mode, max) => {
-  if (mode) {
-    const scalePercent =
-      (count * 100) /
-      exploreData.value[exploreData.value.length - 1][categorySelected.value]
-    const scale = (scalePercent * maxHeigh) / 100
-    // console.log("maxMode", max)
-    return Math.ceil(scale)
-    // const scale =
-    //   (count * maxHeigh) / exploreData.value[exploreData.value.length - 1][categorySelected.value]
-    //   console.log('hi',exploreData.value[exploreData.value.length - 1][categorySelected.value])
-    //   console.log('hi',count)
-    // return Math.ceil(scale)
-  } else {
-    // console.log("maxJa", max)
-    const scalePercent = (count * 100) / max
-    const scale = (scalePercent * maxHeigh) / 100
-    return Math.ceil(scale)
-  }
-}
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
   const scalePercent = (total * 100) / max
@@ -239,7 +268,13 @@ const calculateHeightPerCategory2 = (total, count, maxHeigh, max) => {
   // console.log('eachHeight',eachHeight)
   return Math.ceil(eachHeight)
 }
-const calculateHeight2 = (count, maxHeigh, category) => {
+const calculateHeight = (count, maxHeigh, category) => {
+  if (category === "Total") {
+    let maxValueOfAll = Math.max(...totalDataEachMonth.map((d) => d.total))
+    let scalePercent = (count * 100) / maxValueOfAll
+    let scale = Math.ceil((scalePercent * maxHeigh) / 100)
+    return scale
+  }
   let maxValue = findMaxEachCategory(category)
   let scalePercent = (count * 100) / maxValue
   let scale = Math.ceil((scalePercent * maxHeigh) / 100)
@@ -296,20 +331,10 @@ const fetchData = async () => {
   }
 }
 
-const category = [
-  { name: "การเมือง", color: "bg-vermillion" },
-  { name: "สังคมไทย", color: "bg-lightblue" },
-  { name: "เศรษฐกิจ", color: "bg-orange" },
-  { name: "ต่างประเทศ", color: "bg-rose" },
-  { name: "บันเทิง", color: "bg-pink" },
-  { name: "อาชญากรรม", color: "bg-brown" },
-  { name: "กีฬา", color: "bg-purple" },
-  { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
-  { name: "สิ่งแวดล้อม", color: "bg-green" },
-]
-
 const handleCurrentIndex = (index) => {
   categoryIndex.value = index
+  filterCategoryKeyword(categorySelected.value)
+  filterSampleHeadlineCategory(categorySelected.value)
   scrollToSection()
 }
 
@@ -482,7 +507,8 @@ const handleInput = () => {
 }
 
 const hideSuggestions = () => {
-  // showSuggestions.value = false
+  showSuggestions.value = false
+  isInputFocused.value = false
   // handleInputFocus()
 }
 
@@ -552,6 +578,7 @@ const handleNewSample = () => {
   }
   sampleIndex.value += 1
 }
+
 watchEffect(() => {
   setInterval(() => {
     currentIndex.value = (currentIndex.value + 1) % headlineShow.length
@@ -559,13 +586,14 @@ watchEffect(() => {
   }, 1000)
 })
 onMounted(async () => {
-  // startLoop()
   await fetchData()
   await fetchExploreData10Keyword()
   await filterCategoryKeyword(categorySelected.value)
   findWidthandHeight("section2")
   await fetchAggregateKW()
   await fetchSampleHeadlineCategory()
+  await fetchExploreCategoryHeadline()
+
   const handleSectionOpacity = (currentSection, direction) => {
     const sections = Array.from({ length: 12 }, (_, index) =>
       document.getElementById(`section${index + 1}`)
@@ -584,10 +612,6 @@ onMounted(async () => {
           sections[i + 1].style.opacity = 0
         }
       }
-      //    else if(i === currentSection-1){
-      //     sections[1].style.opacity = 1
-      //     sections[2].style.opacity = 0
-      // }
     }
   }
   const handleStepEnter = (response) => {
@@ -713,7 +737,7 @@ onMounted(async () => {
           >
             <div
               ref="headlineRef"
-              class="relative bg-black p-[10px] w-[90vw] max-w-[600px] lg:pr-[60px] lg:h-[450px] flex items-center"
+              class="relative bg-black p-[10px] w-[90vw] max-w-[600px] lg:pr-[60px] lg:pl-[20px] lg:h-[550px] flex items-center"
             >
               <p class="cream t2">
                 {{ currentText }}
@@ -735,7 +759,7 @@ onMounted(async () => {
                 class="relative flex items-end gap-[1px] justify-center w-[90vw] lg:max-w-[600px]"
               >
                 <div
-                  v-for="(item, index) in data"
+                  v-for="(item, index) in totalDataEachMonth"
                   class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center"
                   :style="{
                     width: `${90 / data.length}%`,
@@ -743,15 +767,11 @@ onMounted(async () => {
                 >
                   <div
                     :class="
-                      index === maxStoryIndex
-                        ? 'bg-black'
-                        : index === minStoryIndex
-                        ? 'bg-black'
-                        : 'bg-[#717070]'
+                      index === 8 || index === 23 ? 'bg-black' : 'bg-black/50'
                     "
                     :style="{
-                      height: `${calculateHeight2(
-                        item.Total,
+                      height: `${calculateHeight(
+                        item.total,
                         findWidthandHeight('section2'),
                         'Total'
                       )}px`,
@@ -761,7 +781,7 @@ onMounted(async () => {
                     class="text-[#939393] -rotate-90 b6"
                     style="pointer-events: none"
                   >
-                    {{ convertToMonthShortTH(item.MonthName) }}
+                    {{ monthShortTH[item.month - 1] }}
                   </p>
                 </div>
                 <div
@@ -819,35 +839,51 @@ onMounted(async () => {
               จำนวนข่าวรายเดือน แบ่งตามหมวด
             </p>
             <div class="relative">
-              <div
-                class="relative flex items-end gap-[1px] justify-center w-[90vw] max-w-[600px]"
-              >
+              <div class="relative flex items-end justify-center">
                 <div
-                  v-for="(item, index) in data"
-                  :style="{
-                    width: `${90 / data.length}%`,
-                  }"
-                  class="flex flex-col-reverse cursor-pointer relative"
+                  class="flex items-end gap-[1px] justify-center lg:max-w-[600px] w-[90vw]"
                 >
-                  <p
-                    class="text-[#939393] -rotate-90 b6 py-[10px]"
-                    style="pointer-events: none"
-                  >
-                    {{ convertToMonthShortTH(item.MonthName) }}
-                  </p>
                   <div
-                    v-for="(ct, index) in category"
-                    :class="ct.color"
-                    :style="{
-                      height: `${calculateHeightPerCategory(
-                        item.Total,
-                        item[ct.name],
-                        findWidthandHeight('section3'),
-                        maxStory
-                      )}px`,
-                    }"
-                  ></div>
+                    v-for="(no, index) in 24"
+                    :style="{ width: `${90 / 24}%` }"
+                    class="flex flex-col justify-center gap-[10px]"
+                  >
+                  <div>
+                     <div
+                      v-for="(ct, index) in Object.keys(
+                        exploreCategoryHeadlineData || 0
+                      )"
+                      class="flex cursor-pointer"
+                    >
+                      <div
+                        class="w-full"
+                        :class="getCategoryColorClass(ct)"
+                        :style="{
+                          height: `${calculateHeightPerCategory2(
+                            111,
+                            exploreCategoryHeadlineData[ct]['monthly'][no - 1]
+                              ?.total,
+                            findWidthandHeight('section3'),
+                            maxStory
+                          )}px`,
+                        }"
+                      ></div>
+                    </div>
+                  </div>
+                   
+                    <p
+                      class="text-[#939393] -rotate-90 b6"
+                      style="pointer-events: none"
+                    >
+                      {{
+                        index >= 12
+                          ? monthShortTH[index - 12]
+                          : monthShortTH[index]
+                      }}
+                    </p>
+                  </div>
                 </div>
+
                 <div
                   class="z-0 absolute bottom-0 w-full h-full"
                   style="pointer-events: none"
@@ -903,11 +939,17 @@ onMounted(async () => {
                   class="flex items-end gap-[1px] w-[90vw] justify-center pointer-events-none"
                 >
                   <div
-                    v-for="(item, index) in data"
+                    v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['การเมือง']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'การเมือง'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                     @click="scrollToSection()"
                   >
@@ -920,8 +962,8 @@ onMounted(async () => {
                       "
                       class="w-full cursor-pointer relative"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.การเมือง,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section4'),
                           'การเมือง'
                         )}px`,
@@ -931,7 +973,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1] }}
                     </p>
                   </div>
                 </div>
@@ -990,18 +1032,24 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                    v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['สังคมไทย']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'สังคมไทย'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
                       class="w-full bg-lightblue cursor-pointer relative"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.สังคมไทย,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section5'),
                           'สังคมไทย'
                         )}px`,
@@ -1011,7 +1059,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1] }}
                     </p>
                   </div>
                 </div>
@@ -1070,18 +1118,24 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                    v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['เศรษฐกิจ']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'เศรษฐกิจ'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
                       class="w-full bg-orange cursor-pointer relative"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.เศรษฐกิจ,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section6'),
                           'เศรษฐกิจ'
                         )}px`,
@@ -1091,7 +1145,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1] }}
                     </p>
                   </div>
                 </div>
@@ -1150,11 +1204,17 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['ต่างประเทศ']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'ต่างประเทศ'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
@@ -1170,8 +1230,8 @@ onMounted(async () => {
                           : 'bg-rose opacity-50'
                       "
                       :style="{
-                        height: `${calculateHeight2(
-                          item.ต่างประเทศ,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section7'),
                           'ต่างประเทศ'
                         )}px`,
@@ -1181,7 +1241,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -1240,18 +1300,24 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['บันเทิง']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'บันเทิง'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
                       class="w-full bg-pink cursor-pointer relative"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.บันเทิง,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section8'),
                           'บันเทิง'
                         )}px`,
@@ -1261,7 +1327,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -1320,11 +1386,17 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['อาชญากรรม']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'อาชญากรรม'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
@@ -1335,8 +1407,8 @@ onMounted(async () => {
                           : 'bg-brown opacity-50'
                       "
                       :style="{
-                        height: `${calculateHeight2(
-                          item.อาชญากรรม,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section9'),
                           'อาชญากรรม'
                         )}px`,
@@ -1346,7 +1418,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -1405,11 +1477,17 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['กีฬา']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'กีฬา'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
@@ -1420,8 +1498,8 @@ onMounted(async () => {
                           : 'bg-purple opacity-50'
                       "
                       :style="{
-                        height: `${calculateHeight2(
-                          item.กีฬา,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section10'),
                           'กีฬา'
                         )}px`,
@@ -1431,7 +1509,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -1489,18 +1567,24 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['วิทยาศาสตร์เทคโนโลยี']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'วิทยาศาสตร์เทคโนโลยี'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
                       class="w-full bg-blue cursor-pointer relative"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.วิทยาศาสตร์เทคโนโลยี,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section11'),
                           'วิทยาศาสตร์เทคโนโลยี'
                         )}px`,
@@ -1510,7 +1594,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -1569,19 +1653,25 @@ onMounted(async () => {
               >
                 <div class="flex items-end gap-[1px] w-[90vw] justify-center">
                   <div
-                    v-for="(item, index) in data"
+                  v-if="
+                      exploreCategoryHeadlineData &&
+                      exploreCategoryHeadlineData['สิ่งแวดล้อม']
+                    "
+                    v-for="(item, index) in exploreCategoryHeadlineData[
+                      'สิ่งแวดล้อม'
+                    ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
                     :style="{
-                      width: `${90 / data.length}%`,
+                      width: `${90 / 24}%`,
                     }"
                   >
                     <div
                       class="w-full cursor-pointer relative"
                       :class="index === 8 ? 'bg-green' : 'bg-green opacity-50'"
                       :style="{
-                        height: `${calculateHeight2(
-                          item.สิ่งแวดล้อม,
+                        height: `${calculateHeight(
+                          item.total,
                           findWidthandHeight('section12'),
                           'สิ่งแวดล้อม'
                         )}px`,
@@ -1591,7 +1681,7 @@ onMounted(async () => {
                       class="text-[#939393] -rotate-90 b6"
                       style="pointer-events: none"
                     >
-                      {{ convertToMonthShortTH(item.MonthName) }}
+                      {{ monthShortTH[item.month - 1]}}
                     </p>
                   </div>
                 </div>
@@ -2295,7 +2385,7 @@ onMounted(async () => {
                 </div>
                 <div class="b4 flex flex-col items-start gap-[5px]">
                   <div>
-                    <p class="b3 font-bold">ก.ย. 2022</p>
+                    <p class="b3 font-bold">ก.ค. 2022</p>
                     <p class="b4 text-start">(415 ข่าว)</p>
                   </div>
                   <div
@@ -2632,6 +2722,7 @@ onMounted(async () => {
                 v-for="(suggestion, index) in filteredSuggestions"
                 :key="index"
                 @mousedown="handleSuggestionMouseDown(suggestion)"
+                @blur="hideSuggestions"
                 class="cursor-pointer"
               >
                 <span v-html="highlightMatchedText(suggestion)"></span>
@@ -2691,10 +2782,8 @@ onMounted(async () => {
                       v-if="exploreModeSelected === 'หมวดข่าว'"
                       v-for="(item, index) in data"
                       :key="index"
-                      class="group flex flex-col items-center gap-2"
-                      :style="{
-                        width: `${90 / data.length}%`,
-                      }"
+                      class="group flex flex-col items-center gap-2 w-[3.75%] lg:w-[4.06%]"
+
                     >
                       <div
                         v-if="exploreModeSelected === 'หมวดข่าว'"
@@ -2707,7 +2796,7 @@ onMounted(async () => {
                         "
                         class="w-full cursor-pointer relative"
                         :style="{
-                          height: `${calculateHeight2(
+                          height: `${calculateHeight(
                             item.Total,
                             200,
                             'Total'
@@ -2726,7 +2815,7 @@ onMounted(async () => {
                       class="flex flex-col items-end"
                     >
                       <div
-                        class="cursor-pointer relative flex gap-[1px] w-[90vw] lg:px-[8vw] justify-center"
+                        class="cursor-pointer relative flex gap-[1px] w-[90vw]  lg:px-[9vw] justify-center"
                       >
                         <div
                           v-for="(item, itemIndex) in dataForKW.montly"
@@ -2745,7 +2834,7 @@ onMounted(async () => {
                               height: `${calculateHeightPerCategory2(
                                 item.total,
                                 item[ct],
-                                findWidthandHeight('section12'),
+                              200,
                                 maxOfMonthly
                               )}px`,
                             }"
@@ -2914,7 +3003,7 @@ onMounted(async () => {
                 "
                 :class="
                   getCategoryBorderColor(
-                    filteredSampleHeadlineCategory[sampleIndex].news_category
+                    categorySelected
                   )
                 "
                 class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]"
@@ -3015,6 +3104,8 @@ onMounted(async () => {
             <p class="my-[20px]">กลับไปหน้าแรก</p>
           </NuxtLink>
           <Share :hasMsgerLink="false" />
+
+
         </div>
       </div>
     </div>
