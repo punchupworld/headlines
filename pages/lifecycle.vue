@@ -195,16 +195,16 @@ function selectNews(news) {
           <div
             class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
           >
-            <div class="md:max-w-[450px] px-3">
+            <div class="max-w-full md:max-w-[450px] px-3">
               <template v-if="step == 0">
                 <img
                   src="/image/lifecycle/tangmo.svg"
                   alt=""
-                  class="max-w-[450px]"
+                  class="w-full"
                   v-if="typeOfNews == 'tangmo'"
                 />
                 <img
-                  class="max-w-[450px]"
+                  class="w-full"
                   src="/image/lifecycle/tangmo_pol.svg"
                   alt=""
                   v-else
@@ -247,7 +247,7 @@ function selectNews(news) {
               <div class="bg-white p-5 h-fit">
                 <p class="b3">
                   <b>“คดีแตงโม-นิดา”</b> พลัดตกเรือเริ่มต้นในเช้ามืดของวันที่ 25
-                  ม.ค. 2022!
+                  ก.พ. 2022!
                 </p>
               </div>
             </div>

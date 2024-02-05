@@ -2,8 +2,12 @@
 const isShowDetailsPopup = ref(false);
 const newsDetailsList = ref([]);
 const newsDetails = ref([]);
-const totalOfTypeOfNews = ref([]);
+const totalOfTypeOfNews = ref(0);
+const maxOfTotalNews = ref(0);
 const newsDataHeatmap = ref([]);
+const typeOfNewsDropdown = ref([]);
+const selectedTypeOfNews = ref("ทุกหมวด");
+const selectedTypeOfNewsEn = ref("total");
 
 const news_type_list = ref([
   "การเมือง",
@@ -33,7 +37,7 @@ const news_list = ref([
   {
     id: 3,
     name: "คดีแตงโม-นิดา",
-    date: "24 ก.พ. 2022 - 12 ก.ย. 2023",
+    date: "25 ก.พ. 2022 - 9 ธ.ค. 2023",
     img: "tangmo.svg",
   },
   {
@@ -128,53 +132,55 @@ const fetchData = async () => {
 };
 
 const fetchDataHeatmap = async (name) => {
-  try {
-    const response = await fetch("/data/lifecycle/" + name + ".csv");
-    const csvText = await response.text();
-    // console.log(csvText);
-    const rows = csvText.split("\n").map((line) => {
-      const [
-        date,
-        การเมือง,
-        กีฬา,
-        ต่างประเทศ,
-        บันเทิง,
-        วิทยาศาสตร์เทคโนโลยี,
-        เศรษฐกิจ,
-        สังคมไทย,
-        สิ่งแวดล้อม,
-        อาชญากรรม,
-        total,
-      ] = line.split(",");
-      return {
-        date,
-        การเมือง,
-        กีฬา,
-        ต่างประเทศ,
-        บันเทิง,
-        วิทยาศาสตร์เทคโนโลยี,
-        เศรษฐกิจ,
-        สังคมไทย,
-        สิ่งแวดล้อม,
-        อาชญากรรม,
-        total,
-      };
-    });
+  const response = await fetch("/data/lifecycle/" + name + ".json");
+  const csvText = await response.json();
 
-    newsDataHeatmap.value = rows;
-    newsDataHeatmap.value.shift();
+  newsDataHeatmap.value = csvText;
 
-    let arr = newsDataHeatmap.value.map((object) => {
-      return object.total;
-    });
-    let max = Math.max(...arr);
+  let data = newsDetailsList.value.filter((x) => x.topics == name);
+  newsDetails.value = data;
 
-    // console.log(max);
-    // console.log(newsDataHeatmap.value);
-  } catch (error) {
-    console.error("Error fetching CSV data:", error);
-  }
+  setDataForHeatmap();
 };
+
+function setDataForHeatmap() {
+  typeOfNewsDropdown.value = [];
+  totalOfTypeOfNews.value = 0;
+
+  if (selectedTypeOfNews.value != "ทุกหมวด") {
+    let x = newsDataHeatmap.value[0].total_of_news.filter(
+      (x) => x.name == selectedTypeOfNews.value
+    );
+
+    selectedTypeOfNewsEn.value = x[0]["name_en"];
+  } else {
+    selectedTypeOfNewsEn.value = "total";
+  }
+
+  let arr = newsDataHeatmap.value[0].list.map((object) => {
+    return object[selectedTypeOfNewsEn.value];
+  });
+
+  let max = Math.max(...arr);
+
+  maxOfTotalNews.value = max;
+
+  // console.log("max:" + maxOfTotalNews.value);
+  // console.log("----------");
+
+  if (newsDataHeatmap.value != []) {
+    newsDataHeatmap.value[0].total_of_news.forEach((element) => {
+      if (element.total != 0) {
+        totalOfTypeOfNews.value++;
+
+        typeOfNewsDropdown.value.push({
+          value: element.name,
+          text: element.name,
+        });
+      }
+    });
+  }
+}
 
 function setDate(date) {
   return new Date(date).toLocaleString("th-TH", {
@@ -184,21 +190,18 @@ function setDate(date) {
   });
 }
 
-function showDetails(name) {
-  fetchDataHeatmap("รัสเซีย-ยูเครน");
-  totalOfTypeOfNews.value = [];
-  isShowDetailsPopup.value = true;
-  let data = newsDetailsList.value.filter((x) => x.topics == name);
-  newsDetails.value = data;
+function setOpacity(total) {
+  let x = 0;
+  if (total == maxOfTotalNews.value) x = 1;
+  else if (total == 1) x = 0.2;
+  else x = total / maxOfTotalNews.value;
+  return x;
+}
 
-  news_type_list.value.forEach((element) => {
-    let name = element.split("/")[0];
-    if (data[0][name] != null && data[0][name] != 0)
-      totalOfTypeOfNews.value.push({
-        name: element,
-        total: data[0][name],
-      });
-  });
+function showDetails(name) {
+  fetchDataHeatmap(name);
+  totalOfTypeOfNews.value = 0;
+  isShowDetailsPopup.value = true;
 }
 
 onMounted(() => {
@@ -315,65 +318,116 @@ onMounted(() => {
         />
       </template>
 
-      <div
-        class="absolute top-0 left-0 right-0 max-w-[820px] bg-white mx-auto p-10 z-10"
-        v-if="isShowDetailsPopup"
-      >
-        <h4 class="t4">{{ newsDetails[0].topics }}</h4>
-        <p class="b3 py-3">
-          พบ
-          <b
-            >{{
-              parseInt(newsDetails[0].number_of_headlines).toLocaleString()
+      <div class="absolute top-0 left-0 right-0 z-10" v-if="isShowDetailsPopup">
+        <div
+          class="max-w-[95vw] md:max-w-[820px] bg-white mx-auto p-5 md:p-10 relative"
+        >
+          <img
+            @click="isShowDetailsPopup = false"
+            src="/image/CanclePink.svg"
+            alt=""
+            class="absolute -top-2 -right-2 cursor-pointer"
+          />
+          <h4 class="t4">{{ newsDetails[0].topics }}</h4>
+          <p class="b3 py-1 md:py-3">
+            พบ
+            <b
+              >{{
+                parseInt(newsDetails[0].number_of_headlines).toLocaleString()
+              }}
+              ข่าว</b
+            >
+            ใน
+            <b>{{ totalOfTypeOfNews }} หมวดข่าว</b>
+          </p>
+
+          <template v-for="item in newsDataHeatmap[0].total_of_news">
+            <div
+              v-if="item.total != 0"
+              class="w-[8px] h-[8px] inline-block mx-1"
+              :class="{
+                'bg-vermillion': item.name == 'การเมือง',
+                'bg-lightblue': item.name == 'สังคมไทย',
+                'bg-orange': item.name == 'เศรษฐกิจ/การเงิน',
+                'bg-rose': item.name == 'ต่างประเทศ',
+                'bg-pink': item.name == 'บันเทิง',
+                'bg-brown': item.name == 'อาชญากรรม',
+                'bg-purple': item.name == 'กีฬา',
+                'bg-blue': item.name == 'วิทยาศาสตร์/เทคโนโลยี',
+                'bg-green': item.name == 'สิ่งแวดล้อม',
+              }"
+            ></div>
+            <span class="b5" v-if="item.total != 0"
+              >{{ item.name }}
+              <b>{{ parseInt(item.total).toLocaleString() }}</b></span
+            >
+          </template>
+
+          <hr class="border-[#C5C4C4] my-4" />
+
+          <p class="b3">
+            <b
+              >ได้พื้นที่สื่อ
+              {{ newsDataHeatmap[0].list.length }} วันที่มีข่าว</b
+            >
+            <span class="text-[#C5C4C4] b5"> (นับเฉพาะวันที่มีข่าว)</span>
+          </p>
+          <p class="b5">
+            วันที่มีข่าวครั้งแรก :
+            {{ setDate(newsDataHeatmap[0].list[0].date) }}
+          </p>
+          <p class="b5">
+            วันที่มีข่าวครั้งสุดท้าย :
+            {{
+              setDate(
+                newsDataHeatmap[0].list[newsDataHeatmap[0].list.length - 1].date
+              )
             }}
-            ข่าว</b
-          >
-          ใน
-          <b>{{ totalOfTypeOfNews.length }} หมวดข่าว</b>
-        </p>
+          </p>
 
-        <template v-for="item in totalOfTypeOfNews">
-          <div
-            class="w-[8px] h-[8px] inline-block mx-1"
-            :class="{
-              'bg-vermillion': item.name == 'การเมือง',
-              'bg-lightblue': item.name == 'สังคมไทย',
-              'bg-orange': item.name == 'เศรษฐกิจ/การเงิน',
-              'bg-rose': item.name == 'ต่างประเทศ',
-              'bg-pink': item.name == 'บันเทิง',
-              'bg-brown': item.name == 'อาชญากรรม',
-              'bg-purple': item.name == 'กีฬา',
-              'bg-blue': item.name == 'วิทยาศาสตร์/เทคโนโลยี',
-              'bg-green': item.name == 'สิ่งแวดล้อม',
-            }"
-          ></div>
-          <span class="b5"
-            >{{ item.name }}
-            <b>{{ parseInt(item.total).toLocaleString() }}</b></span
-          >
-        </template>
+          <div class="flex items-center justify-between py-1 md:py-3">
+            <div>
+              <p class="b6">
+                <b>1 แท่ง</b> = 1 วัน <b class="ml-1">สีเข้ม</b> = จำนวนข่าวเยอะ
+              </p>
+            </div>
+            <div>
+              <select
+                v-model="selectedTypeOfNews"
+                class="b5"
+                @change="setDataForHeatmap()"
+              >
+                <option value="ทุกหมวด">ทุกหมวด</option>
+                <option :value="item.value" v-for="item in typeOfNewsDropdown">
+                  {{ item.text }}
+                </option>
+              </select>
+            </div>
+          </div>
 
-        <hr class="border-[#C5C4C4] my-4" />
-
-        <p class="b3">
-          <b>ได้พื้นที่สื่อ {{ newsDataHeatmap.length - 2 }} วันที่มีข่าว</b>
-          <span class="text-[#C5C4C4] b5"> (นับเฉพาะวันที่มีข่าว)</span>
-        </p>
-        <p class="b5">
-          วันที่มีข่าวครั้งแรก : {{ setDate(newsDataHeatmap[0].date) }}
-        </p>
-        <p class="b5">
-          วันที่มีข่าวครั้งสุดท้าย :
-          {{ setDate(newsDataHeatmap[newsDataHeatmap.length - 1].date) }}
-        </p>
-
-        <!-- <div class="flex py-3">
-          <div
-            v-for="item in newsDataHeatmap"
-            class="w-[1px] h-[30px] bg-black"
-            :class="{ 'opacity-20': item.total == 1 }"
-          ></div>
-        </div> -->
+          <div class="flex pb-3">
+            <div
+              v-for="item in newsDataHeatmap[0].list"
+              class="heatmap-bar"
+              :class="{
+                'bg-black': selectedTypeOfNews == 'ทุกหมวด',
+                'bg-vermillion': selectedTypeOfNews == 'การเมือง',
+                'bg-lightblue': selectedTypeOfNews == 'สังคมไทย',
+                'bg-orange': selectedTypeOfNews == 'เศรษฐกิจ/การเงิน',
+                'bg-rose': selectedTypeOfNews == 'ต่างประเทศ',
+                'bg-pink': selectedTypeOfNews == 'บันเทิง',
+                'bg-brown': selectedTypeOfNews == 'อาชญากรรม',
+                'bg-purple': selectedTypeOfNews == 'กีฬา',
+                'bg-blue': selectedTypeOfNews == 'วิทยาศาสตร์/เทคโนโลยี',
+                'bg-green': selectedTypeOfNews == 'สิ่งแวดล้อม',
+                'pointer-events-none': item[selectedTypeOfNewsEn] == 0,
+              }"
+              :style="{ opacity: setOpacity(item[selectedTypeOfNewsEn]) }"
+            >
+              <div class="selected-bar"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -382,5 +436,22 @@ onMounted(() => {
 <style lang="scss" scoped>
 #news-list::-webkit-scrollbar {
   display: none;
+}
+
+.heatmap-bar {
+  max-width: 5px;
+  width: 100%;
+  height: 60px;
+  border: 2px solid transparent;
+
+  @include mobile {
+    width: 2px;
+    height: 30px;
+    border: 1px solid transparent;
+  }
+}
+
+.heatmap-bar:hover {
+  border: 1px solid #ff006b;
 }
 </style>
