@@ -274,10 +274,10 @@ function selectNews(news) {
             </div>
             <div class="step" data-step="4">
               <div class="bg-white p-5 h-fit b3">
-                <p class="">
-                  ก่อนจะแผ่ขยายไปสู่หมวด <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div> <b>การเมือง</b>ในวันต่อมา
-                  เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
-                </p>
+                ก่อนจะแผ่ขยายไปสู่หมวด
+                <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div>
+                <b class="px-1">การเมือง</b>ในวันต่อมา
+                เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
               </div>
             </div>
             <div class="step" data-step="5">
@@ -333,7 +333,9 @@ function selectNews(news) {
                   และไม่แน่ว่า
                   ข่าวนี้อาจจะยังสิงสถิตในหน้าสื่อให้เราเห็นต่อในปีถัดไป
                 </p>
-                <p class="b5 text-[#717070]">*นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว</p>
+                <p class="b5 text-[#717070]">
+                  *นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว
+                </p>
               </div>
             </div>
             <div class="step" data-step="10">
@@ -351,9 +353,9 @@ function selectNews(news) {
         </div>
       </div>
 
-      <ExploreNews/>
+      <ExploreNews />
 
-      <div class="max-w-[850px] mx-auto text-center px-4" >
+      <div class="max-w-[850px] mx-auto text-center px-4">
         <p
           @click="isShowRefPopup = true"
           class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer pb-10"
