@@ -16,14 +16,14 @@ defineProps({
         <img src="/image/Facebook.svg" alt="" class="h-[30px]" />
       </ShareNetwork>
       <ShareNetwork
-        network="facebook"
+        network="twitter"
         url="https://headlines-3bc.pages.dev/"
         title=""
       >
         <img src="/image/X.svg" alt="" />
       </ShareNetwork>
       <ShareNetwork
-        network="facebook"
+        network="line"
         url="https://headlines-3bc.pages.dev/"
         title=""
       >
