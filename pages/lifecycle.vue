@@ -183,10 +183,13 @@ function selectNews(news) {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          class="sticky top-0 h-screen flex items-center overflow-x-auto chart-wrapper"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col justify-center"
           v-if="step > 0 && isSelectNews"
         >
-          <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
+          <TangmoNews />
+          <div>
+            <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
+          </div>
         </div>
         <div
           id="main-box"
@@ -211,7 +214,7 @@ function selectNews(news) {
                 />
               </template>
               <template v-if="step < 7 && step > 0">
-                <RandomNews :current_step="step" />
+                <RandomNews :current_step="step" :isInStorytelling="true" />
               </template>
             </div>
           </div>
@@ -397,6 +400,6 @@ function selectNews(news) {
 }
 
 .chart-wrapper::-webkit-scrollbar {
-  display: none;
+  // display: none;
 }
 </style>

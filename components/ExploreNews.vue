@@ -394,7 +394,7 @@ onMounted(() => {
             <div>
               <select
                 v-model="selectedTypeOfNews"
-                class="b5"
+                class="b5 bg-[#F4F4F4] w-[100px]"
                 @change="setDataForHeatmap()"
               >
                 <option value="ทุกหมวด">ทุกหมวด</option>
@@ -405,7 +405,7 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="flex pb-3">
+          <div class="flex pb-3 overflow-x-auto">
             <div
               v-for="item in newsDataHeatmap[0].list"
               class="heatmap-bar"
@@ -427,6 +427,8 @@ onMounted(() => {
               <div class="selected-bar"></div>
             </div>
           </div>
+
+          <RandomNews :isInStorytelling="false" />
         </div>
       </div>
     </div>
