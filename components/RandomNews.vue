@@ -39,7 +39,7 @@ function randomNews() {
   } else data = random_news.value;
 
   selectedNews.value = data[getRandomInt(data.length)];
-  console.log(selectedNews.value);
+  // console.log(selectedNews.value);
 
   total.value = data.length;
 }

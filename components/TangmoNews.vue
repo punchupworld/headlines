@@ -25,8 +25,8 @@ const fetchData = async () => {
 
 function setMarginLeft(date) {
   const x = d3.scaleTime(
-    [new Date(2022, 1, 1), new Date(2023, 12, 31)],
-    [0, 3375]
+    [new Date("2022/1/1"), new Date("2023/12/31")],
+    [0, 3650]
   );
 
   return x(new Date(date)) + "px";
@@ -38,7 +38,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-[215px] flex items-end">
+  <div class="h-[215px] flex items-end relative">
     <div
       v-for="(item, i) in tangmo_news"
       class="chart"
@@ -46,6 +46,7 @@ onMounted(() => {
         left: setMarginLeft(item.date),
         height: (item.total / maxHeightChart) * 100 + '%',
       }"
+      :data="item.date"
     >
       <div
         :class="{
@@ -112,8 +113,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .chart {
-  position: relative;
-  flex: 0 0 5px;
+  position: absolute;
+  width: 5px;
   transition: 0.5s;
   display: flex;
   flex-direction: column;

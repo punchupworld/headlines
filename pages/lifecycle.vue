@@ -18,10 +18,11 @@ function selectNews(news) {
     scroller
       .setup({
         step: "#main-box .step-list .step",
-        offset: 0.8,
+        offset: 0.2,
       })
       .onStepEnter((response) => {
         step.value = response.index;
+        console.log(response);
         // { element, index, direction }
       })
       .onStepExit((response) => {
@@ -187,7 +188,8 @@ function selectNews(news) {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col justify-center"
+          id="tangmo-news-list"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col justify-center scroll-smooth"
           v-if="step > 0 && isSelectNews"
         >
           <TangmoNews />
@@ -218,7 +220,7 @@ function selectNews(news) {
                 />
               </template>
               <template v-if="step < 7 && step > 0">
-                <RandomNews :current_step="step" :isInStorytelling="true" />
+                <!-- <RandomNews :current_step="step" :isInStorytelling="true" /> -->
               </template>
             </div>
           </div>
