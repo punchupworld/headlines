@@ -40,7 +40,7 @@ const monthTH = [
   "ตุลาคม",
   "พฤศจิกายน",
   "ธันวาคม",
-]
+];
 
 const monthShortTH = [
   "ม.ค.",
@@ -55,7 +55,7 @@ const monthShortTH = [
   "ต.ค.",
   "พ.ย.",
   "ธ.ค.",
-]
+];
 
 const monthShortEN = [
   "Jan",
@@ -393,28 +393,28 @@ const summaryData = async () => {
 // }
 
 const filterSampleHeadlineCategory = async (category) => {
-  let year
-  const categoryToCompare = category.toLowerCase()
+  let year;
+  const categoryToCompare = category.toLowerCase();
   filteredSampleHeadlineCategory.value =
     await sampleHeadlineCategory.value.filter((item) => {
       if (categoryIndex.value >= 12) {
-        year = 2023
-        let cateIndex = categoryIndex.value - 12
+        year = 2023;
+        let cateIndex = categoryIndex.value - 12;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[cateIndex]
-        )
+        );
       } else {
-        year = 2022
+        year = 2022;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[categoryIndex.value]
-        )
+        );
       }
-    })
-}
+    });
+};
 const fetchSampleHeadlineCategory = async () => {
   const response = await fetch("/data/HeadlinesSample.json")
   const data = await response.json()
@@ -424,8 +424,8 @@ const fetchSampleHeadlineCategory = async () => {
 }
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 
 const formatMonth = (inputDate) => {
   const dateParts = inputDate.split("-")
@@ -463,8 +463,8 @@ const findMaxOfMonthly = () => {
   maxOfMonthly.value = maxValue
 }
 const selectExploreMode = async (mode) => {
-  exploreModeSelected.value = mode
-  sampleIndex.value = 0
+  exploreModeSelected.value = mode;
+  sampleIndex.value = 0;
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
     dataForKW.value = await keywords.value[inputKeyword.value]
     findMaxOfMonthly()
@@ -483,27 +483,27 @@ const selectExploreMode = async (mode) => {
 const getCategoryColorClass = (category) => {
   switch (true) {
     case category.includes("การเมือง"):
-      return "bg-vermillion"
+      return "bg-vermillion";
     case category.includes("สังคมไทย"):
-      return "bg-lightblue"
+      return "bg-lightblue";
     case category.includes("เศรษฐกิจ"):
-      return "bg-orange"
+      return "bg-orange";
     case category.includes("ต่างประเทศ"):
-      return "bg-rose"
+      return "bg-rose";
     case category.includes("บันเทิง"):
-      return "bg-pink"
+      return "bg-pink";
     case category.includes("อาชญากรรม"):
-      return "bg-brown"
+      return "bg-brown";
     case category.includes("กีฬา"):
-      return "bg-purple"
+      return "bg-purple";
     case category.includes("วิทยาศาสตร์"):
-      return "bg-blue"
+      return "bg-blue";
     case category.includes("สิ่งแวดล้อม"):
-      return "bg-green"
+      return "bg-green";
     default:
-      return ""
+      return "";
   }
-}
+};
 
 const categoryBorderColorMap = {
   การเมือง: "border-[#FF3D00]",
@@ -515,16 +515,16 @@ const categoryBorderColorMap = {
   กีฬา: "border-[#AA92E3]",
   วิทยาศาสตร์: "border-[#257DCC]",
   สิ่งแวดล้อม: "border-[#9BB95A]",
-}
+};
 
 const getCategoryBorderColor = (category) => {
   for (const key in categoryBorderColorMap) {
     if (category.includes(key)) {
-      return categoryBorderColorMap[key]
+      return categoryBorderColorMap[key];
     }
   }
-  return ""
-}
+  return "";
+};
 
 const calculateHeightPerCategory2 = (total, count, maxHeigh, max) => {
   const totalHeight = (total * maxHeigh) / max
@@ -613,47 +613,47 @@ const findMaxEachCategory = (category) => {
 // }
 
 const handleCurrentIndex = (index) => {
-  categoryIndex.value = index
-  filterCategoryKeyword(categorySelected.value)
-  filterSampleHeadlineCategory(categorySelected.value)
-  scrollToSection()
-}
+  categoryIndex.value = index;
+  filterCategoryKeyword(categorySelected.value);
+  filterSampleHeadlineCategory(categorySelected.value);
+  scrollToSection();
+};
 
-const exploreRef = ref(null)
+const exploreRef = ref(null);
 const scrollToSection = () => {
-  exploreRef.value.scrollIntoView({ behavior: "smooth" })
-}
+  exploreRef.value.scrollIntoView({ behavior: "smooth" });
+};
 
-const top10KeywordsData = ref()
+const top10KeywordsData = ref();
 const fetchExploreData10Keyword = async () => {
-  const response = await fetch("/data/Top10Keyword.json")
-  const data = await response.json()
-  top10KeywordsData.value = data
-}
-const top10Keywords = ref()
+  const response = await fetch("/data/Top10Keyword.json");
+  const data = await response.json();
+  top10KeywordsData.value = data;
+};
+const top10Keywords = ref();
 const filterCategoryKeyword = async (category) => {
   let year
   top10Keywords.value = await top10KeywordsData.value.filter((item) => {
-    const itemMonths = item.month.split(",").map((m) => m.toLowerCase())
-    const categoryToCompare = category.toLowerCase()
+    const itemMonths = item.month.split(",").map((m) => m.toLowerCase());
+    const categoryToCompare = category.toLowerCase();
     if (categoryIndex.value >= 12) {
-      year = 2023
-      let cateIndex = categoryIndex.value - 12
+      year = 2023;
+      let cateIndex = categoryIndex.value - 12;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[cateIndex].toLowerCase()) &&
         item.year === year
-      )
+      );
     } else {
-      year = 2022
+      year = 2022;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[categoryIndex.value].toLowerCase()) &&
         item.year === year
-      )
+      );
     }
-  })
-}
+  });
+};
 const handleExploreMounthYear = (action) => {
   if (action === "prev") {
     if (categoryIndex.value !== 0) {
@@ -676,7 +676,7 @@ const handleExploreMounthYear = (action) => {
       filterSampleHeadlineCategory(categorySelected.value)
     }
   }
-}
+};
 const selectCategory = (category) => {
   categorySelected.value = category
   filterCategoryKeyword(category)
@@ -686,13 +686,13 @@ const fullMonthAndYear = computed(() => {
   if (categoryIndex.value >= 12) {
     return `${monthTH[categoryIndex.value - 12]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   } else {
     return `${monthTH[categoryIndex.value]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   }
-})
+});
 
 const scroller = scrollama()
 
@@ -713,23 +713,23 @@ const filteredSuggestions = computed(() => {
 
 const beforeKeyword = ref("")
 const showTheSuggestion = () => {
-  showSuggestions.value = true
-  inputKeyword.value = ""
-  handleInputFocus()
-}
+  showSuggestions.value = true;
+  inputKeyword.value = "";
+  handleInputFocus();
+};
 
 const handleInputFocus = () => {
-  isInputFocused.value = !isInputFocused.value
-}
+  isInputFocused.value = !isInputFocused.value;
+};
 const clearInput = () => {
-  inputKeyword.value = ""
-  showSuggestions.value = false
-}
+  inputKeyword.value = "";
+  showSuggestions.value = false;
+};
 
 const handleInput = () => {
-  showSuggestions.value = true
-  isInputFocused.value = true
-}
+  showSuggestions.value = true;
+  isInputFocused.value = true;
+};
 
 const hideSuggestions = () => {
   showSuggestions.value = false
@@ -737,13 +737,13 @@ const hideSuggestions = () => {
   inputKeyword.value = beforeKeyword.value
   console.log(inputKeyword.value)
   // handleInputFocus()
-}
+};
 
 const selectSuggestion = (selectedValue) => {
   // console.log(selectedValue)
-  inputKeyword.value = selectedValue
+  inputKeyword.value = selectedValue;
   // showSuggestions.value = false
-}
+};
 const searchKeyword = () => {
   dataForKW.value = keywords.value[inputKeyword.value]
   showSuggestions.value = false
@@ -756,14 +756,14 @@ const searchKeyword = () => {
 }
 
 const handleTyping = () => {
-  isInputFocused.value = true
-}
+  isInputFocused.value = true;
+};
 const handleSuggestionMouseDown = (selectedValue) => {
-  selectSuggestion(selectedValue)
-  searchKeyword()
-  showSuggestions.value = false
-  isInputFocused.value = false
-}
+  selectSuggestion(selectedValue);
+  searchKeyword();
+  showSuggestions.value = false;
+  isInputFocused.value = false;
+};
 
 const highlightKeyword = (headline, keyword) => {
   if (exploreModeSelected.value === "หมวดข่าว") {
@@ -773,43 +773,44 @@ const highlightKeyword = (headline, keyword) => {
         .map((k) => k.keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"))
         .join("|")})`,
       "gi"
-    )
+    );
     return headline.replace(
       keywordsRegex,
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   } else {
     return headline.replace(
       new RegExp(`(${keyword})`, "gi"),
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   }
-}
+};
 
 const highlightMatchedText = (suggestion) => {
-  const typedText = inputKeyword.value.toLowerCase()
-  const suggestionLower = suggestion.toLowerCase()
-  const index = suggestionLower.indexOf(typedText)
+  const typedText = inputKeyword.value.toLowerCase();
+  const suggestionLower = suggestion.toLowerCase();
+  const index = suggestionLower.indexOf(typedText);
 
   const highlightedText =
     suggestion.substring(0, index) +
     "<b>" +
     suggestion.substring(index, index + typedText.length) +
     "</b>" +
-    suggestion.substring(index + typedText.length)
+    suggestion.substring(index + typedText.length);
 
-  return highlightedText
-}
+  return highlightedText;
+};
 
-const sampleIndex = ref(0)
+const sampleIndex = ref(0);
 const handleNewSample = () => {
   if (sampleIndex.value === 9) {
     sampleIndex.value = 0 
   }
-  sampleIndex.value += 1
-}
+  sampleIndex.value += 1;
+};
 
 watchEffect((onCleanup) => {
+  if (process.client) {
   if(headlineShow.value.length === 0) return;
 
   let interval = setInterval(() => {
@@ -819,6 +820,7 @@ watchEffect((onCleanup) => {
   onCleanup(()=>{
     clearInterval(interval)
   })
+}
 })
 
 const currentText = computed(() => {
@@ -837,27 +839,30 @@ onMounted(async () => {
   const handleSectionOpacity = (currentSection, direction) => {
     const sections = Array.from({ length: 12 }, (_, index) =>
       document.getElementById(`section${index + 1}`)
-    )
+    );
 
     for (let i = 0; i < sections.length; i++) {
       if (i === currentSection - 1) {
         if (direction === "down") {
-          sections[i].style.opacity = 1
-          sections[i - 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i - 1].style.opacity = 0;
         } else if (direction === "up") {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i + 1].style.opacity = 0;
         } else {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i + 1].style.opacity = 0;
         }
       }
     }
-  }
+  };
   const handleStepEnter = (response) => {
-    const currentSection = parseInt(response.element.id.replace("card", ""), 10)
-    handleSectionOpacity(currentSection, response.direction)
-  }
+    const currentSection = parseInt(
+      response.element.id.replace("card", ""),
+      10
+    );
+    handleSectionOpacity(currentSection, response.direction);
+  };
   const init = () => {
     scroller
       .setup({
@@ -865,11 +870,11 @@ onMounted(async () => {
         offset: 0.9,
         debug: false,
       })
-      .onStepEnter(handleStepEnter)
-    window.addEventListener("resize", scroller.resize)
-  }
-  init()
-})
+      .onStepEnter(handleStepEnter);
+    window.addEventListener("resize", scroller.resize);
+  };
+  init();
+});
 </script>
 
 <template>
@@ -955,10 +960,12 @@ onMounted(async () => {
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="">
-          <Vue3Lottie
-            :animationData="lottie_1"
-            class="max-w-[450px] w-[90vw]"
-          />
+          <ClientOnly>
+            <Vue3Lottie
+              :animationData="lottie_1"
+              class="max-w-[450px] w-[90vw]"
+            />
+          </ClientOnly>
         </div>
 
         <!-- <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">

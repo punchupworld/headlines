@@ -1,57 +1,57 @@
 <script setup>
-import draggable from "vuedraggable"
-import { Vue3Lottie } from "vue3-lottie"
-import lottie_intro from "public/lottie/lottie-0.json"
-const isShowAnswer = ref(false)
-const resultTextHead = ref("")
-const resultTextDesc = ref()
-const numOfCorrect = ref(0)
-const isShowContent = ref(false)
-const isShowQuiz = ref(true)
-const isShowRefPopup = ref(false)
-const quizData = ref([])
-const reference = ref(null)
-const quizSet = ref(1)
-const quiz = ref([])
+import draggable from "vuedraggable";
+import { Vue3Lottie } from "vue3-lottie";
+import lottie_intro from "public/lottie/lottie-0.json";
+const isShowAnswer = ref(false);
+const resultTextHead = ref("");
+const resultTextDesc = ref();
+const numOfCorrect = ref(0);
+const isShowContent = ref(false);
+const isShowQuiz = ref(true);
+const isShowRefPopup = ref(false);
+const quizData = ref([]);
+const reference = ref(null);
+const quizSet = ref(1);
+const quiz = ref([]);
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 const showContent = () => {
-  isShowContent.value = true
-  isShowQuiz.value = false
-}
+  isShowContent.value = true;
+  isShowQuiz.value = false;
+};
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date)
-  })
-})
+    return new Date(a.date) - new Date(b.date);
+  });
+});
 
 const checkAnswer = () => {
-  console.log(quiz.value)
+  console.log(quiz.value);
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name
-  }).length
+    return item.name === answer.value[index].name;
+  }).length;
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%"
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
+      "%";
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+      "%";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   }
-  isShowAnswer.value = true
-  isShowContent.value = true
-}
+  isShowAnswer.value = true;
+  isShowContent.value = true;
+};
 const formatDate = (inputDate) => {
   const months = [
     "ม.ค.",
@@ -66,60 +66,60 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ]
-  const dateObject = new Date(inputDate)
-  const day = dateObject.getDate()
-  const monthIndex = dateObject.getMonth()
-  const year = dateObject.getFullYear() % 100
-  return `${day} ${months[monthIndex]} ${year}`
-}
+  ];
+  const dateObject = new Date(inputDate);
+  const day = dateObject.getDate();
+  const monthIndex = dateObject.getMonth();
+  const year = dateObject.getFullYear() % 100;
+  return `${day} ${months[monthIndex]} ${year}`;
+};
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
-    console.log(quiz.value)
-    quizSet.value++
+    );
+    console.log(quiz.value);
+    quizSet.value++;
   } else {
-    quizSet.value = 1
+    quizSet.value = 1;
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
+    );
   }
   const addFieldToObject = (obj, fieldName, fieldValue) => {
-    obj[fieldName] = fieldValue
-  }
-  addFieldToObject(quiz.value[0], "no", 1)
-  addFieldToObject(quiz.value[1], "no", 2)
-  addFieldToObject(quiz.value[2], "no", 3)
-}
+    obj[fieldName] = fieldValue;
+  };
+  addFieldToObject(quiz.value[0], "no", 1);
+  addFieldToObject(quiz.value[1], "no", 2);
+  addFieldToObject(quiz.value[2], "no", 3);
+};
 const restartQuiz = async () => {
-  isShowAnswer.value = false
-  isShowContent.value = false
-  await setQuiz()
-}
+  isShowAnswer.value = false;
+  isShowContent.value = false;
+  await setQuiz();
+};
 
 const scrollToReference = () => {
-  reference.value.scrollIntoView({ behavior: "smooth" })
-}
+  reference.value.scrollIntoView({ behavior: "smooth" });
+};
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv")
-    const csvText = await response.text()
+    const response = await fetch("/data/quiz.csv");
+    const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
-      const [id, name, link, date] = line.split(",")
-      return { id, name, link, date }
-    })
-    quizData.value = rows
-    console.log(quizData.value)
-    setQuiz()
+      const [id, name, link, date] = line.split(",");
+      return { id, name, link, date };
+    });
+    quizData.value = rows;
+    console.log(quizData.value);
+    setQuiz();
   } catch (error) {
-    console.error("Error fetching CSV data:", error)
+    console.error("Error fetching CSV data:", error);
   }
-}
+};
 
-const bgLoopIndex = ref(0)
+const bgLoopIndex = ref(0);
 const bgColor = [
   "bg-vermillion",
   "bg-lightblue",
@@ -130,20 +130,20 @@ const bgColor = [
   "bg-purple",
   "bg-blue",
   "bg-green",
-]
+];
 const startLoop = () => {
   setInterval(() => {
-    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length
-  }, 1000)
-}
+    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length;
+  }, 1000);
+};
 
 const blockCategryStyle =
-  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center"
+  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center";
 onMounted(() => {
-  fetchData()
-  startLoop()
-  quizSet.value = 1
-})
+  fetchData();
+  startLoop();
+  quizSet.value = 1;
+});
 </script>
 
 <template>
@@ -160,10 +160,19 @@ onMounted(() => {
           @click="showRefPopup"
           src="/image/CanclePink.svg"
           alt=""
+<<<<<<< HEAD
           class="absolute -top-2 -right-2" />
         <div
           id="ref"
           class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full">
+=======
+          class="absolute -top-2 -right-2"
+        />
+        <div
+          id="ref"
+          class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full"
+        >
+>>>>>>> bcdf687a491f10de6f62e790f4dc0dd042e720f2
           <div class="pb-5">
             <h1 class="h5 font-bold pb-[20px]" ref="reference">
               ที่มาและข้อจำกัดของข้อมูล
@@ -194,7 +203,12 @@ onMounted(() => {
             <img
               src="/image/NewsAgencyDesktop.svg"
               alt=""
+<<<<<<< HEAD
               class="hidden lg:block" />
+=======
+              class="hidden lg:block"
+            />
+>>>>>>> bcdf687a491f10de6f62e790f4dc0dd042e720f2
             <div class="flex gap-[5px] py-5 content-center">
               <div>
                 <ol class="b4 font-bold list-decimal text-start">
@@ -420,7 +434,12 @@ onMounted(() => {
                 </div>
               </div>
               <div
+<<<<<<< HEAD
                 class="absolute bottom-10 lg:left-1/3 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]">
+=======
+                class="absolute bottom-10 lg:left-1/3 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
+              >
+>>>>>>> bcdf687a491f10de6f62e790f4dc0dd042e720f2
                 <img src="/image/SlideIcon.svg" alt="" />
                 <p>เลื่อน</p>
               </div>
@@ -432,7 +451,12 @@ onMounted(() => {
     <div
       id="quiz"
       class="flex flex-col py-[30px] max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
+<<<<<<< HEAD
       v-show="isShowQuiz">
+=======
+      v-show="isShowQuiz"
+    >
+>>>>>>> bcdf687a491f10de6f62e790f4dc0dd042e720f2
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
         <h5
           :class="numOfCorrect === 0 ? 'bg-[#FF3D00] cream' : 'bg-[#4ADADA]'"
@@ -654,7 +678,12 @@ onMounted(() => {
       </div>
 
       <div
+<<<<<<< HEAD
         class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+=======
+        class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]"
+      >
+>>>>>>> bcdf687a491f10de6f62e790f4dc0dd042e720f2
         <div class="b3 space-y-[10px]">
           <div class="flex flex-col items-center justify-center gap-[5px]">
             <p class="bg-vermillion w-fit text-white px-[10px]">
@@ -676,7 +705,9 @@ onMounted(() => {
           </p>
           <p>ในขณะที่ 50% ของผู้ตอบแบบสอบถาม บริโภคข่าวจากสื่อโทรทัศน์</p>
 
-          <Vue3Lottie :animationData="lottie_intro" class="max-w-[450px]" />
+          <ClientOnly>
+            <Vue3Lottie :animationData="lottie_intro" class="max-w-[450px]" />
+          </ClientOnly>
           <p>
             ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
             เป็นบทนำในการเล่าเรื่อง ที่ล้วนต้องสั้นกระชับ
