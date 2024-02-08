@@ -2,6 +2,7 @@
 import scrollama from "scrollama"
 import { Vue3Lottie } from "vue3-lottie"
 import lottie_1 from "public/lottie/lottie-1.json"
+import { sum, max } from "d3"
 
 const headlineRef = ref(null)
 const currentIndex = ref(0)
@@ -13,10 +14,7 @@ const categoryIndex = ref(0)
 const data = ref()
 const exploreData = ref()
 const categorySelected = ref("การเมือง")
-// const max = ref(0)
-// const min = ref(0)
-const maxStory = ref(0)
-const maxStoryIndex = ref(0)
+const maxOfMonthCategory = ref(0)
 const minStory = ref(0)
 const minStoryIndex = ref(0)
 const inputKeyword = ref("แซ่บ")
@@ -26,8 +24,10 @@ const keywords = ref()
 const sampleHeadlineCategory = ref()
 const filteredSampleHeadlineCategory = ref()
 const exploreCategoryHeadlineData = ref()
-let totalDataEachMonth = []
-let totalDataEachCategory = []
+const totalDataEachMonth = ref([])
+const totalDataEachCategory = ref([])
+const maxOfEachCategory = ref([])
+
 const monthTH = [
   "มกราคม",
   "กุมภาพันธ์",
@@ -72,75 +72,326 @@ const monthShortEN = [
   "Nov",
   "Dec",
 ]
+
 const category = [
   { name: "การเมือง", color: "bg-vermillion" },
   { name: "สังคมไทย", color: "bg-lightblue" },
-  { name: "เศรษฐกิจ", color: "bg-orange" },
+  { name: "เศรษฐกิจ/การเงิน", color: "bg-orange" },
   { name: "ต่างประเทศ", color: "bg-rose" },
   { name: "บันเทิง", color: "bg-pink" },
   { name: "อาชญากรรม", color: "bg-brown" },
   { name: "กีฬา", color: "bg-purple" },
-  { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
+  { name: "วิทยาศาสตร์/เทคโนโลยี", color: "bg-blue" },
   { name: "สิ่งแวดล้อม", color: "bg-green" },
 ]
-
 const fetchExploreCategoryHeadline = async () => {
   const response = await fetch("/data/sample_news_headlines.json")
   const data = await response.json()
   exploreCategoryHeadlineData.value = data
-  console.log(exploreCategoryHeadlineData.value["การเมือง"]["monthly"])
+}
 
-  for (let year = 2022; year <= 2023; year++) {
-    for (let month = 1; month <= 12; month++) {
-      let totalForMonth = 0
-
-      Object.keys(data).forEach((categoryName) => {
-        const monthlyData = data[categoryName].monthly
-
-        const totalForCategoryMonth =
-          monthlyData.find((item) => item.year === year && item.month === month)
-            ?.total || 0
-
-        totalForMonth += totalForCategoryMonth
-      })
-
-      totalDataEachMonth.push({ year, month, total: totalForMonth })
-    }
-  }
-
-  maxStory.value = Math.max(...totalDataEachMonth.map((d) => d.total))
-  console.log(maxStory.value)
-
+const summaryData = async () => {
+  const dataSet = exploreCategoryHeadlineData.value
+  console.log(
+    "exploreCategoryHeadlineData",
+    exploreCategoryHeadlineData.value["เศรษฐกิจ/การเงิน"]
+  )
   const categorySums = {}
   let overallTotal = 0
+  const year = [2022, 2023]
+  const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  const arrTotalEachMonth = []
+  const arrSumEachCategory = []
+  const arrMaxOfEachCategoryPerMonth = []
 
-  for (let year = 2022; year <= 2023; year++) {
-    for (let month = 1; month <= 12; month++) {
-      Object.keys(data).forEach((categoryName) => {
-        const monthlyData = data[categoryName].monthly
-        const totalForCategoryMonth =
-          monthlyData.find((item) => item.year === year && item.month === month)
-            ?.total || 0
+  //   year.forEach((year) => {
+  //     month.forEach((month) => {
+  //       // arrTotalEachMonth.push({ year,month })
 
-        categorySums[categoryName] =
-          (categorySums[categoryName] || 0) + totalForCategoryMonth
-        overallTotal += totalForCategoryMonth
-      })
-    }
+  //       let totalForMonth = 0
+  //       for (const categoryName in dataSet) {
+  //           const monthlyData = dataSet[categoryName].monthly
+
+  //         const totalForCategoryMonth =
+  //           monthlyData.find((item) => item.year === year && item.month === month)
+  //             ?.total || 0
+  //         categorySums[categoryName] =
+  //           (categorySums[categoryName] || 0) + totalForCategoryMonth
+  // console.log('categorySum',categorySums)
+  // console.log('',totalForCategoryMonth)
+
+  //         totalForMonth += totalForCategoryMonth
+  //         overallTotal += totalForCategoryMonth
+  //       }
+  //       arrTotalEachMonth.push({ year, month, total: totalForMonth })
+  //       // Object.keys(dataSet).forEach((categoryName) => {
+  //       //   console.log(categoryName)
+  //       //   const monthlyData = dataSet[categoryName].monthly
+
+  //       //   const totalForCategoryMonth =
+  //       //     monthlyData.find((item) => item.year === year && item.month === month)
+  //       //       ?.total || 0
+  //       //   categorySums[categoryName] =
+  //       //     (categorySums[categoryName] || 0) + totalForCategoryMonth
+
+  //       //   totalForMonth += totalForCategoryMonth
+  //       //   overallTotal += totalForCategoryMonth
+  //       // })
+  //       // arrTotalEachMonth.push({ year, month, total: totalForMonth })
+  //     })
+
+  //   })
+
+  let allArr = []
+  for (const category in exploreCategoryHeadlineData.value) {
+    // console.log("category", exploreCategoryHeadlineData.value[category].monthly)
+
+    const monthly = exploreCategoryHeadlineData.value[category].monthly
+    // for (const monthly in category[monthly]) {
+    //   console.log('helloo',monthly)
+    // }
+    // if (arrTotalEachMonth.find((item)=>{ })) {
+    //   arrTotalEachMonth.push
+
+    // } else {
+    //   arrTotalEachMonth.pus
+
+    // }
+    // allArr.push({
+    //  ...(...monthly),
+    //   category: category,
+    // })
+    // conewObjnsole.log('newObj',newObj)
+
+    monthly.forEach((item) => {
+      allArr.push({ ...item, category: category })
+    })
   }
+  console.log("allArr", allArr)
 
-  Object.keys(categorySums).forEach((categoryName) => {
-    totalDataEachCategory.push({
-      category: categoryName,
-      total: categorySums[categoryName],
+  year.forEach((year) => {
+    month.forEach((month) => {
+      // let a = sum(allArr.filter(), d => d.total)
+      let nowAllArr = allArr.filter(
+        (item) => item.year === year && item.month === month
+      )
+      // console.log('allArr',nowAllArr)
+      arrTotalEachMonth.push({
+        year,
+        month,
+        total: sum(nowAllArr, (d) => d.total),
+      })
     })
   })
 
-  totalDataEachCategory.push({ category: "Total", total: overallTotal })
+  category.forEach((ct) => {
+    const groupByCategory = allArr.filter((item) => item.category === ct.name)
+    arrSumEachCategory.push({
+      category: ct.name,
+      total: sum(groupByCategory, (d) => d.total),
+      max: max(groupByCategory, (d) => d.total),
+    })
+  })
 
-  console.log("total")
-  console.log(totalDataEachCategory)
+  arrSumEachCategory.push({
+    category: "Total",
+    total: sum(arrSumEachCategory, (d) => d.total),
+  })
+  maxOfMonthCategory.value = max(arrTotalEachMonth, (d) => d.total)
+  console.log("arrSumEachCategory", arrSumEachCategory)
+  console.log("arrTotalEachMonth", arrTotalEachMonth)
+
+  totalDataEachCategory.value = arrSumEachCategory
+  totalDataEachMonth.value = arrTotalEachMonth
+  // maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
+  console.log("totalDataEachMonth", totalDataEachMonth.value)
+  console.log("maxOfMonthCategory", maxOfMonthCategory.value)
+  console.log("totalDataEachCategory", totalDataEachCategory.value)
+  console.log("maxOfEachCategory", maxOfEachCategory.value)
+  // console.log('arrTotalEachMonth',arrTotalEachMonth)
+  // console.log('categorySums',categorySums)
+  // console.log('overallTotal',overallTotal)
+  // console.log('arrTotalEachMonth',arrTotalEachMonth)
+  // console.log('allArr',allArr)
+  // Object.keys(categorySums).forEach((categoryName) => {
+  //   arrSumEachCategory.push({
+  //     category: categoryName,
+  //     total: categorySums[categoryName],
+  //   })
+  // })
+
+  // arrSumEachCategory.push({ category: "Total", total: overallTotal })
+
+  // Object.keys(dataSet).forEach((categoryName) => {
+  //   const monthlyData = dataSet[categoryName].monthly
+  //   const max = Math.max(...monthlyData.map((d) => d.total))
+  //   arrMaxOfEachCategoryPerMonth.push({ category: categoryName, max })
+  // })
+
+  // totalDataEachCategory.value = arrSumEachCategory
+  // totalDataEachMonth.value = arrTotalEachMonth
+  // maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
+
+  // maxOfMonthCategory.value = Math.max(
+  //   ...totalDataEachMonth.value.map((d) => d.total)
+  // )
+
+  // console.log('maxOfMonthCategory',maxOfMonthCategory.value)
+  // console.log('totalDataEachCategory',totalDataEachCategory.value)
+  // console.log('totalDataEachMonth',totalDataEachMonth.value)
+  // console.log('maxOfEachCategory',maxOfEachCategory.value)
 }
+
+// const summaryData = async () => {
+//   const categorySums = {}
+//   let overallTotal = 0
+//   let year = [2022, 2023]
+//   let month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+//   let arrTotalEachMonth = []
+//   let arrSumEachCategory = []
+//   let arrMaxOfEachCategoryPerMonth = []
+
+//   year.forEach((year) => {
+//     month.forEach((month) => {
+//       let totalForMonth = 0
+//       Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
+//         const monthlyData =
+//           exploreCategoryHeadlineData.value[categoryName].monthly
+
+//         //total of each category per month
+//         const totalForCategoryMonth =
+//           monthlyData.find((item) => item.year === year && item.month === month)
+//             ?.total || 0
+
+//         categorySums[categoryName] =
+//           (categorySums[categoryName] || 0) + totalForCategoryMonth
+
+//         //1 month all category total
+//         totalForMonth += totalForCategoryMonth
+
+//         overallTotal += totalForCategoryMonth
+
+//       })
+//       arrTotalEachMonth.push({ year, month, total: totalForMonth })
+//     })
+//   })
+
+//   Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
+// arrSumEachCategory.push({
+//       category: categoryName,
+//       total: categorySums[categoryName],
+//     })
+
+//     const monthlyData =
+//       exploreCategoryHeadlineData.value[categoryName].monthly
+//     const max = Math.max(...monthlyData.map((d) => d.total))
+//     arrMaxOfEachCategoryPerMonth.push({ category: categoryName, max })
+//   })
+//   arrSumEachCategory.push({ category: "Total", total: overallTotal })
+//   totalDataEachCategory.value = arrSumEachCategory
+//   totalDataEachMonth.value =
+//   maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
+
+//   maxOfMonthCategory.value = Math.max(...arrTotalEachMonth.map((d) => d.total))
+//   // for (let year = 2022; year <= 2023; year++) {
+//   //   for (let month = 1; month <= 12; month++) {
+//   //     let totalForMonth = 0
+
+//   //     Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
+//   //       const monthlyData = exploreCategoryHeadlineData.value[categoryName].monthly
+
+//   //       const totalForCategoryMonth =
+//   //         monthlyData.find((item) => item.year === year && item.month === month)
+//   //           ?.total || 0
+
+//   //       categorySums[categoryName] =
+//   //         (categorySums[categoryName] || 0) + totalForCategoryMonth
+//   //       totalForMonth += totalForCategoryMonth
+//   //       overallTotal += totalForCategoryMonth
+//   //     })
+
+//   //     totalDataEachMonth.value.push({ year, month, total: totalForMonth })
+//   //   }
+//   // }
+
+//   // maxOfMonthCategory.value = Math.max(...totalDataEachMonth.value.map((d) => d.total))
+
+//   // Object.keys(categorySums).forEach((categoryName) => {
+//   //   totalDataEachCategory.value.push({
+//   //     category: categoryName,
+//   //     total: categorySums[categoryName],
+//   //   })
+//   // })
+
+//   // totalDataEachCategory.value.push({ category: "Total", total: overallTotal })
+
+//   // Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
+//   //   const monthlyData = exploreCategoryHeadlineData.value[categoryName].monthly
+//   //   const max = Math.max(...monthlyData.map((d) => d.total))
+//   //   maxOfEachCategory.value.push({ category: categoryName, max })
+//   // })
+// }
+
+// const fetchExploreCategoryHeadline = async () => {
+//   const response = await fetch("/data/sample_news_headlines.json")
+//   const data = await response.json()
+//   exploreCategoryHeadlineData.value = data
+
+//   for (let year = 2022; year <= 2023; year++) {
+//     for (let month = 1; month <= 12; month++) {
+//       let totalForMonth = 0
+
+//       Object.keys(data).forEach((categoryName) => {
+//         const monthlyData = data[categoryName].monthly
+
+//         const totalForCategoryMonth =
+//           monthlyData.find((item) => item.year === year && item.month === month)
+//             ?.total || 0
+
+//         totalForMonth += totalForCategoryMonth
+//       })
+
+//       totalDataEachMonth.push({ year, month, total: totalForMonth })
+//     }
+//   }
+
+//   maxOfMonthCategory.value = Math.max(...totalDataEachMonth.map((d) => d.total))
+
+//   const categorySums = {}
+//   let overallTotal = 0
+
+//   for (let year = 2022; year <= 2023; year++) {
+//     for (let month = 1; month <= 12; month++) {
+//       Object.keys(data).forEach((categoryName) => {
+//         const monthlyData = data[categoryName].monthly
+//         const totalForCategoryMonth =
+//           monthlyData.find((item) => item.year === year && item.month === month)
+//             ?.total || 0
+
+//         categorySums[categoryName] =
+//           (categorySums[categoryName] || 0) + totalForCategoryMonth
+//         overallTotal += totalForCategoryMonth
+//       })
+//     }
+//   }
+
+//   Object.keys(categorySums).forEach((categoryName) => {
+//     totalDataEachCategory.push({
+//       category: categoryName,
+//       total: categorySums[categoryName],
+//     })
+//   })
+
+//   totalDataEachCategory.push({ category: "Total", total: overallTotal })
+
+//   Object.keys(data).forEach((categoryName) => {
+//     const monthlyData = data[categoryName].monthly
+//     const max = Math.max(...monthlyData.map((d) => d.total))
+//     maxOfEachCategory.push({ category: categoryName, max })
+//   })
+
+//   console.log(maxOfEachCategory)
+// }
 
 const filterSampleHeadlineCategory = async (category) => {
   let year
@@ -172,7 +423,6 @@ const fetchSampleHeadlineCategory = async () => {
   await filterSampleHeadlineCategory(categorySelected.value)
   headlineShow = sampleHeadlineCategory.value.map((item) => item.headline)
   headlineShow = headlineShow.slice(0, 10)
-  // console.log(headlineShow)
 }
 
 const showRefPopup = () => {
@@ -180,20 +430,6 @@ const showRefPopup = () => {
 }
 
 const formatMonth = (inputDate) => {
-  // const months = [
-  //   "ม.ค.",
-  //   "ก.พ.",
-  //   "มี.ค.",
-  //   "เม.ย.",
-  //   "พ.ค.",
-  //   "มิ.ย.",
-  //   "ก.ค.",
-  //   "ส.ค.",
-  //   "ก.ย.",
-  //   "ต.ค.",
-  //   "พ.ย.",
-  //   "ธ.ค.",
-  // ]
   const dateParts = inputDate.split("-")
   const day = parseInt(dateParts[2])
   const month = parseInt(dateParts[1])
@@ -202,52 +438,47 @@ const formatMonth = (inputDate) => {
 }
 
 const setData = () => {
-  data.value = exploreData.value.slice(1, -1)
-  // max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
-  // min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
-  // data.value.forEach((entry, index) => {
-  //   const totalValue = parseInt(entry.Total.trim(), 10)
-
-  //   if (!isNaN(totalValue) && totalValue > maxStory.value) {
-  //     maxStory.value = totalValue
-  //     maxStoryIndex.value = index
-  //   }
-  // })
-  minStory.value = Math.min(...data.value.map((d) => d.Total))
-  minStoryIndex.value = data.value.findIndex(
-    (d) => parseInt(d.Total.trim(), 10) === minStory.value
-  )
+  // data.value = exploreData.value.slice(1, -1)
+  // minStory.value = Math.min(...data.value.map((d) => d.Total))
+  // minStoryIndex.value = data.value.findIndex(
+  //   (d) => parseInt(d.Total.trim(), 10) === minStory.value
+  // )
 }
 const fetchAggregateKW = async () => {
   const response = await fetch("/data/aggregate_keywords.json")
   const data = await response.json()
   keywords.value = await data
   suggestionsKW.value = Object.keys(keywords.value)
-  // const name = keywords.value.map((item)=>item.name)
-  // suggestionsKW.value = name
-  // console.log(suggestionsKW.value)
-  // console.log(suggestions.value)
 }
 const dataForKW = ref()
 
-const maxOfMonthly = computed(() => {
-  return Math.max(...dataForKW.value.montly.map((d) => d.total))
-})
+// const maxOfMonthly = computed(() => {
+//   return Math.max(...dataForKW.value.montly.map((d) => d.total))
+// })
+
+const maxOfMonthly = ref(0)
 const findMaxOfMonthly = () => {
   let dataValues = dataForKW.value.montly
-  // console.log(dataValues)
+  console.log(dataValues)
   let maxValue = Math.max(...dataValues.map((d) => d.total))
+  console.log(maxValue)
   maxOfMonthly.value = maxValue
-  // console.log(maxOfMonthly.value)
 }
 const selectExploreMode = async (mode) => {
   exploreModeSelected.value = mode
   sampleIndex.value = 0
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
     dataForKW.value = await keywords.value[inputKeyword.value]
-    console.log(dataForKW.value?.length)
-    console.log(dataForKW.value)
     findMaxOfMonthly()
+  }
+  if (exploreModeSelected.value === "หมวดข่าว") {
+    console.log(
+      exploreCategoryHeadlineData.value[
+        Object.keys(exploreCategoryHeadlineData.value).find((category) =>
+          category.includes(categorySelected.value)
+        )
+      ]["monthly"]
+    )
   }
 }
 
@@ -297,87 +528,91 @@ const getCategoryBorderColor = (category) => {
   return ""
 }
 
-const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
-  const scalePercent = (total * 100) / max
-  // console.log("max", maxHeigh)
-  // console.log("scalePercent", scalePercent)
-  const scaleAll = (scalePercent * maxHeigh) / 100
-  // console.log("scaleAll", scaleAll)
-  const scalePerCategory = (count * scaleAll) / total
-  // console.log("scalePerCategory", scalePerCategory)
-  return Math.ceil(scalePerCategory)
-}
 const calculateHeightPerCategory2 = (total, count, maxHeigh, max) => {
   const totalHeight = (total * maxHeigh) / max
   const eachHeight = (count * totalHeight) / total
-  // console.log('max',max)
-  // console.log('maxH',maxHeigh)
-  // console.log('totalHeight',totalHeight)
-  // console.log('eachHeight',eachHeight)
   return Math.ceil(eachHeight)
 }
-const calculateHeight = (count, maxHeigh, category) => {
+const calculateHeight = (count, maxHeigh, category, max) => {
+  // return 2
   if (category === "Total") {
-    let maxValueOfAll = Math.max(...totalDataEachMonth.map((d) => d.total))
-    let scalePercent = (count * 100) / maxValueOfAll
+    // console.log("total")
+    if (totalDataEachMonth.value.length > 0) {
+      let maxValueOfAll = Math.max(
+        ...totalDataEachMonth.value.map((d) => d.total)
+      )
+      let scalePercent = (count * 100) / maxValueOfAll
+      let scale = Math.ceil((scalePercent * maxHeigh) / 100)
+      return scale
+    } else {
+      return 0
+    }
+  } else {
+    // console.log('else')
+    // let max = maxOfEachCategory.find((item) => item.category.includes(category)).max
+    // console.log(max)
+    // let maxValue = findMaxEachCategory(category)
+    // console.log(category,' + ',maxValue)
+    let scalePercent = (count * 100) / max
     let scale = Math.ceil((scalePercent * maxHeigh) / 100)
     return scale
   }
-  let maxValue = findMaxEachCategory(category)
-  let scalePercent = (count * 100) / maxValue
-  let scale = Math.ceil((scalePercent * maxHeigh) / 100)
-  return scale
 }
 
 const findMaxEachCategory = (category) => {
-  const dataValues = data.value
-  let maxValue = Math.max(...dataValues.map((d) => d[category]))
+  const dataValues =
+    exploreCategoryHeadlineData.value[
+      Object.keys(exploreCategoryHeadlineData.value).find((category) =>
+        category.includes(categorySelected.value)
+      )
+    ]["monthly"]
+  let maxValue = Math.max(...dataValues.map((d) => d.total))
   return maxValue
 }
 
-const fetchData = async () => {
-  try {
-    const response = await fetch("/data/ExploreMonth.csv")
-    const csvText = await response.text()
-    const rows = csvText.split("\n").map((line) => {
-      const [
-        Year,
-        Month,
-        MonthName,
-        การเมือง,
-        กีฬา,
-        ต่างประเทศ,
-        บันเทิง,
-        วิทยาศาสตร์เทคโนโลยี,
-        สังคมไทย,
-        อาชญากรรม,
-        เศรษฐกิจ,
-        สิ่งแวดล้อม,
-        Total,
-      ] = line.split(",")
-      return {
-        Year,
-        Month,
-        MonthName,
-        การเมือง,
-        กีฬา,
-        ต่างประเทศ,
-        บันเทิง,
-        วิทยาศาสตร์เทคโนโลยี,
-        สังคมไทย,
-        อาชญากรรม,
-        เศรษฐกิจ,
-        สิ่งแวดล้อม,
-        Total,
-      }
-    })
-    exploreData.value = rows
-    // console.log(exploreData.value)
-    setData()
-  } catch (error) {
-    console.error("Error fetching CSV data:", error)
-  }
-}
+// const fetchData = async () => {
+//   try {
+//     const response = await fetch("/data/ExploreMonth.csv")
+//     const csvText = await response.text()
+//     const rows = csvText.split("\n").map((line) => {
+//       const [
+//         Year,
+//         Month,
+//         MonthName,
+//         การเมือง,
+//         กีฬา,
+//         ต่างประเทศ,
+//         บันเทิง,
+//         วิทยาศาสตร์/เทคโนโลยี,
+//         สังคมไทย,
+//         อาชญากรรม,
+//         เศรษฐกิจ,
+//         สิ่งแวดล้อม,
+//         Total,
+//       ] = line.split(",")
+//       return {
+//         Year,
+//         Month,
+//         MonthName,
+//         การเมือง,
+//         กีฬา,
+//         ต่างประเทศ,
+//         บันเทิง,
+//         วิทยาศาสตร์/เทคโนโลยี,
+//         สังคมไทย,
+//         อาชญากรรม,
+//         เศรษฐกิจ,
+//         สิ่งแวดล้อม,
+//         Total,
+//       }
+//     })
+//     exploreData.value = rows
+
+//     setData()
+//   } catch (error) {
+//     console.error("Error fetching CSV data:", error)
+//   }
+// }
 
 const handleCurrentIndex = (index) => {
   categoryIndex.value = index
@@ -399,20 +634,6 @@ const fetchExploreData10Keyword = async () => {
 }
 const top10Keywords = ref()
 const filterCategoryKeyword = async (category) => {
-  // const month = [
-  //   "jan",
-  //   "feb",
-  //   "mar",
-  //   "apr",
-  //   "may",
-  //   "jun",
-  //   "jul",
-  //   "aug",
-  //   "sep",
-  //   "oct",
-  //   "nov",
-  //   "dec",
-  // ]
   let year
   top10Keywords.value = await top10KeywordsData.value.filter((item) => {
     const itemMonths = item.month.split(",").map((m) => m.toLowerCase())
@@ -441,18 +662,17 @@ const handleExploreMounthYear = (action) => {
       categoryIndex.value -= 1
       filterCategoryKeyword(categorySelected.value)
       filterSampleHeadlineCategory(categorySelected.value)
-    }
-    else if(categoryIndex.value === 0){
+    } else if (categoryIndex.value === 0) {
       categoryIndex.value = 23
       filterCategoryKeyword(categorySelected.value)
       filterSampleHeadlineCategory(categorySelected.value)
     }
   } else if (action === "next") {
-    if (categoryIndex.value !== data.value.length - 1) {
+    if (categoryIndex.value !== 23) {
       categoryIndex.value += 1
       filterCategoryKeyword(categorySelected.value)
       filterSampleHeadlineCategory(categorySelected.value)
-    }else if(categoryIndex.value === 23){
+    } else if (categoryIndex.value === 23) {
       categoryIndex.value = 0
       filterCategoryKeyword(categorySelected.value)
       filterSampleHeadlineCategory(categorySelected.value)
@@ -461,10 +681,6 @@ const handleExploreMounthYear = (action) => {
 }
 const selectCategory = (category) => {
   categorySelected.value = category
-  // console.log(categorySelected.value)
-  // console.log(exploreCategoryHeadlineData.value[Object.keys(exploreCategoryHeadlineData.value).find((category) => category.includes(categorySelected.value))]['monthly'])
-  // max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
-  // min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
   filterCategoryKeyword(category)
 }
 
@@ -497,6 +713,8 @@ const filteredSuggestions = computed(() => {
   )
   return filtered.slice(0, 6)
 })
+
+const beforeKeyword = ref("")
 const showTheSuggestion = () => {
   showSuggestions.value = true
   inputKeyword.value = ""
@@ -519,6 +737,8 @@ const handleInput = () => {
 const hideSuggestions = () => {
   showSuggestions.value = false
   isInputFocused.value = false
+  inputKeyword.value = beforeKeyword.value
+  console.log(inputKeyword.value)
   // handleInputFocus()
 }
 
@@ -530,7 +750,12 @@ const selectSuggestion = (selectedValue) => {
 const searchKeyword = () => {
   dataForKW.value = keywords.value[inputKeyword.value]
   showSuggestions.value = false
+  if (dataForKW.value) {
+    beforeKeyword.value = inputKeyword.value
+  }
   handleInputFocus()
+  findMaxOfMonthly()
+  console.log(maxOfMonthly.value)
 }
 
 const handleTyping = () => {
@@ -587,21 +812,24 @@ const handleNewSample = () => {
   sampleIndex.value += 1
 }
 
-watchEffect(() => {
-  setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % headlineShow.length
-    currentText.value = headlineShow[currentIndex.value]
-  }, 1000)
-})
+// watchEffect(() => {
+//   setInterval(() => {
+//     if(headlineShow && headlineShow.length > 0){
+//         currentIndex.value = (currentIndex.value + 1) % headlineShow.length
+//     currentText.value = headlineShow[currentIndex.value]
+//     }
+
+//   }, 1000)
+// })
 onMounted(async () => {
-  await fetchData()
+  // await fetchData()
   await fetchExploreData10Keyword()
   await filterCategoryKeyword(categorySelected.value)
   findWidthandHeight("section2")
   await fetchAggregateKW()
   await fetchSampleHeadlineCategory()
   await fetchExploreCategoryHeadline()
-
+  await summaryData()
   const handleSectionOpacity = (currentSection, direction) => {
     const sections = Array.from({ length: 12 }, (_, index) =>
       document.getElementById(`section${index + 1}`)
@@ -736,26 +964,26 @@ onMounted(async () => {
       </div>
       <div id="section" class="h-screen sticky top-0 overflow-hidden">
         <div
-          class="flex flex-col items-center lg:items-start h-screen justify-center"
+          class="flex flex-col items-center xl:items-start h-screen justify-center"
         >
-          <div
+          <!-- <div
             id="section1"
             style="opacity: 1; transition: opacity 0.5s ease"
             class="absolute flex justify-center items-center z-0"
           >
             <div
               ref="headlineRef"
-              class="relative bg-black p-[10px] w-[90vw] max-w-[600px] lg:pr-[60px] lg:pl-[20px] lg:h-[550px] flex items-center"
+              class="relative bg-black p-[10px] w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] xl:h-[550px] flex items-center"
             >
               <p class="cream t2">
                 {{ currentText }}
               </p>
             </div>
-          </div>
+          </div> -->
           <div
             id="section2"
             style="transition: opacity 0.5s ease"
-            class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center lg:justify-start lg:items-start"
+            class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center xl:justify-start xl:items-start"
           >
             <p
               class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto"
@@ -770,7 +998,7 @@ onMounted(async () => {
                   v-for="(item, index) in totalDataEachMonth"
                   class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center"
                   :style="{
-                    width: `${90 / data.length}%`,
+                    width: `${90 / 24}%`,
                   }"
                 >
                   <div
@@ -784,7 +1012,9 @@ onMounted(async () => {
                         'Total'
                       )}px`,
                     }"
-                  ></div>
+                  >
+                    {{ item.total }}
+                  </div>
                   <p
                     class="text-[#939393] -rotate-90 b6"
                     style="pointer-events: none"
@@ -828,7 +1058,7 @@ onMounted(async () => {
             </div>
 
             <div
-              class="flex flex-wrap justify-center py-[10px] lg:max-w-[600px] mx-auto"
+              class="flex flex-wrap justify-center py-[10px] xl:max-w-[600px] mx-auto"
             >
               <div v-for="(item, index) in category">
                 <div class="flex items-center gap-[5px] pr-[10px]">
@@ -864,18 +1094,22 @@ onMounted(async () => {
                         class="flex cursor-pointer"
                       >
                         <div
+                          v-if="totalDataEachMonth.length > 0"
                           class="w-full"
                           :class="getCategoryColorClass(ct)"
                           :style="{
                             height: `${calculateHeightPerCategory2(
-                              111,
+                              totalDataEachMonth[index].total,
                               exploreCategoryHeadlineData[ct]['monthly'][no - 1]
-                                ?.total,
-                              findWidthandHeight('section3'),
-                              maxStory
+                                .total,
+                              findWidthandHeight('section2'),
+                              maxOfMonthCategory
                             )}px`,
                           }"
-                        ></div>
+                        >
+                          <!-- {{ no }} -->
+                          <!-- {{  exploreCategoryHeadlineData[ct]['monthly'][no - 1].total }} -->
+                        </div>
                       </div>
                     </div>
 
@@ -962,6 +1196,7 @@ onMounted(async () => {
                     @click="scrollToSection()"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       @click="handleCurrentIndex(index)"
                       :class="
                         index === 4 || index === 16
@@ -973,7 +1208,12 @@ onMounted(async () => {
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section4'),
-                          'การเมือง'
+                          'การเมือง',
+                          parseInt(
+                            totalDataEachCategory.find((item) =>
+                              item.category.includes('การเมือง')
+                            ).max
+                          )
                         )}px`,
                       }"
                     ></div>
@@ -1054,12 +1294,16 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full bg-lightblue cursor-pointer relative"
                       :style="{
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section5'),
-                          'สังคมไทย'
+                          'สังคมไทย',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('สังคมไทย')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1128,10 +1372,10 @@ onMounted(async () => {
                   <div
                     v-if="
                       exploreCategoryHeadlineData &&
-                      exploreCategoryHeadlineData['เศรษฐกิจ']
+                      exploreCategoryHeadlineData['เศรษฐกิจ/การเงิน']
                     "
                     v-for="(item, index) in exploreCategoryHeadlineData[
-                      'เศรษฐกิจ'
+                      'เศรษฐกิจ/การเงิน'
                     ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
@@ -1140,12 +1384,18 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full bg-orange cursor-pointer relative"
                       :style="{
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section6'),
-                          'เศรษฐกิจ'
+                          'เศรษฐกิจ/การเงิน',
+                          parseInt(
+                            totalDataEachCategory.find((item) =>
+                              item.category.includes('เศรษฐกิจ/การเงิน')
+                            ).max
+                          )
                         )}px`,
                       }"
                     ></div>
@@ -1226,6 +1476,7 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full cursor-pointer relative"
                       :class="
                         index === 2 ||
@@ -1241,7 +1492,10 @@ onMounted(async () => {
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section7'),
-                          'ต่างประเทศ'
+                          'ต่างประเทศ',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('ต่างประเทศ')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1322,12 +1576,16 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full bg-pink cursor-pointer relative"
                       :style="{
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section8'),
-                          'บันเทิง'
+                          'บันเทิง',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('บันเทิง')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1408,6 +1666,7 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full cursor-pointer relative"
                       :class="
                         index === 6 || index === 20
@@ -1418,7 +1677,10 @@ onMounted(async () => {
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section9'),
-                          'อาชญากรรม'
+                          'อาชญากรรม',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('อาชญากรรม')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1499,6 +1761,7 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full cursor-pointer relative"
                       :class="
                         index === 4 || index === 10 || index === 20
@@ -1509,7 +1772,10 @@ onMounted(async () => {
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section10'),
-                          'กีฬา'
+                          'กีฬา',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('กีฬา')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1577,10 +1843,10 @@ onMounted(async () => {
                   <div
                     v-if="
                       exploreCategoryHeadlineData &&
-                      exploreCategoryHeadlineData['วิทยาศาสตร์เทคโนโลยี']
+                      exploreCategoryHeadlineData['วิทยาศาสตร์/เทคโนโลยี']
                     "
                     v-for="(item, index) in exploreCategoryHeadlineData[
-                      'วิทยาศาสตร์เทคโนโลยี'
+                      'วิทยาศาสตร์/เทคโนโลยี'
                     ]['monthly']"
                     :key="index"
                     class="group flex flex-col items-center gap-2"
@@ -1589,12 +1855,16 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full bg-blue cursor-pointer relative"
                       :style="{
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section11'),
-                          'วิทยาศาสตร์เทคโนโลยี'
+                          'วิทยาศาสตร์/เทคโนโลยี',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('วิทยาศาสตร์/เทคโนโลยี')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1675,13 +1945,17 @@ onMounted(async () => {
                     }"
                   >
                     <div
+                      v-if="totalDataEachCategory.length > 0"
                       class="w-full cursor-pointer relative"
                       :class="index === 8 ? 'bg-green' : 'bg-green opacity-50'"
                       :style="{
                         height: `${calculateHeight(
                           item.total,
                           findWidthandHeight('section12'),
-                          'สิ่งแวดล้อม'
+                          'สิ่งแวดล้อม',
+                          totalDataEachCategory.find((item) =>
+                            item.category.includes('สิ่งแวดล้อม')
+                          ).max
                         )}px`,
                       }"
                     ></div>
@@ -1739,7 +2013,7 @@ onMounted(async () => {
       <div id="card" class="relative z-10 flex flex-col">
         <div
           id="card1"
-          class="flex items-center justify-center lg:items-end lg:justify-end w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
@@ -1757,7 +2031,7 @@ onMounted(async () => {
         </div>
         <div
           id="card2"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="b3 bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
@@ -1782,7 +2056,7 @@ onMounted(async () => {
         </div>
         <div
           id="card3"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -1826,7 +2100,7 @@ onMounted(async () => {
         </div>
         <div
           id="card4"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -1899,7 +2173,7 @@ onMounted(async () => {
         </div>
         <div
           id="card5"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2056,7 +2330,7 @@ onMounted(async () => {
         </div>
         <div
           id="card6"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2127,7 +2401,7 @@ onMounted(async () => {
         </div>
         <div
           id="card7"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2197,7 +2471,7 @@ onMounted(async () => {
         </div>
         <div
           id="card8"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2315,7 +2589,7 @@ onMounted(async () => {
         </div>
         <div
           id="card9"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2470,7 +2744,7 @@ onMounted(async () => {
         </div>
         <div
           id="card10"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2516,7 +2790,7 @@ onMounted(async () => {
         </div>
         <div
           id="card11"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2570,7 +2844,7 @@ onMounted(async () => {
         </div>
         <div
           id="card12"
-          class="flex items-center justify-center lg:items-end lg:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+          class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
         >
           <div
             class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
@@ -2714,13 +2988,13 @@ onMounted(async () => {
                 @click="clearInput"
                 v-if="!isInputFocused"
               />
-              <div
+              <button
                 v-else
                 class="border border-[#FF006B] text-[#FF006B] b4 px-[10px] flex items-center cursor-pointer"
-                @click="searchKeyword"
+                @mousedown.prevent="searchKeyword"
               >
                 ค้นหา
-              </div>
+              </button>
             </div>
             <ul
               v-if="showSuggestions && filteredSuggestions.length > 0"
@@ -2730,7 +3004,7 @@ onMounted(async () => {
                 v-for="(suggestion, index) in filteredSuggestions"
                 :key="index"
                 @mousedown="handleSuggestionMouseDown(suggestion)"
-                @blur="hideSuggestions"
+                @click.stop="hideSuggestions"
                 class="cursor-pointer"
               >
                 <span v-html="highlightMatchedText(suggestion)"></span>
@@ -2752,12 +3026,14 @@ onMounted(async () => {
             >
               <option value="การเมือง">การเมือง</option>
               <option value="สังคมไทย">สังคมไทย</option>
-              <option value="เศรษฐกิจ">เศรษฐกิจ/การเงิน</option>
+              <option value="เศรษฐกิจ/การเงิน">เศรษฐกิจ/การเงิน</option>
               <option value="ต่างประเทศ">ต่างประเทศ</option>
               <option value="บันเทิง">บันเทิง</option>
               <option value="อาชญากรรม">อาชญากรรม</option>
               <option value="กีฬา">กีฬา</option>
-              <option value="วิทยาศาสตร์">วิทยาศาสตร์เทคโนโลยี</option>
+              <option value="วิทยาศาสตร์/เทคโนโลยี">
+                วิทยาศาสตร์/เทคโนโลยี
+              </option>
               <option value="สิ่งแวดล้อม">สิ่งแวดล้อม</option>
             </select>
           </div>
@@ -2792,15 +3068,16 @@ onMounted(async () => {
                         exploreCategoryHeadlineData
                       "
                       v-for="(item, index) in exploreCategoryHeadlineData[
-                        Object.keys(exploreCategoryHeadlineData).find(
-                          (category) => category.includes(categorySelected)
-                        )
+                        categorySelected
                       ]['monthly']"
                       :key="index"
                       class="group flex flex-col items-center gap-2 w-[3.75%] lg:w-[4.06%]"
                     >
                       <div
-                        v-if="exploreModeSelected === 'หมวดข่าว'"
+                        v-if="
+                          totalDataEachCategory.length > 0 &&
+                          exploreModeSelected === 'หมวดข่าว'
+                        "
                         @click="handleCurrentIndex(index)"
                         :class="
                           index === categoryIndex
@@ -2813,7 +3090,10 @@ onMounted(async () => {
                           height: `${calculateHeight(
                             item.total,
                             200,
-                            `${categorySelected}`
+                            `${categorySelected}`,
+                            totalDataEachCategory?.find((item) =>
+                              item.category.includes(categorySelected)
+                            ).max
                           )}px`,
                         }"
                       ></div>
@@ -2839,6 +3119,7 @@ onMounted(async () => {
                           }"
                         >
                           <div
+                            v-if="totalDataEachCategory.length > 0"
                             class="group relative"
                             v-for="(ct, ctNo) in Object.keys(
                               dataForKW.categories_total
@@ -2964,8 +3245,8 @@ onMounted(async () => {
                     "
                     >{{
                       parseInt(
-                        totalDataEachCategory.find(
-                          (item) => item.category.includes(categorySelected)
+                        totalDataEachCategory.find((item) =>
+                          item.category.includes(categorySelected)
                         ).total
                       ).toLocaleString()
                     }}
