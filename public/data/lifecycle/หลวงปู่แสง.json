@@ -1,0 +1,404 @@
+﻿[
+  {
+    "total_of_news": [
+      {
+        "name": "การเมือง",
+        "name_en": "political",
+        "total": "3"
+      },
+      {
+        "name": "สังคมไทย",
+        "name_en": "th_social",
+        "total": "75"
+      },
+      {
+        "name": "เศรษฐกิจ/การเงิน",
+        "name_en": "economic",
+        "total": "0"
+      },
+      {
+        "name": "ต่างประเทศ",
+        "name_en": "international",
+        "total": "0"
+      },
+      {
+        "name": "บันเทิง",
+        "name_en": "entertainment",
+        "total": "1"
+      },
+      {
+        "name": "อาชญากรรม",
+        "name_en": "crime",
+        "total": "3"
+      },
+      {
+        "name": "กีฬา",
+        "name_en": "sport",
+        "total": "0"
+      },
+      {
+        "name": "วิทยาศาสตร์/เทคโนโลยี",
+        "name_en": "science_tech",
+        "total": "0"
+      },
+      {
+        "name": "สิ่งแวดล้อม",
+        "name_en": "environment",
+        "total": "0"
+      }
+    ],
+    "list": [
+      {
+        "date": "4/21/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/11/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/12/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "3",
+        "environment": "0",
+        "crime": "0",
+        "total": "3"
+      },
+      {
+        "date": "5/13/22",
+        "political": "1",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "11",
+        "environment": "0",
+        "crime": "0",
+        "total": "12"
+      },
+      {
+        "date": "5/14/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "13",
+        "environment": "0",
+        "crime": "1",
+        "total": "14"
+      },
+      {
+        "date": "5/15/22",
+        "political": "1",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "5",
+        "environment": "0",
+        "crime": "0",
+        "total": "6"
+      },
+      {
+        "date": "5/16/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "1",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "3",
+        "environment": "0",
+        "crime": "1",
+        "total": "5"
+      },
+      {
+        "date": "5/17/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "4",
+        "environment": "0",
+        "crime": "1",
+        "total": "5"
+      },
+      {
+        "date": "5/18/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "2",
+        "environment": "0",
+        "crime": "0",
+        "total": "2"
+      },
+      {
+        "date": "5/19/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "2",
+        "environment": "0",
+        "crime": "0",
+        "total": "2"
+      },
+      {
+        "date": "5/21/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/22/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/25/22",
+        "political": "1",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "0",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/27/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "6/1/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "6/2/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "6/8/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "7/3/22",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "2",
+        "environment": "0",
+        "crime": "0",
+        "total": "2"
+      },
+      {
+        "date": "5/12/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "5/14/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "6/19/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "4",
+        "environment": "0",
+        "crime": "0",
+        "total": "4"
+      },
+      {
+        "date": "6/20/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "5",
+        "environment": "0",
+        "crime": "0",
+        "total": "5"
+      },
+      {
+        "date": "6/23/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "2",
+        "environment": "0",
+        "crime": "0",
+        "total": "2"
+      },
+      {
+        "date": "6/24/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      },
+      {
+        "date": "6/25/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "4",
+        "environment": "0",
+        "crime": "0",
+        "total": "4"
+      },
+      {
+        "date": "6/26/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "3",
+        "environment": "0",
+        "crime": "0",
+        "total": "3"
+      },
+      {
+        "date": "6/27/23",
+        "political": "0",
+        "sport": "0",
+        "international": "0",
+        "entertainment": "0",
+        "science_tech": "0",
+        "economic": "0",
+        "th_social": "1",
+        "environment": "0",
+        "crime": "0",
+        "total": "1"
+      }
+    ]
+  }
+]

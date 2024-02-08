@@ -183,10 +183,13 @@ function selectNews(news) {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          class="sticky top-0 h-screen flex items-center overflow-x-auto chart-wrapper"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col justify-center"
           v-if="step > 0 && isSelectNews"
         >
-          <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
+          <TangmoNews />
+          <div>
+            <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
+          </div>
         </div>
         <div
           id="main-box"
@@ -195,23 +198,23 @@ function selectNews(news) {
           <div
             class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
           >
-            <div class="md:max-w-[450px] px-3">
+            <div class="max-w-full md:max-w-[450px] px-3">
               <template v-if="step == 0">
                 <img
                   src="/image/lifecycle/tangmo.svg"
                   alt=""
-                  class="max-w-[450px]"
+                  class="w-full"
                   v-if="typeOfNews == 'tangmo'"
                 />
                 <img
-                  class="max-w-[450px]"
+                  class="w-full"
                   src="/image/lifecycle/tangmo_pol.svg"
                   alt=""
                   v-else
                 />
               </template>
               <template v-if="step < 7 && step > 0">
-                <RandomNews :current_step="step" />
+                <RandomNews :current_step="step" :isInStorytelling="true" />
               </template>
             </div>
           </div>
@@ -247,7 +250,7 @@ function selectNews(news) {
               <div class="bg-white p-5 h-fit">
                 <p class="b3">
                   <b>“คดีแตงโม-นิดา”</b> พลัดตกเรือเริ่มต้นในเช้ามืดของวันที่ 25
-                  ม.ค. 2022!
+                  ก.พ. 2022!
                 </p>
               </div>
             </div>
@@ -274,10 +277,10 @@ function selectNews(news) {
             </div>
             <div class="step" data-step="4">
               <div class="bg-white p-5 h-fit b3">
-                <p class="">
-                  ก่อนจะแผ่ขยายไปสู่หมวด <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div> <b>การเมือง</b>ในวันต่อมา
-                  เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
-                </p>
+                ก่อนจะแผ่ขยายไปสู่หมวด
+                <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div>
+                <b class="px-1">การเมือง</b>ในวันต่อมา
+                เมื่อมีนักการเมืองเข้ามาเกี่ยวข้อง
               </div>
             </div>
             <div class="step" data-step="5">
@@ -333,7 +336,9 @@ function selectNews(news) {
                   และไม่แน่ว่า
                   ข่าวนี้อาจจะยังสิงสถิตในหน้าสื่อให้เราเห็นต่อในปีถัดไป
                 </p>
-                <p class="b5 text-[#717070]">*นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว</p>
+                <p class="b5 text-[#717070]">
+                  *นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว
+                </p>
               </div>
             </div>
             <div class="step" data-step="10">
@@ -351,9 +356,9 @@ function selectNews(news) {
         </div>
       </div>
 
-      <ExploreNews/>
+      <ExploreNews />
 
-      <div class="max-w-[850px] mx-auto text-center px-4" >
+      <div class="max-w-[850px] mx-auto text-center px-4">
         <p
           @click="isShowRefPopup = true"
           class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer pb-10"
@@ -395,6 +400,6 @@ function selectNews(news) {
 }
 
 .chart-wrapper::-webkit-scrollbar {
-  display: none;
+  // display: none;
 }
 </style>

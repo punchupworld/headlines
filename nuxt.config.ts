@@ -4,7 +4,7 @@ const BASE_URL = "https://headlines-3bc.pages.dev/";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: true,
+  ssr: false,
   postcss: {
     plugins: {
       tailwindcss: {},
