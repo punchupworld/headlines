@@ -587,10 +587,12 @@ const handleNewSample = () => {
 };
 
 watchEffect(() => {
-  setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % headlineShow.length;
-    currentText.value = headlineShow[currentIndex.value];
-  }, 1000);
+  if (process.client) {
+    setInterval(() => {
+      currentIndex.value = (currentIndex.value + 1) % headlineShow.length;
+      currentText.value = headlineShow[currentIndex.value];
+    }, 1000);
+  }
 });
 onMounted(async () => {
   await fetchData();
