@@ -158,8 +158,12 @@ function selectNews(news) {
           </div>
         </div>
 
-        <Vue3Lottie :animationData="lottie_part2" class="max-w-[450px] py-5" />
-
+        <ClientOnly>
+          <Vue3Lottie
+            :animationData="lottie_part2"
+            class="max-w-[450px] py-5"
+          />
+        </ClientOnly>
         <p class="b3 pt-5">
           เมื่อพูดถึงข่าวที่สื่อนำเสนอยาวนานไม่จบไม่สิ้น ในช่วง 2 ปีที่ผ่านมา
           คุณนึกถึงข่าวอะไรเป็นอันดับแรก

@@ -1,33 +1,33 @@
 <script setup>
-import scrollama from "scrollama"
-import { Vue3Lottie } from "vue3-lottie"
-import lottie_1 from "public/lottie/lottie-1.json"
+import scrollama from "scrollama";
+import { Vue3Lottie } from "vue3-lottie";
+import lottie_1 from "public/lottie/lottie-1.json";
 
-const headlineRef = ref(null)
-const currentIndex = ref(0)
-let headlineShow = []
-const currentText = ref(headlineShow[currentIndex.value])
-const exploreModeSelected = ref("หมวดข่าว")
-const isShowRefPopup = ref(false)
-const categoryIndex = ref(0)
-const data = ref()
-const exploreData = ref()
-const categorySelected = ref("การเมือง")
+const headlineRef = ref(null);
+const currentIndex = ref(0);
+let headlineShow = [];
+const currentText = ref(headlineShow[currentIndex.value]);
+const exploreModeSelected = ref("หมวดข่าว");
+const isShowRefPopup = ref(false);
+const categoryIndex = ref(0);
+const data = ref();
+const exploreData = ref();
+const categorySelected = ref("การเมือง");
 // const max = ref(0)
 // const min = ref(0)
-const maxStory = ref(0)
-const maxStoryIndex = ref(0)
-const minStory = ref(0)
-const minStoryIndex = ref(0)
-const inputKeyword = ref("แซ่บ")
-const showSuggestions = ref(false)
-const isInputFocused = ref(false)
-const keywords = ref()
-const sampleHeadlineCategory = ref()
-const filteredSampleHeadlineCategory = ref()
-const exploreCategoryHeadlineData = ref()
-let totalDataEachMonth = []
-let totalDataEachCategory = []
+const maxStory = ref(0);
+const maxStoryIndex = ref(0);
+const minStory = ref(0);
+const minStoryIndex = ref(0);
+const inputKeyword = ref("แซ่บ");
+const showSuggestions = ref(false);
+const isInputFocused = ref(false);
+const keywords = ref();
+const sampleHeadlineCategory = ref();
+const filteredSampleHeadlineCategory = ref();
+const exploreCategoryHeadlineData = ref();
+let totalDataEachMonth = [];
+let totalDataEachCategory = [];
 const monthTH = [
   "มกราคม",
   "กุมภาพันธ์",
@@ -41,7 +41,7 @@ const monthTH = [
   "ตุลาคม",
   "พฤศจิกายน",
   "ธันวาคม",
-]
+];
 
 const monthShortTH = [
   "ม.ค.",
@@ -56,7 +56,7 @@ const monthShortTH = [
   "ต.ค.",
   "พ.ย.",
   "ธ.ค.",
-]
+];
 
 const monthShortEN = [
   "Jan",
@@ -71,7 +71,7 @@ const monthShortEN = [
   "Oct",
   "Nov",
   "Dec",
-]
+];
 const category = [
   { name: "การเมือง", color: "bg-vermillion" },
   { name: "สังคมไทย", color: "bg-lightblue" },
@@ -82,50 +82,50 @@ const category = [
   { name: "กีฬา", color: "bg-purple" },
   { name: "วิทยาศาสตร์เทคโนโลยี", color: "bg-blue" },
   { name: "สิ่งแวดล้อม", color: "bg-green" },
-]
+];
 
 const fetchExploreCategoryHeadline = async () => {
-  const response = await fetch("/data/sample_news_headlines.json")
-  const data = await response.json()
-  exploreCategoryHeadlineData.value = data
-  console.log(exploreCategoryHeadlineData.value["การเมือง"]["monthly"])
+  const response = await fetch("/data/sample_news_headlines.json");
+  const data = await response.json();
+  exploreCategoryHeadlineData.value = data;
+  console.log(exploreCategoryHeadlineData.value["การเมือง"]["monthly"]);
 
   for (let year = 2022; year <= 2023; year++) {
     for (let month = 1; month <= 12; month++) {
-      let totalForMonth = 0
+      let totalForMonth = 0;
 
       Object.keys(data).forEach((categoryName) => {
-        const monthlyData = data[categoryName].monthly
+        const monthlyData = data[categoryName].monthly;
 
         const totalForCategoryMonth =
           monthlyData.find((item) => item.year === year && item.month === month)
-            ?.total || 0
+            ?.total || 0;
 
-        totalForMonth += totalForCategoryMonth
-      })
+        totalForMonth += totalForCategoryMonth;
+      });
 
-      totalDataEachMonth.push({ year, month, total: totalForMonth })
+      totalDataEachMonth.push({ year, month, total: totalForMonth });
     }
   }
 
-  maxStory.value = Math.max(...totalDataEachMonth.map((d) => d.total))
-  console.log(maxStory.value)
+  maxStory.value = Math.max(...totalDataEachMonth.map((d) => d.total));
+  console.log(maxStory.value);
 
-  const categorySums = {}
-  let overallTotal = 0
+  const categorySums = {};
+  let overallTotal = 0;
 
   for (let year = 2022; year <= 2023; year++) {
     for (let month = 1; month <= 12; month++) {
       Object.keys(data).forEach((categoryName) => {
-        const monthlyData = data[categoryName].monthly
+        const monthlyData = data[categoryName].monthly;
         const totalForCategoryMonth =
           monthlyData.find((item) => item.year === year && item.month === month)
-            ?.total || 0
+            ?.total || 0;
 
         categorySums[categoryName] =
-          (categorySums[categoryName] || 0) + totalForCategoryMonth
-        overallTotal += totalForCategoryMonth
-      })
+          (categorySums[categoryName] || 0) + totalForCategoryMonth;
+        overallTotal += totalForCategoryMonth;
+      });
     }
   }
 
@@ -133,51 +133,51 @@ const fetchExploreCategoryHeadline = async () => {
     totalDataEachCategory.push({
       category: categoryName,
       total: categorySums[categoryName],
-    })
-  })
+    });
+  });
 
-  totalDataEachCategory.push({ category: "Total", total: overallTotal })
+  totalDataEachCategory.push({ category: "Total", total: overallTotal });
 
-  console.log("total")
-  console.log(totalDataEachCategory)
-}
+  console.log("total");
+  console.log(totalDataEachCategory);
+};
 
 const filterSampleHeadlineCategory = async (category) => {
-  let year
-  const categoryToCompare = category.toLowerCase()
+  let year;
+  const categoryToCompare = category.toLowerCase();
   filteredSampleHeadlineCategory.value =
     await sampleHeadlineCategory.value.filter((item) => {
       if (categoryIndex.value >= 12) {
-        year = 2023
-        let cateIndex = categoryIndex.value - 12
+        year = 2023;
+        let cateIndex = categoryIndex.value - 12;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[cateIndex]
-        )
+        );
       } else {
-        year = 2022
+        year = 2022;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[categoryIndex.value]
-        )
+        );
       }
-    })
-}
+    });
+};
 const fetchSampleHeadlineCategory = async () => {
-  const response = await fetch("/data/HeadlinesSample.json")
-  const data = await response.json()
-  sampleHeadlineCategory.value = data
-  await filterSampleHeadlineCategory(categorySelected.value)
-  headlineShow = sampleHeadlineCategory.value.map((item) => item.headline)
-  headlineShow = headlineShow.slice(0, 10)
+  const response = await fetch("/data/HeadlinesSample.json");
+  const data = await response.json();
+  sampleHeadlineCategory.value = data;
+  await filterSampleHeadlineCategory(categorySelected.value);
+  headlineShow = sampleHeadlineCategory.value.map((item) => item.headline);
+  headlineShow = headlineShow.slice(0, 10);
   // console.log(headlineShow)
-}
+};
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 
 const formatMonth = (inputDate) => {
   // const months = [
@@ -194,15 +194,15 @@ const formatMonth = (inputDate) => {
   //   "พ.ย.",
   //   "ธ.ค.",
   // ]
-  const dateParts = inputDate.split("-")
-  const day = parseInt(dateParts[2])
-  const month = parseInt(dateParts[1])
-  const year = parseInt(dateParts[0])
-  return `${day} ${monthShortTH[month - 1]} ${year}`
-}
+  const dateParts = inputDate.split("-");
+  const day = parseInt(dateParts[2]);
+  const month = parseInt(dateParts[1]);
+  const year = parseInt(dateParts[0]);
+  return `${day} ${monthShortTH[month - 1]} ${year}`;
+};
 
 const setData = () => {
-  data.value = exploreData.value.slice(1, -1)
+  data.value = exploreData.value.slice(1, -1);
   // max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
   // min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
   // data.value.forEach((entry, index) => {
@@ -213,68 +213,68 @@ const setData = () => {
   //     maxStoryIndex.value = index
   //   }
   // })
-  minStory.value = Math.min(...data.value.map((d) => d.Total))
+  minStory.value = Math.min(...data.value.map((d) => d.Total));
   minStoryIndex.value = data.value.findIndex(
     (d) => parseInt(d.Total.trim(), 10) === minStory.value
-  )
-}
+  );
+};
 const fetchAggregateKW = async () => {
-  const response = await fetch("/data/aggregate_keywords.json")
-  const data = await response.json()
-  keywords.value = await data
-  suggestionsKW.value = Object.keys(keywords.value)
+  const response = await fetch("/data/aggregate_keywords.json");
+  const data = await response.json();
+  keywords.value = await data;
+  suggestionsKW.value = Object.keys(keywords.value);
   // const name = keywords.value.map((item)=>item.name)
   // suggestionsKW.value = name
   // console.log(suggestionsKW.value)
   // console.log(suggestions.value)
-}
-const dataForKW = ref()
+};
+const dataForKW = ref();
 
 const maxOfMonthly = computed(() => {
-  return Math.max(...dataForKW.value.montly.map((d) => d.total))
-})
+  return Math.max(...dataForKW.value.montly.map((d) => d.total));
+});
 const findMaxOfMonthly = () => {
-  let dataValues = dataForKW.value.montly
+  let dataValues = dataForKW.value.montly;
   // console.log(dataValues)
-  let maxValue = Math.max(...dataValues.map((d) => d.total))
-  maxOfMonthly.value = maxValue
+  let maxValue = Math.max(...dataValues.map((d) => d.total));
+  maxOfMonthly.value = maxValue;
   // console.log(maxOfMonthly.value)
-}
+};
 const selectExploreMode = async (mode) => {
-  exploreModeSelected.value = mode
-  sampleIndex.value = 0
+  exploreModeSelected.value = mode;
+  sampleIndex.value = 0;
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
-    dataForKW.value = await keywords.value[inputKeyword.value]
-    console.log(dataForKW.value?.length)
-    console.log(dataForKW.value)
-    findMaxOfMonthly()
+    dataForKW.value = await keywords.value[inputKeyword.value];
+    console.log(dataForKW.value?.length);
+    console.log(dataForKW.value);
+    findMaxOfMonthly();
   }
-}
+};
 
 const getCategoryColorClass = (category) => {
   switch (true) {
     case category.includes("การเมือง"):
-      return "bg-vermillion"
+      return "bg-vermillion";
     case category.includes("สังคมไทย"):
-      return "bg-lightblue"
+      return "bg-lightblue";
     case category.includes("เศรษฐกิจ"):
-      return "bg-orange"
+      return "bg-orange";
     case category.includes("ต่างประเทศ"):
-      return "bg-rose"
+      return "bg-rose";
     case category.includes("บันเทิง"):
-      return "bg-pink"
+      return "bg-pink";
     case category.includes("อาชญากรรม"):
-      return "bg-brown"
+      return "bg-brown";
     case category.includes("กีฬา"):
-      return "bg-purple"
+      return "bg-purple";
     case category.includes("วิทยาศาสตร์"):
-      return "bg-blue"
+      return "bg-blue";
     case category.includes("สิ่งแวดล้อม"):
-      return "bg-green"
+      return "bg-green";
     default:
-      return ""
+      return "";
   }
-}
+};
 
 const categoryBorderColorMap = {
   การเมือง: "border-[#FF3D00]",
@@ -286,59 +286,59 @@ const categoryBorderColorMap = {
   กีฬา: "border-[#AA92E3]",
   วิทยาศาสตร์: "border-[#257DCC]",
   สิ่งแวดล้อม: "border-[#9BB95A]",
-}
+};
 
 const getCategoryBorderColor = (category) => {
   for (const key in categoryBorderColorMap) {
     if (category.includes(key)) {
-      return categoryBorderColorMap[key]
+      return categoryBorderColorMap[key];
     }
   }
-  return ""
-}
+  return "";
+};
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
-  const scalePercent = (total * 100) / max
+  const scalePercent = (total * 100) / max;
   // console.log("max", maxHeigh)
   // console.log("scalePercent", scalePercent)
-  const scaleAll = (scalePercent * maxHeigh) / 100
+  const scaleAll = (scalePercent * maxHeigh) / 100;
   // console.log("scaleAll", scaleAll)
-  const scalePerCategory = (count * scaleAll) / total
+  const scalePerCategory = (count * scaleAll) / total;
   // console.log("scalePerCategory", scalePerCategory)
-  return Math.ceil(scalePerCategory)
-}
+  return Math.ceil(scalePerCategory);
+};
 const calculateHeightPerCategory2 = (total, count, maxHeigh, max) => {
-  const totalHeight = (total * maxHeigh) / max
-  const eachHeight = (count * totalHeight) / total
+  const totalHeight = (total * maxHeigh) / max;
+  const eachHeight = (count * totalHeight) / total;
   // console.log('max',max)
   // console.log('maxH',maxHeigh)
   // console.log('totalHeight',totalHeight)
   // console.log('eachHeight',eachHeight)
-  return Math.ceil(eachHeight)
-}
+  return Math.ceil(eachHeight);
+};
 const calculateHeight = (count, maxHeigh, category) => {
   if (category === "Total") {
-    let maxValueOfAll = Math.max(...totalDataEachMonth.map((d) => d.total))
-    let scalePercent = (count * 100) / maxValueOfAll
-    let scale = Math.ceil((scalePercent * maxHeigh) / 100)
-    return scale
+    let maxValueOfAll = Math.max(...totalDataEachMonth.map((d) => d.total));
+    let scalePercent = (count * 100) / maxValueOfAll;
+    let scale = Math.ceil((scalePercent * maxHeigh) / 100);
+    return scale;
   }
-  let maxValue = findMaxEachCategory(category)
-  let scalePercent = (count * 100) / maxValue
-  let scale = Math.ceil((scalePercent * maxHeigh) / 100)
-  return scale
-}
+  let maxValue = findMaxEachCategory(category);
+  let scalePercent = (count * 100) / maxValue;
+  let scale = Math.ceil((scalePercent * maxHeigh) / 100);
+  return scale;
+};
 
 const findMaxEachCategory = (category) => {
-  const dataValues = data.value
-  let maxValue = Math.max(...dataValues.map((d) => d[category]))
-  return maxValue
-}
+  const dataValues = data.value;
+  let maxValue = Math.max(...dataValues.map((d) => d[category]));
+  return maxValue;
+};
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/ExploreMonth.csv")
-    const csvText = await response.text()
+    const response = await fetch("/data/ExploreMonth.csv");
+    const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
       const [
         Year,
@@ -354,7 +354,7 @@ const fetchData = async () => {
         เศรษฐกิจ,
         สิ่งแวดล้อม,
         Total,
-      ] = line.split(",")
+      ] = line.split(",");
       return {
         Year,
         Month,
@@ -369,35 +369,35 @@ const fetchData = async () => {
         เศรษฐกิจ,
         สิ่งแวดล้อม,
         Total,
-      }
-    })
-    exploreData.value = rows
+      };
+    });
+    exploreData.value = rows;
     // console.log(exploreData.value)
-    setData()
+    setData();
   } catch (error) {
-    console.error("Error fetching CSV data:", error)
+    console.error("Error fetching CSV data:", error);
   }
-}
+};
 
 const handleCurrentIndex = (index) => {
-  categoryIndex.value = index
-  filterCategoryKeyword(categorySelected.value)
-  filterSampleHeadlineCategory(categorySelected.value)
-  scrollToSection()
-}
+  categoryIndex.value = index;
+  filterCategoryKeyword(categorySelected.value);
+  filterSampleHeadlineCategory(categorySelected.value);
+  scrollToSection();
+};
 
-const exploreRef = ref(null)
+const exploreRef = ref(null);
 const scrollToSection = () => {
-  exploreRef.value.scrollIntoView({ behavior: "smooth" })
-}
+  exploreRef.value.scrollIntoView({ behavior: "smooth" });
+};
 
-const top10KeywordsData = ref()
+const top10KeywordsData = ref();
 const fetchExploreData10Keyword = async () => {
-  const response = await fetch("/data/Top10Keyword.json")
-  const data = await response.json()
-  top10KeywordsData.value = data
-}
-const top10Keywords = ref()
+  const response = await fetch("/data/Top10Keyword.json");
+  const data = await response.json();
+  top10KeywordsData.value = data;
+};
+const top10Keywords = ref();
 const filterCategoryKeyword = async (category) => {
   // const month = [
   //   "jan",
@@ -413,135 +413,134 @@ const filterCategoryKeyword = async (category) => {
   //   "nov",
   //   "dec",
   // ]
-  let year
+  let year;
   top10Keywords.value = await top10KeywordsData.value.filter((item) => {
-    const itemMonths = item.month.split(",").map((m) => m.toLowerCase())
-    const categoryToCompare = category.toLowerCase()
+    const itemMonths = item.month.split(",").map((m) => m.toLowerCase());
+    const categoryToCompare = category.toLowerCase();
     if (categoryIndex.value >= 12) {
-      year = 2023
-      let cateIndex = categoryIndex.value - 12
+      year = 2023;
+      let cateIndex = categoryIndex.value - 12;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[cateIndex].toLowerCase()) &&
         item.year === year
-      )
+      );
     } else {
-      year = 2022
+      year = 2022;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[categoryIndex.value].toLowerCase()) &&
         item.year === year
-      )
+      );
     }
-  })
-}
+  });
+};
 const handleExploreMounthYear = (action) => {
   if (action === "prev") {
     if (categoryIndex.value !== 0) {
-      categoryIndex.value -= 1
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
-    }
-    else if(categoryIndex.value === 0){
-      categoryIndex.value = 23
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value -= 1;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
+    } else if (categoryIndex.value === 0) {
+      categoryIndex.value = 23;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     }
   } else if (action === "next") {
     if (categoryIndex.value !== data.value.length - 1) {
-      categoryIndex.value += 1
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
-    }else if(categoryIndex.value === 23){
-      categoryIndex.value = 0
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value += 1;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
+    } else if (categoryIndex.value === 23) {
+      categoryIndex.value = 0;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     }
   }
-}
+};
 const selectCategory = (category) => {
-  categorySelected.value = category
+  categorySelected.value = category;
   // console.log(categorySelected.value)
   // console.log(exploreCategoryHeadlineData.value[Object.keys(exploreCategoryHeadlineData.value).find((category) => category.includes(categorySelected.value))]['monthly'])
   // max.value = Math.max(...data.value.map((d) => d[categorySelected.value]))
   // min.value = Math.min(...data.value.map((d) => d[categorySelected.value]))
-  filterCategoryKeyword(category)
-}
+  filterCategoryKeyword(category);
+};
 
 const fullMonthAndYear = computed(() => {
   if (categoryIndex.value >= 12) {
     return `${monthTH[categoryIndex.value - 12]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   } else {
     return `${monthTH[categoryIndex.value]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   }
-})
+});
 
-const scroller = scrollama()
-const height = ref(0)
+const scroller = scrollama();
+const height = ref(0);
 
 const findWidthandHeight = (section) => {
-  const sectionFocus = document.getElementById(section)
-  const width = sectionFocus.offsetWidth
-  height.value = (3 / 4) * width
-  return height.value
-}
-const suggestionsKW = ref([])
+  const sectionFocus = document.getElementById(section);
+  const width = sectionFocus.offsetWidth;
+  height.value = (3 / 4) * width;
+  return height.value;
+};
+const suggestionsKW = ref([]);
 
 const filteredSuggestions = computed(() => {
   const filtered = suggestionsKW.value.filter((suggestion) =>
     suggestion.toLowerCase().includes(inputKeyword.value.toLowerCase())
-  )
-  return filtered.slice(0, 6)
-})
+  );
+  return filtered.slice(0, 6);
+});
 const showTheSuggestion = () => {
-  showSuggestions.value = true
-  inputKeyword.value = ""
-  handleInputFocus()
-}
+  showSuggestions.value = true;
+  inputKeyword.value = "";
+  handleInputFocus();
+};
 
 const handleInputFocus = () => {
-  isInputFocused.value = !isInputFocused.value
-}
+  isInputFocused.value = !isInputFocused.value;
+};
 const clearInput = () => {
-  inputKeyword.value = ""
-  showSuggestions.value = false
-}
+  inputKeyword.value = "";
+  showSuggestions.value = false;
+};
 
 const handleInput = () => {
-  showSuggestions.value = true
-  isInputFocused.value = true
-}
+  showSuggestions.value = true;
+  isInputFocused.value = true;
+};
 
 const hideSuggestions = () => {
-  showSuggestions.value = false
-  isInputFocused.value = false
+  showSuggestions.value = false;
+  isInputFocused.value = false;
   // handleInputFocus()
-}
+};
 
 const selectSuggestion = (selectedValue) => {
   // console.log(selectedValue)
-  inputKeyword.value = selectedValue
+  inputKeyword.value = selectedValue;
   // showSuggestions.value = false
-}
+};
 const searchKeyword = () => {
-  dataForKW.value = keywords.value[inputKeyword.value]
-  showSuggestions.value = false
-  handleInputFocus()
-}
+  dataForKW.value = keywords.value[inputKeyword.value];
+  showSuggestions.value = false;
+  handleInputFocus();
+};
 
 const handleTyping = () => {
-  isInputFocused.value = true
-}
+  isInputFocused.value = true;
+};
 const handleSuggestionMouseDown = (selectedValue) => {
-  selectSuggestion(selectedValue)
-  searchKeyword()
-  showSuggestions.value = false
-  isInputFocused.value = false
-}
+  selectSuggestion(selectedValue);
+  searchKeyword();
+  showSuggestions.value = false;
+  isInputFocused.value = false;
+};
 
 const highlightKeyword = (headline, keyword) => {
   if (exploreModeSelected.value === "หมวดข่าว") {
@@ -551,81 +550,84 @@ const highlightKeyword = (headline, keyword) => {
         .map((k) => k.keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"))
         .join("|")})`,
       "gi"
-    )
+    );
     return headline.replace(
       keywordsRegex,
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   } else {
     return headline.replace(
       new RegExp(`(${keyword})`, "gi"),
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   }
-}
+};
 
 const highlightMatchedText = (suggestion) => {
-  const typedText = inputKeyword.value.toLowerCase()
-  const suggestionLower = suggestion.toLowerCase()
-  const index = suggestionLower.indexOf(typedText)
+  const typedText = inputKeyword.value.toLowerCase();
+  const suggestionLower = suggestion.toLowerCase();
+  const index = suggestionLower.indexOf(typedText);
 
   const highlightedText =
     suggestion.substring(0, index) +
     "<b>" +
     suggestion.substring(index, index + typedText.length) +
     "</b>" +
-    suggestion.substring(index + typedText.length)
+    suggestion.substring(index + typedText.length);
 
-  return highlightedText
-}
+  return highlightedText;
+};
 
-const sampleIndex = ref(0)
+const sampleIndex = ref(0);
 const handleNewSample = () => {
   if (sampleIndex.value === 9) {
-    sampleIndex.value = 0
+    sampleIndex.value = 0;
   }
-  sampleIndex.value += 1
-}
+  sampleIndex.value += 1;
+};
 
 watchEffect(() => {
   setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % headlineShow.length
-    currentText.value = headlineShow[currentIndex.value]
-  }, 1000)
-})
+    currentIndex.value = (currentIndex.value + 1) % headlineShow.length;
+    currentText.value = headlineShow[currentIndex.value];
+  }, 1000);
+});
 onMounted(async () => {
-  await fetchData()
-  await fetchExploreData10Keyword()
-  await filterCategoryKeyword(categorySelected.value)
-  findWidthandHeight("section2")
-  await fetchAggregateKW()
-  await fetchSampleHeadlineCategory()
-  await fetchExploreCategoryHeadline()
+  await fetchData();
+  await fetchExploreData10Keyword();
+  await filterCategoryKeyword(categorySelected.value);
+  findWidthandHeight("section2");
+  await fetchAggregateKW();
+  await fetchSampleHeadlineCategory();
+  await fetchExploreCategoryHeadline();
 
   const handleSectionOpacity = (currentSection, direction) => {
     const sections = Array.from({ length: 12 }, (_, index) =>
       document.getElementById(`section${index + 1}`)
-    )
+    );
 
     for (let i = 0; i < sections.length; i++) {
       if (i === currentSection - 1) {
         if (direction === "down") {
-          sections[i].style.opacity = 1
-          sections[i - 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i - 1].style.opacity = 0;
         } else if (direction === "up") {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i + 1].style.opacity = 0;
         } else {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
+          sections[i].style.opacity = 1;
+          sections[i + 1].style.opacity = 0;
         }
       }
     }
-  }
+  };
   const handleStepEnter = (response) => {
-    const currentSection = parseInt(response.element.id.replace("card", ""), 10)
-    handleSectionOpacity(currentSection, response.direction)
-  }
+    const currentSection = parseInt(
+      response.element.id.replace("card", ""),
+      10
+    );
+    handleSectionOpacity(currentSection, response.direction);
+  };
   const init = () => {
     scroller
       .setup({
@@ -633,11 +635,11 @@ onMounted(async () => {
         offset: 0.9,
         debug: false,
       })
-      .onStepEnter(handleStepEnter)
-    window.addEventListener("resize", scroller.resize)
-  }
-  init()
-})
+      .onStepEnter(handleStepEnter);
+    window.addEventListener("resize", scroller.resize);
+  };
+  init();
+});
 </script>
 
 <template>
@@ -723,10 +725,12 @@ onMounted(async () => {
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="">
-          <Vue3Lottie
-            :animationData="lottie_1"
-            class="max-w-[450px] w-[90vw]"
-          />
+          <ClientOnly>
+            <Vue3Lottie
+              :animationData="lottie_1"
+              class="max-w-[450px] w-[90vw]"
+            />
+          </ClientOnly>
         </div>
 
         <!-- <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
@@ -2964,8 +2968,8 @@ onMounted(async () => {
                     "
                     >{{
                       parseInt(
-                        totalDataEachCategory.find(
-                          (item) => item.category.includes(categorySelected)
+                        totalDataEachCategory.find((item) =>
+                          item.category.includes(categorySelected)
                         ).total
                       ).toLocaleString()
                     }}
