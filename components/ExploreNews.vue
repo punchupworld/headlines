@@ -133,6 +133,7 @@ const fetchData = async () => {
 
 const fetchDataHeatmap = async (name) => {
   const response = await fetch("/data/lifecycle/" + name + ".json");
+  console.log("/data/lifecycle/" + name + ".json");
   const csvText = await response.json();
 
   newsDataHeatmap.value = csvText;
