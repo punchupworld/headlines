@@ -682,6 +682,7 @@ const handleExploreMounthYear = (action) => {
 const selectCategory = (category) => {
   categorySelected.value = category
   filterCategoryKeyword(category)
+  filterSampleHeadlineCategory(categorySelected.value)
 }
 
 const fullMonthAndYear = computed(() => {
