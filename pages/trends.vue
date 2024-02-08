@@ -6,8 +6,7 @@ import { sum, max } from "d3"
 
 const headlineRef = ref(null)
 const currentIndex = ref(0)
-let headlineShow = []
-const currentText = ref(headlineShow[currentIndex.value])
+const headlineShow = ref([])
 const exploreModeSelected = ref("หมวดข่าว")
 const isShowRefPopup = ref(false)
 const categoryIndex = ref(0)
@@ -421,8 +420,7 @@ const fetchSampleHeadlineCategory = async () => {
   const data = await response.json()
   sampleHeadlineCategory.value = data
   await filterSampleHeadlineCategory(categorySelected.value)
-  headlineShow = sampleHeadlineCategory.value.map((item) => item.headline)
-  headlineShow = headlineShow.slice(0, 10)
+  headlineShow.value = sampleHeadlineCategory.value.map((item) => item.headline).slice(0, 10)
 }
 
 const showRefPopup = () => {
@@ -697,13 +695,12 @@ const fullMonthAndYear = computed(() => {
 })
 
 const scroller = scrollama()
-const height = ref(0)
 
 const findWidthandHeight = (section) => {
   const sectionFocus = document.getElementById(section)
   const width = sectionFocus.offsetWidth
-  height.value = (3 / 4) * width
-  return height.value
+  const height = (3 / 4) * width
+  return height
 }
 const suggestionsKW = ref([])
 
@@ -807,20 +804,27 @@ const highlightMatchedText = (suggestion) => {
 const sampleIndex = ref(0)
 const handleNewSample = () => {
   if (sampleIndex.value === 9) {
-    sampleIndex.value = 0
+    sampleIndex.value = 0 
   }
   sampleIndex.value += 1
 }
 
-// watchEffect(() => {
-//   setInterval(() => {
-//     if(headlineShow && headlineShow.length > 0){
-//         currentIndex.value = (currentIndex.value + 1) % headlineShow.length
-//     currentText.value = headlineShow[currentIndex.value]
-//     }
+watchEffect((onCleanup) => {
+  if(headlineShow.value.length === 0) return;
 
-//   }, 1000)
-// })
+  let interval = setInterval(() => {
+    currentIndex.value = (currentIndex.value + 1) % headlineShow.value.length
+  }, 1000)
+
+  onCleanup(()=>{
+    clearInterval(interval)
+  })
+})
+
+const currentText = computed(() => {
+  return headlineShow.value[currentIndex.value]
+})
+
 onMounted(async () => {
   // await fetchData()
   await fetchExploreData10Keyword()
@@ -962,11 +966,12 @@ onMounted(async () => {
           <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
         </div> -->
       </div>
-      <div id="section" class="h-screen sticky top-0 overflow-hidden">
+      <div>
+         <div id="section" class="h-screen sticky top-0 overflow-hidden">
         <div
           class="flex flex-col items-center xl:items-start h-screen justify-center"
         >
-          <!-- <div
+          <div
             id="section1"
             style="opacity: 1; transition: opacity 0.5s ease"
             class="absolute flex justify-center items-center z-0"
@@ -979,7 +984,7 @@ onMounted(async () => {
                 {{ currentText }}
               </p>
             </div>
-          </div> -->
+          </div>
           <div
             id="section2"
             style="transition: opacity 0.5s ease"
@@ -1013,7 +1018,6 @@ onMounted(async () => {
                       )}px`,
                     }"
                   >
-                    {{ item.total }}
                   </div>
                   <p
                     class="text-[#939393] -rotate-90 b6"
@@ -2929,6 +2933,8 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+      </div>
+     
       <div id="explore" class="py-[40px] bg-[#EBE8DE] z-10 relative">
         <h1 class="h5 font-bold text-center">
           สำรวจเทรนด์ข่าวในปี<br />
@@ -2967,6 +2973,7 @@ onMounted(async () => {
                   class="w-[16px] m-[5px]"
                 />
                 <input
+                autocomplete="off"
                   type="text"
                   name="exploreKeyword"
                   list="exploreKeyword"
