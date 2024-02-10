@@ -3,6 +3,8 @@ import scrollama from "scrollama"
 import { Vue3Lottie } from "vue3-lottie"
 import lottie_1 from "public/lottie/lottie-1.json"
 import { sum, max } from "d3"
+import BarChart from "/components/BarChart.vue"
+import StoryCard from "/components/StoryCard.vue"
 
 const headlineRef = ref(null)
 const currentIndex = ref(0)
@@ -90,77 +92,16 @@ const fetchExploreCategoryHeadline = async () => {
 }
 
 const summaryData = async () => {
-  const dataSet = exploreCategoryHeadlineData.value
-  console.log(
-    "exploreCategoryHeadlineData",
-    exploreCategoryHeadlineData.value["เศรษฐกิจ/การเงิน"]
-  )
-  const categorySums = {}
-  let overallTotal = 0
   const year = [2022, 2023]
   const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
   const arrTotalEachMonth = []
   const arrSumEachCategory = []
-  const arrMaxOfEachCategoryPerMonth = []
-
-  //   year.forEach((year) => {
-  //     month.forEach((month) => {
-  //       // arrTotalEachMonth.push({ year,month })
-
-  //       let totalForMonth = 0
-  //       for (const categoryName in dataSet) {
-  //           const monthlyData = dataSet[categoryName].monthly
-
-  //         const totalForCategoryMonth =
-  //           monthlyData.find((item) => item.year === year && item.month === month)
-  //             ?.total || 0
-  //         categorySums[categoryName] =
-  //           (categorySums[categoryName] || 0) + totalForCategoryMonth
-  // console.log('categorySum',categorySums)
-  // console.log('',totalForCategoryMonth)
-
-  //         totalForMonth += totalForCategoryMonth
-  //         overallTotal += totalForCategoryMonth
-  //       }
-  //       arrTotalEachMonth.push({ year, month, total: totalForMonth })
-  //       // Object.keys(dataSet).forEach((categoryName) => {
-  //       //   console.log(categoryName)
-  //       //   const monthlyData = dataSet[categoryName].monthly
-
-  //       //   const totalForCategoryMonth =
-  //       //     monthlyData.find((item) => item.year === year && item.month === month)
-  //       //       ?.total || 0
-  //       //   categorySums[categoryName] =
-  //       //     (categorySums[categoryName] || 0) + totalForCategoryMonth
-
-  //       //   totalForMonth += totalForCategoryMonth
-  //       //   overallTotal += totalForCategoryMonth
-  //       // })
-  //       // arrTotalEachMonth.push({ year, month, total: totalForMonth })
-  //     })
-
-  //   })
 
   let allArr = []
   for (const category in exploreCategoryHeadlineData.value) {
-    // console.log("category", exploreCategoryHeadlineData.value[category].monthly)
+
 
     const monthly = exploreCategoryHeadlineData.value[category].monthly
-    // for (const monthly in category[monthly]) {
-    //   console.log('helloo',monthly)
-    // }
-    // if (arrTotalEachMonth.find((item)=>{ })) {
-    //   arrTotalEachMonth.push
-
-    // } else {
-    //   arrTotalEachMonth.pus
-
-    // }
-    // allArr.push({
-    //  ...(...monthly),
-    //   category: category,
-    // })
-    // conewObjnsole.log('newObj',newObj)
 
     monthly.forEach((item) => {
       allArr.push({ ...item, category: category })
@@ -202,195 +143,10 @@ const summaryData = async () => {
 
   totalDataEachCategory.value = arrSumEachCategory
   totalDataEachMonth.value = arrTotalEachMonth
-  // maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
   console.log("totalDataEachMonth", totalDataEachMonth.value)
-  console.log("maxOfMonthCategory", maxOfMonthCategory.value)
   console.log("totalDataEachCategory", totalDataEachCategory.value)
-  console.log("maxOfEachCategory", maxOfEachCategory.value)
-  // console.log('arrTotalEachMonth',arrTotalEachMonth)
-  // console.log('categorySums',categorySums)
-  // console.log('overallTotal',overallTotal)
-  // console.log('arrTotalEachMonth',arrTotalEachMonth)
-  // console.log('allArr',allArr)
-  // Object.keys(categorySums).forEach((categoryName) => {
-  //   arrSumEachCategory.push({
-  //     category: categoryName,
-  //     total: categorySums[categoryName],
-  //   })
-  // })
-
-  // arrSumEachCategory.push({ category: "Total", total: overallTotal })
-
-  // Object.keys(dataSet).forEach((categoryName) => {
-  //   const monthlyData = dataSet[categoryName].monthly
-  //   const max = Math.max(...monthlyData.map((d) => d.total))
-  //   arrMaxOfEachCategoryPerMonth.push({ category: categoryName, max })
-  // })
-
-  // totalDataEachCategory.value = arrSumEachCategory
-  // totalDataEachMonth.value = arrTotalEachMonth
-  // maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
-
-  // maxOfMonthCategory.value = Math.max(
-  //   ...totalDataEachMonth.value.map((d) => d.total)
-  // )
-
-  // console.log('maxOfMonthCategory',maxOfMonthCategory.value)
-  // console.log('totalDataEachCategory',totalDataEachCategory.value)
-  // console.log('totalDataEachMonth',totalDataEachMonth.value)
-  // console.log('maxOfEachCategory',maxOfEachCategory.value)
+  
 }
-
-// const summaryData = async () => {
-//   const categorySums = {}
-//   let overallTotal = 0
-//   let year = [2022, 2023]
-//   let month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-//   let arrTotalEachMonth = []
-//   let arrSumEachCategory = []
-//   let arrMaxOfEachCategoryPerMonth = []
-
-//   year.forEach((year) => {
-//     month.forEach((month) => {
-//       let totalForMonth = 0
-//       Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
-//         const monthlyData =
-//           exploreCategoryHeadlineData.value[categoryName].monthly
-
-//         //total of each category per month
-//         const totalForCategoryMonth =
-//           monthlyData.find((item) => item.year === year && item.month === month)
-//             ?.total || 0
-
-//         categorySums[categoryName] =
-//           (categorySums[categoryName] || 0) + totalForCategoryMonth
-
-//         //1 month all category total
-//         totalForMonth += totalForCategoryMonth
-
-//         overallTotal += totalForCategoryMonth
-
-//       })
-//       arrTotalEachMonth.push({ year, month, total: totalForMonth })
-//     })
-//   })
-
-//   Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
-// arrSumEachCategory.push({
-//       category: categoryName,
-//       total: categorySums[categoryName],
-//     })
-
-//     const monthlyData =
-//       exploreCategoryHeadlineData.value[categoryName].monthly
-//     const max = Math.max(...monthlyData.map((d) => d.total))
-//     arrMaxOfEachCategoryPerMonth.push({ category: categoryName, max })
-//   })
-//   arrSumEachCategory.push({ category: "Total", total: overallTotal })
-//   totalDataEachCategory.value = arrSumEachCategory
-//   totalDataEachMonth.value =
-//   maxOfEachCategory.value = arrMaxOfEachCategoryPerMonth
-
-//   maxOfMonthCategory.value = Math.max(...arrTotalEachMonth.map((d) => d.total))
-//   // for (let year = 2022; year <= 2023; year++) {
-//   //   for (let month = 1; month <= 12; month++) {
-//   //     let totalForMonth = 0
-
-//   //     Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
-//   //       const monthlyData = exploreCategoryHeadlineData.value[categoryName].monthly
-
-//   //       const totalForCategoryMonth =
-//   //         monthlyData.find((item) => item.year === year && item.month === month)
-//   //           ?.total || 0
-
-//   //       categorySums[categoryName] =
-//   //         (categorySums[categoryName] || 0) + totalForCategoryMonth
-//   //       totalForMonth += totalForCategoryMonth
-//   //       overallTotal += totalForCategoryMonth
-//   //     })
-
-//   //     totalDataEachMonth.value.push({ year, month, total: totalForMonth })
-//   //   }
-//   // }
-
-//   // maxOfMonthCategory.value = Math.max(...totalDataEachMonth.value.map((d) => d.total))
-
-//   // Object.keys(categorySums).forEach((categoryName) => {
-//   //   totalDataEachCategory.value.push({
-//   //     category: categoryName,
-//   //     total: categorySums[categoryName],
-//   //   })
-//   // })
-
-//   // totalDataEachCategory.value.push({ category: "Total", total: overallTotal })
-
-//   // Object.keys(exploreCategoryHeadlineData.value).forEach((categoryName) => {
-//   //   const monthlyData = exploreCategoryHeadlineData.value[categoryName].monthly
-//   //   const max = Math.max(...monthlyData.map((d) => d.total))
-//   //   maxOfEachCategory.value.push({ category: categoryName, max })
-//   // })
-// }
-
-// const fetchExploreCategoryHeadline = async () => {
-//   const response = await fetch("/data/sample_news_headlines.json")
-//   const data = await response.json()
-//   exploreCategoryHeadlineData.value = data
-
-//   for (let year = 2022; year <= 2023; year++) {
-//     for (let month = 1; month <= 12; month++) {
-//       let totalForMonth = 0
-
-//       Object.keys(data).forEach((categoryName) => {
-//         const monthlyData = data[categoryName].monthly
-
-//         const totalForCategoryMonth =
-//           monthlyData.find((item) => item.year === year && item.month === month)
-//             ?.total || 0
-
-//         totalForMonth += totalForCategoryMonth
-//       })
-
-//       totalDataEachMonth.push({ year, month, total: totalForMonth })
-//     }
-//   }
-
-//   maxOfMonthCategory.value = Math.max(...totalDataEachMonth.map((d) => d.total))
-
-//   const categorySums = {}
-//   let overallTotal = 0
-
-//   for (let year = 2022; year <= 2023; year++) {
-//     for (let month = 1; month <= 12; month++) {
-//       Object.keys(data).forEach((categoryName) => {
-//         const monthlyData = data[categoryName].monthly
-//         const totalForCategoryMonth =
-//           monthlyData.find((item) => item.year === year && item.month === month)
-//             ?.total || 0
-
-//         categorySums[categoryName] =
-//           (categorySums[categoryName] || 0) + totalForCategoryMonth
-//         overallTotal += totalForCategoryMonth
-//       })
-//     }
-//   }
-
-//   Object.keys(categorySums).forEach((categoryName) => {
-//     totalDataEachCategory.push({
-//       category: categoryName,
-//       total: categorySums[categoryName],
-//     })
-//   })
-
-//   totalDataEachCategory.push({ category: "Total", total: overallTotal })
-
-//   Object.keys(data).forEach((categoryName) => {
-//     const monthlyData = data[categoryName].monthly
-//     const max = Math.max(...monthlyData.map((d) => d.total))
-//     maxOfEachCategory.push({ category: categoryName, max })
-//   })
-
-//   console.log(maxOfEachCategory)
-// }
 
 const filterSampleHeadlineCategory = async (category) => {
   let year
@@ -559,16 +315,16 @@ const calculateHeight = (count, maxHeigh, category, max) => {
   }
 }
 
-const findMaxEachCategory = (category) => {
-  const dataValues =
-    exploreCategoryHeadlineData.value[
-      Object.keys(exploreCategoryHeadlineData.value).find((category) =>
-        category.includes(categorySelected.value)
-      )
-    ]["monthly"]
-  let maxValue = Math.max(...dataValues.map((d) => d.total))
-  return maxValue
-}
+// const findMaxEachCategory = (category) => {
+//   const dataValues =
+//     exploreCategoryHeadlineData.value[
+//       Object.keys(exploreCategoryHeadlineData.value).find((category) =>
+//         category.includes(categorySelected.value)
+//       )
+//     ]["monthly"]
+//   let maxValue = Math.max(...dataValues.map((d) => d.total))
+//   return maxValue
+// }
 
 // const fetchData = async () => {
 //   try {
@@ -701,9 +457,13 @@ const scroller = scrollama()
 
 const findWidthandHeight = (section) => {
   const sectionFocus = document.getElementById(section)
-  const width = sectionFocus.offsetWidth
-  const height = (3 / 4) * width
-  return height
+  if (sectionFocus) {
+    const width = sectionFocus.offsetWidth
+    const height = (3 / 4) * width
+    return height
+  } else {
+    return 0
+  }
 }
 const suggestionsKW = ref([])
 
@@ -879,23 +639,19 @@ onMounted(async () => {
 
 <template>
   <div
-    class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center"
-  >
+    class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center">
     <div
       id="refPopup"
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
-      v-show="isShowRefPopup"
-    >
+      v-show="isShowRefPopup">
       <div
         id="popUpScroll"
-        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh]"
-      >
+        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh]">
         <img
           @click="showRefPopup"
           src="/image/CanclePink.svg"
           alt=""
-          class="absolute -top-2 -right-2"
-        />
+          class="absolute -top-2 -right-2" />
         <div id="ref" class="p-[20px] overflow-y-auto h-full">
           <h1 class="b1 font-bold" ref="reference">
             ที่มาและข้อจำกัดของข้อมูล
@@ -942,12 +698,10 @@ onMounted(async () => {
     </div>
     <div
       id="part1"
-      class="pb-[40px] px-[16px] max-w-[850px] md:max-w-full md:mx-[15vw]"
-    >
+      class="pb-[40px] px-[16px] max-w-[850px] md:max-w-full md:mx-[15vw]">
       <div
         id="cover"
-        class="space-y-[10px] text-center mb-[20px] h-screen flex flex-col justify-center"
-      >
+        class="space-y-[10px] text-center mb-[20px] h-screen flex flex-col justify-center">
         <h1 class="t2 pb-5">..‘พาดหัวข่าว’ เล่าเรื่อง..</h1>
         <p class="h4 font-bold">คนไทยได้เจอข่าวอะไรมากที่สุด ?</p>
         <p class="b2">
@@ -955,16 +709,14 @@ onMounted(async () => {
         </p>
         <p
           @click="showRefPopup"
-          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px] border-[#EBE8DE] cursor-pointer"
-        >
+          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px] border-[#EBE8DE] cursor-pointer">
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="">
           <ClientOnly>
             <Vue3Lottie
               :animationData="lottie_1"
-              class="max-w-[450px] w-[90vw]"
-            />
+              class="max-w-[450px] w-[90vw]" />
           </ClientOnly>
         </div>
 
@@ -973,20 +725,17 @@ onMounted(async () => {
           <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
         </div> -->
       </div>
-      <div>
+      <div class="max-w-[850px] mx-auto">
         <div id="section" class="h-screen sticky top-0 overflow-hidden">
           <div
-            class="flex flex-col items-center xl:items-start h-screen justify-center"
-          >
+            class="flex flex-col items-center xl:items-start h-screen justify-center">
             <div
               id="section1"
               style="opacity: 1; transition: opacity 0.5s ease"
-              class="absolute flex justify-center items-center z-0"
-            >
+              class="absolute flex justify-center items-center z-0">
               <div
                 ref="headlineRef"
-                class="relative bg-black p-[10px] w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] xl:h-[550px] flex items-center"
-              >
+                class="relative bg-black p-[10px] max-[375px]:w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] xl:h-[550px] flex items-center">
                 <p class="cream t2">
                   {{ currentText }}
                 </p>
@@ -995,24 +744,20 @@ onMounted(async () => {
             <div
               id="section2"
               style="transition: opacity 0.5s ease"
-              class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center xl:justify-start xl:items-start"
-            >
+              class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center xl:justify-start xl:items-start">
               <p
-                class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto"
-              >
+                class="text-[#717070] b4 font-bold text-center pb-[10px] flex items-center justify-center mx-auto">
                 จำนวนข่าวรายเดือน
               </p>
               <div class="relative">
                 <div
-                  class="relative flex items-end gap-[1px] justify-center w-[90vw] lg:max-w-[600px]"
-                >
+                  class="relative flex items-end gap-[1px] justify-center max-[375px]:w-[90vw] lg:max-w-[600px]">
                   <div
                     v-for="(item, index) in totalDataEachMonth"
                     class="w-full cursor-pointer relative flex flex-col gap-[10px] justify-center"
                     :style="{
                       width: `${90 / 24}%`,
-                    }"
-                  >
+                    }">
                     <div
                       :class="
                         index === 8 || index === 23 ? 'bg-black' : 'bg-black/50'
@@ -1023,19 +768,16 @@ onMounted(async () => {
                           findWidthandHeight('section2'),
                           'Total'
                         )}px`,
-                      }"
-                    ></div>
+                      }"></div>
                     <p
                       class="text-[#939393] -rotate-90 b6"
-                      style="pointer-events: none"
-                    >
+                      style="pointer-events: none">
                       {{ monthShortTH[item.month - 1] }}
                     </p>
                   </div>
                   <div
                     class="z-0 absolute bottom-0 w-full h-full"
-                    style="pointer-events: none"
-                  >
+                    style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div class="space-y-2">
                         <p class="b5 border-b border-black border-dotted">
@@ -1043,8 +785,7 @@ onMounted(async () => {
                         </p>
                         <div class="border-b border-[#FF006B] relative">
                           <p
-                            class="absolute -top-1.5 b5 text-[#FF006B] font-bold stoke"
-                          >
+                            class="absolute -top-1.5 b5 text-[#FF006B] font-bold stoke">
                             7816
                           </p>
                         </div>
@@ -1058,20 +799,17 @@ onMounted(async () => {
                   </div>
                 </div>
                 <div
-                  class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
-                >
+                  class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]">
                   <p>2022</p>
                   <p>2023</p>
                 </div>
                 <div
                   class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
-                  style="pointer-events: none"
-                ></div>
+                  style="pointer-events: none"></div>
               </div>
 
               <div
-                class="flex flex-wrap justify-center py-[10px] xl:max-w-[600px] mx-auto"
-              >
+                class="flex flex-wrap justify-center py-[10px] xl:max-w-[600px] mx-auto">
                 <div v-for="(item, index) in category">
                   <div class="flex items-center gap-[5px] pr-[10px]">
                     <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1083,44 +821,37 @@ onMounted(async () => {
             <div
               id="section3"
               class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center"
-              style="transition: opacity 0.5s ease"
-            >
+              style="transition: opacity 0.5s ease">
               <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
                 จำนวนข่าวรายเดือน แบ่งตามหมวด
               </p>
               <div class="relative">
                 <div class="relative flex items-end justify-center">
                   <div
-                    class="flex items-end gap-[1px] justify-center lg:max-w-[600px] w-[90vw]"
-                  >
+                    class="flex items-end gap-[1px] justify-center lg:max-w-[600px] max-[375px]:w-[90vw]">
                     <div
                       v-for="(no, index) in 24"
                       :style="{ width: `${90 / 24}%` }"
-                      class="flex flex-col justify-center gap-[10px]"
-                    >
-                      <div>
+                      class="flex flex-col justify-center gap-[10px]">
+                      <div class="flex flex-col-reverse">
                         <div
-                          v-for="(ct, index) in Object.keys(
-                            exploreCategoryHeadlineData || 0
-                          )"
-                          class="flex cursor-pointer"
-                        >
+                          v-for="(ct, index) in category || 0"
+                          class="flex cursor-pointer">
                           <div
                             v-if="totalDataEachMonth.length > 0"
                             class="w-full"
-                            :class="getCategoryColorClass(ct)"
+                            :class="ct.color"
                             :style="{
                               height: `${calculateHeightPerCategory2(
                                 totalDataEachMonth[index].total,
-                                exploreCategoryHeadlineData[ct]['monthly'][
-                                  no - 1
-                                ].total,
+                                exploreCategoryHeadlineData[ct?.name][
+                                  'monthly'
+                                ][no - 1].total,
                                 findWidthandHeight('section2'),
                                 maxOfMonthCategory
                               )}px`,
-                            }"
-                          >
-                            <!-- {{ no }} -->
+                            }">
+                            <!-- {{ ct.name }} -->
                             <!-- {{  exploreCategoryHeadlineData[ct]['monthly'][no - 1].total }} -->
                           </div>
                         </div>
@@ -1128,8 +859,7 @@ onMounted(async () => {
 
                       <p
                         class="text-[#939393] -rotate-90 b6"
-                        style="pointer-events: none"
-                      >
+                        style="pointer-events: none">
                         {{
                           index >= 12
                             ? monthShortTH[index - 12]
@@ -1141,8 +871,7 @@ onMounted(async () => {
 
                   <div
                     class="z-0 absolute bottom-0 w-full h-full"
-                    style="pointer-events: none"
-                  >
+                    style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div>
                         <p class="b5 border-b border-black border-dotted">
@@ -1158,20 +887,17 @@ onMounted(async () => {
                   </div>
                 </div>
                 <div
-                  class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]"
-                >
+                  class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]">
                   <p>2022</p>
                   <p>2023</p>
                 </div>
                 <div
                   class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
-                  style="pointer-events: none"
-                ></div>
+                  style="pointer-events: none"></div>
               </div>
 
               <div
-                class="flex flex-wrap justify-center py-[10px] lg:max-w-[600px]"
-              >
+                class="flex flex-wrap justify-center py-[10px] lg:max-w-[600px]">
                 <div v-for="(item, index) in category">
                   <div class="flex items-center gap-[5px] pr-[10px]">
                     <div :class="item.color" class="w-[10px] h-[10px]"></div>
@@ -1180,7 +906,17 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-            <div
+
+            <BarChart
+              v-for="(ct, index) in category"
+              :id="'section' + (index + 4)"
+              :category="ct.name"
+              :color="ct.color"
+              :storyData="exploreCategoryHeadlineData"
+              :totalCategoryData="totalDataEachCategory"
+              :totalMonthData="totalDataEachMonth"
+              :height="findWidthandHeight(`section${index + 4}`)" />
+            <!-- <div
               id="section4"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1214,7 +950,7 @@ onMounted(async () => {
                         v-if="totalDataEachCategory.length > 0"
                         @click="handleCurrentIndex(index)"
                         :class="
-                          index === 4 || index === 16
+                          [4,16].includes(index)
                             ? 'bg-[#FF3D00]'
                             : 'bg-[#FF3D00]/50'
                         "
@@ -1282,8 +1018,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section5"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1374,8 +1110,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section6"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1468,8 +1204,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section7"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1570,8 +1306,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section8"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1662,8 +1398,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section9"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1759,8 +1495,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section10"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1855,8 +1591,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section11"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -1947,8 +1683,8 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div
+            </div> -->
+            <!-- <div
               id="section12"
               class="opacity-0 absolute pointer-events-none"
               style="transition: opacity 0.5s ease"
@@ -2042,31 +1778,48 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div id="card" class="relative z-10 flex flex-col">
-          <div
+          <!-- <div
             id="card1"
             class="flex items-center justify-center xl:items-end xl:justify-end w-full mb-[70vh] mt-[10vh]"
           >
-            <div
-              class="bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
-            >
-              <p class="b3">
-                ในช่วง 2 ปีที่ผ่านมา<br />
-                สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
-              </p>
-              <p class="b1 font-bold">187,582 พาดหัวข่าว</p>
-              <p class="b5 text-[#717070]">
-                *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
-                PBS, Voice TV, WorkpointTODAY
-              </p>
-            </div>
-          </div>
-          <div
+            
+          </div> -->
+          <StoryCard id="card1">
+            <p class="b3">
+              ในช่วง 2 ปีที่ผ่านมา<br />
+              สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
+            </p>
+            <p class="b1 font-bold">187,582 พาดหัวข่าว</p>
+            <p class="b5 text-[#717070]">
+              *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
+              PBS, Voice TV, WorkpointTODAY
+            </p>
+          </StoryCard>
+          <StoryCard id="card2">
+            <p class=" ">
+              <span class="text-[#FF006B] font-bold">
+                โดยเฉลี่ยแล้ว <br />
+                เรามีข่าวให้อ่านกันอย่างน้อยเดือนละ 7,816 พาดหัวข่าว</span
+              >
+              หรือตกวันละ 261 พาดหัวข่าว
+            </p>
+            <p class="font-bold">เดือนที่มีข่าวมากที่สุดคือ ก.ย. 2022</p>
+            <p>(8,781 พาดหัวข่าว)</p>
+            <p>
+              <span class="font-bold"
+                >ส่วนเดือนที่มีข่าวน้อยที่สุดคือ ธ.ค. 2023</span
+              >
+              (6,469 พาดหัวข่าว)
+            </p>
+            <p></p>
+          </StoryCard>
+          <!-- <div
             id="card2"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
+            class="flex items-center justify-center xl:items-end xl:justify-end  w-full mb-[70vh] mt-[10vh]"
           >
             <div
               class="b3 bg-white p-[20px] lg:w-[350px] w-full text-center mx-[16px]"
@@ -2088,8 +1841,42 @@ onMounted(async () => {
               </p>
               <p></p>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card3">
+            <p class="b3 leading-[1000px]">
+              เมื่อเจาะดูเป็นรายหมวดพบว่า คนไทยมีโอกาสเห็นพาดหัวข่าว
+              <span class="bg-vermillion font-bold my-2">การเมือง</span> และ
+              <span class="bg-lightblue font-bold">สังคมไทย</span> มากที่สุด
+              ในขณะที่
+              <span class="bg-green font-bold">สิ่งแวดล้อม</span>
+              เป็นข่าวที่ถูกนำเสนอน้อยที่สุด
+            </p>
+            <p class="b4 text-[#939393]">สัดส่วนข่าวแต่ละหมวด รวม 2 ปี</p>
+            <div class="flex h-[60px] my-[10px] w-full">
+              <div
+                class="stoke bg-vermillion w-[28%] flex items-center justify-center font-bold">
+                28.2%
+              </div>
+              <div
+                class="stoke bg-lightblue w-[26%] flex items-center justify-center font-bold">
+                26%
+              </div>
+              <div class="bg-orange opacity-20 w-[13%]"></div>
+              <div class="bg-rose opacity-20 w-1/12"></div>
+              <div class="bg-pink opacity-20 w-1/12"></div>
+              <div class="bg-brown opacity-20 w-1/12"></div>
+              <div class="bg-purple opacity-20 w-[4%]"></div>
+              <div class="bg-blue opacity-20 w-[3%]"></div>
+              <div
+                class="stoke bg-green w-[2%] flex items-center justify-center font-bold">
+                1.7%
+              </div>
+            </div>
+            <p class="b3 font-bold">
+              ไปดูกันว่าข่าวในแต่ละหมวดมีประเด็นอะไรที่น่าสนใจบ้าง..
+            </p>
+          </StoryCard>
+          <!-- <div
             id="card3"
             class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
           >
@@ -2132,8 +1919,68 @@ onMounted(async () => {
                 ไปดูกันว่าข่าวในแต่ละหมวดมีประเด็นอะไรที่น่าสนใจบ้าง..
               </p>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card4">
+            <div>
+              <div>
+                <p class="b1 font-bold">ข่าวการเมือง</p>
+                <p class="b4 text-[#717070]">
+                  รวม 52,971 ข่าว (28.2% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3">
+                <p>
+                  เป็นที่น่าสังเกตว่าจำนวนข่าวในหมวดนี้จะแปรผันตรงกับวาระทางการเมืองที่ร้อนแรง
+                  โดยเดือนที่มีข่าวสูงสุดของปี 2022 และ 2023
+                  ล้วนตรงกับวาระสำคัญทางการเมือง ได้แก่
+                </p>
+              </div>
+              <div>
+                <ul class="list-disc">
+                  <li>
+                    <span class="font-bold">พ.ค. 2022 </span>
+                    <span class="text-[#717070]"> (2,521 หัวข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#เลือกตั้งผู้ว่าฯกทม.</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">พ.ค. 2023 </span>
+                    <span class="text-[#717070]"> (3,134 ข่าว)</span>
+                    <br />
+                    <p class="text-[#FF3D00]">#การเลือกตั้ง2566</p>
+                  </li>
+                </ul>
+              </div>
+              <div class="b3">
+                <p class="font-bold">5 คีย์เวิร์ดพบบ่อย</p>
+                <p>ในพาดหัวข่าวการเมือง ได้แก่</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[4px] mt-[10px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">นายกฯ</span>(7,884)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">เลือกตั้ง2566</span>(6,521)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ประยุทธ์</span>(3,539)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">รัฐบาล</span>(4,681)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">เพื่อไทย</span>(4,617)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </StoryCard>
+          <!-- <div
             id="card4"
             class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
           >
@@ -2205,14 +2052,140 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          
+          <StoryCard id="card5">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวสังคมไทย</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 48,745 ข่าว (26% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px] border-b border-[#C5C4C4]">
+                  <p>
+                    แม้จำนวนพาดหัวข่าวสังคมไทยจะมีแนวโน้มลดลงอย่างต่อเนื่องตั้งแต่
+                    ก.ย. 2022 แต่ในภาพรวม 2 ปี ยังถือว่ามีสัดส่วนมากเป็นอันดับ 2
+                    รองจากข่าวการเมือง
+                    ด้วยประเด็นข่าวที่กว้างและครอบคลุมหลายเรื่องในสังคม
+                    หลายคำที่เจอในพาดหัวข่าวบ่อยๆ
+                    จึงเป็นคำที่สามารถพบในข่าวหมวดอื่นๆ ได้เช่นกัน
+                    จำแนกเป็นประเภทต่างๆ ได้ ดังนี้
+                  </p>
+                </div>
+                <div>
+                  <p class="b3 font-bold pt-[10px] pb-[5px]">เหตุการณ์สำคัญ</p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">สงกรานต์</span>(478)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> ลอยกระทง</span>(148)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> APEC</span>(105)
+                    </div>
+
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
+                    </div>
+                  </div>
+                </div>
+                <div class="py-[10px] border-b border-[#C5C4C4]">
+                  <p class="b3 font-bold pb-[5px]">ภัยธรรมชาติ</p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> น้ำท่วม</span>(1,153)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ฝุ่น PM2.5</span>(505)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
+                    </div>
+                  </div>
+                </div>
+                <div class="border-b border-[#C5C4C4] py-[10px]">
+                  <p class="b3 font-bold">โรค</p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> โควิด-19</span>(2,703)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">โอมิครอน</span>(301)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ฝีดาษลิง</span>(254)
+                    </div>
+                  </div>
+                </div>
+                <div class="border-b border-[#C5C4C4] py-[10px]">
+                  <p class="b3 font-bold pb-[5px ]">บุคคล</p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ชัชชาติ</span>(912)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> พิธา</span>(177)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> ทักษิณ</span>(146)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> แตงโมนิดา</span>(104)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> กำนันนก</span>(54)
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-[10px]">
+                  <p class="b3 py-[5px]">
+                    นอกจากนี้ยังมีคำที่บ่งชี้เพศสภาพซึ่งปรากฏในพาดหัวข่าวอยู่บ่อยๆ
+                    อย่าง
+                  </p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">สาว</span>(2,283)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">หนุ่ม</span>(1,736)
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card5"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวสังคมไทย</p>
@@ -2234,32 +2207,26 @@ onMounted(async () => {
                 <div>
                   <p class="b3 font-bold pt-[10px] pb-[5px]">เหตุการณ์สำคัญ</p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">สงกรานต์</span>(478)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> ลอยกระทง</span>(148)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> APEC</span>(105)
                     </div>
 
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
                     </div>
                   </div>
@@ -2267,21 +2234,17 @@ onMounted(async () => {
                 <div class="py-[10px] border-b border-[#C5C4C4]">
                   <p class="b3 font-bold pb-[5px]">ภัยธรรมชาติ</p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> น้ำท่วม</span>(1,153)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ฝุ่น PM2.5</span>(505)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
                     </div>
                   </div>
@@ -2289,21 +2252,17 @@ onMounted(async () => {
                 <div class="border-b border-[#C5C4C4] py-[10px]">
                   <p class="b3 font-bold">โรค</p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> โควิด-19</span>(2,703)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">โอมิครอน</span>(301)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ฝีดาษลิง</span>(254)
                     </div>
                   </div>
@@ -2311,31 +2270,25 @@ onMounted(async () => {
                 <div class="border-b border-[#C5C4C4] py-[10px]">
                   <p class="b3 font-bold pb-[5px ]">บุคคล</p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ชัชชาติ</span>(912)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> พิธา</span>(177)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> ทักษิณ</span>(146)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> แตงโมนิดา</span>(104)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> กำนันนก</span>(54)
                     </div>
                   </div>
@@ -2346,30 +2299,83 @@ onMounted(async () => {
                     อย่าง
                   </p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">สาว</span>(2,283)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">หนุ่ม</span>(1,736)
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card6">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 24,586 ข่าว (13.1% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 pt-[10px]">
+                  <p>
+                    ในขณะที่ข่าวหมวดอื่นมีการเปลี่ยนแปลงสัดส่วนของจำนวนข่าวระหว่าง
+                    2 ปี บ้างลดลง บ้างเพิ่มขึ้น แต่ข่าวเศรษฐกิจ/การเงิน
+                    <span class="font-bold"
+                      >เป็นหมวดเดียวที่มีสัดส่วนข่าวเท่าเดิมเป๊ะ</span
+                    >
+                  </p>
+                </div>
+                <div class="py-[10px] border-b border-[#C5C4C4]">
+                  <p class="b4 text-[#717070]">
+                    สัดส่วนข่าวแต่ละหมวดต่อจำนวนข่าวทั้งหมดในแต่ละปี
+                  </p>
+                  <img src="/image/trends/economyChart.svg" alt="" />
+                </div>
+                <div class="b3 py-[10px]">
+                  <p class="font-bold">Top</p>
+                  <p>
+                    <span class="font-bold">คีย์เวิร์ดพบบ่อย</span>
+                    ในแต่ละเดือนของข่าวหมวดนี้ไม่ค่อยแตกต่างกันมากนัก
+                    โดยจะวนเวียนอยู่กับประเด็นเหล่านี้
+                  </p>
+                </div>
+                <div class="">
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">หุ้น</span>(4,024)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> จีน</span>(1,555)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ดอกเบี้ย</span>(1,296)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">กำไร</span>(1,067)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">สหรัฐ</span>(976)
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card6"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
@@ -2402,45 +2408,100 @@ onMounted(async () => {
                 </div>
                 <div class="">
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">หุ้น</span>(4,024)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> จีน</span>(1,555)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ดอกเบี้ย</span>(1,296)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">กำไร</span>(1,067)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">สหรัฐ</span>(976)
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card7">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวต่างประเทศ</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 20,236 ข่าว (10.8% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 pt-[10px]">
+                  <p>
+                    เทรนด์ข่าวต่างประเทศมี
+                    <span class="font-bold">6 ช่วงเวลา</span>
+                    ที่จำนวนข่าวสูงกว่าเดือนอื่นๆ
+                    เมื่อส่องดูคีย์เวิร์ดในพาดหัวข่าว 6 เดือนนี้
+                    พบว่ามีเหตุการณ์ระดับโลก หรือบุคคลสำคัญของชาติอื่นๆ
+                    มาเกี่ยวข้อง
+                  </p>
+                </div>
+                <div>
+                  <ul class="list-disc">
+                    <li>
+                      <span class="font-bold">มี.ค. 2022</span>
+                      <span class="text-[#717070]"> (1,017 ข่าว) </span>
+                      <br />
+                      <p class="text-[#BD4553]">#สงครามยูเครนรัสเซีย</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">ก.ค. 2022</span>
+                      <span class="text-[#717070]"> (933 ข่าว)</span>
+                      <br />
+                      <p class="text-[#BD4553]">#ลอบสังหารชินโซ อาเบะ</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">ก.ย. 2022</span>
+                      <span class="text-[#717070]"> (1,021 ข่าว)</span> มี
+                      <br />
+                      <p class="text-[#BD4553]">#ควีนเอลิซาเบธที่ 2 สวรรคต</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">พ.ย. 2022</span>
+                      <span class="text-[#717070]"> (972 ข่าว)</span> มี
+                      <br />
+                      <p class="text-[#BD4553]">#ประท้วงมาตรการโควิดในจีน,</p>
+                      <p class="text-[#BD4553]">#เลือกตั้งกลางเทอมที่สหรัฐฯ</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">มี.ค. 2023</span>
+                      <span class="text-[#717070]"> (954 ข่าว)</span> มี
+                      <br />
+                      <p class="text-[#BD4553]">
+                        #การเมืองระหว่างประเทศสหรัฐฯ จีน และรัสเซีย
+                      </p>
+                    </li>
+                    <li>
+                      <span class="font-bold">ต.ค. 2023</span>
+                      <span class="text-[#717070]"> (929 ข่าว)</span> มี
+                      <br />
+                      <p class="text-[#BD4553]">#สงครามอิสราเอล-ฮามาส</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card7"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวต่างประเทศ</p>
@@ -2503,14 +2564,109 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card8">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวบันเทิง</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 14,253 ข่าว (7.6% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px] space-y-[10px]">
+                  <p>
+                    คนไทยให้ความสนใจต่อวงการบันเทิงไทยน้อยลงหรือเปล่านะ ?
+                    เพราะดูเหมือนว่าจำนวนข่าวบันเทิงจะ
+                    <span class="font-bold"
+                      >ลดลงเกือบครึ่งหนึ่งตั้งแต่เดือน เม.ย. 2023
+                      เป็นต้นมา</span
+                    >
+                  </p>
+                  <p>
+                    แต่แล้วไงใครแคร์
+                    เช็กกันสักนิดว่าสำนักข่าวไทยเขียนข่าวอะไรในหมวดข่าวบันเทิง
+                  </p>
+                  <p>
+                    แม้คีย์เวิร์ดที่โผล่มาให้เห็นบ่อยๆจะเป็นชื่อคนในวงการ เช่น
+                  </p>
+                </div>
+                <div>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">แตงโม-นิดา</span>(199)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">อิงฟ้า</span>(180)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ดิว-อริสรา</span>(97)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-[10px]">
+                  <p class="b3">
+                    แต่คำกริยาและคำคุณศัพท์ในพาดหัวข่าวนี่แหละ
+                    บอกสถานะโดยรวมของคนวงการนี้ หรือคนบันเทิงจะชอบ
+                  </p>
+                  <div
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]">
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">รัก</span>(1,347)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">โพสต์</span>(978)
+                    </div>
+
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">แซ่บ</span>(646)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">โชว์</span>(517)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">สวย</span>(512)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">อวด</span>(440)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">เลิก</span>(437)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ดราม่า</span>(423)
+                    </div>
+                  </div>
+                  <div class="flex flex-col items-center">
+                    <p class="b3 pb-[10px]">หรือแม้แต่</p>
+                    <div
+                      class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">ติดโควิด</span>(148)
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card8"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวบันเทิง</p>
@@ -2537,26 +2693,21 @@ onMounted(async () => {
                 </div>
                 <div>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">แตงโม-นิดา</span>(199)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">อิงฟ้า</span>(180)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ดิว-อริสรา</span>(97)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
                     </div>
                   </div>
@@ -2567,69 +2718,187 @@ onMounted(async () => {
                     บอกสถานะโดยรวมของคนวงการนี้ หรือคนบันเทิงจะชอบ
                   </p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]"
-                  >
+                    class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]">
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">รัก</span>(1,347)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">โพสต์</span>(978)
                     </div>
 
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">แซ่บ</span>(646)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">โชว์</span>(517)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">สวย</span>(512)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">อวด</span>(440)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">เลิก</span>(437)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ดราม่า</span>(423)
                     </div>
                   </div>
                   <div class="flex flex-col items-center">
                     <p class="b3 pb-[10px]">หรือแม้แต่</p>
                     <div
-                      class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">ติดโควิด</span>(148)
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card9">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวอาชญากรรม</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 13,651 ข่าว (7.3% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px] space-y-[10px]">
+                  <p>
+                    เมื่อลองเปรียบเทียบ Top 10
+                    คีย์เวิร์ดพบบ่อยในพาดหัวข่าวอาชญากรรมของเดือนที่มีจำนวนข่าวอาชญากรรมมากที่สุดกับน้อยที่สุด
+                    จะพบประเด็นที่มีร่วมกัน คือ
+                  </p>
+                </div>
+                <div class="grid grid-cols-2 gap-[10px]">
+                  <div class="b4 flex flex-col justify-end items-end gap-[5px]">
+                    <div>
+                      <p class="b3 font-bold">ก.ย. 2023</p>
+                      <p class="b4 text-end">(712 ข่าว)</p>
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ตำรวจ (217)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      กำนันนก (145)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      คดี (110)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      บิ๊กโจ๊ก (98)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ยิง (93)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      จับ (89)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      บ้าน (83)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ฆ่า (65)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      ปืน (56)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      ผกก. (55)
+                    </div>
+                  </div>
+                  <div class="b4 flex flex-col items-start gap-[5px]">
+                    <div>
+                      <p class="b3 font-bold">ก.ค. 2022</p>
+                      <p class="b4 text-start">(415 ข่าว)</p>
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ตำรวจ (127)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      จับ (112)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      ดับ/ตาย (87)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ยิง (59)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      คดี (57)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      รถ (52)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                      ฆ่า (51)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      หนี (47)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      หนุ่ม (46)
+                    </div>
+                    <div
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                      แม่ (40)
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-[10px]">
+                  <p class="b3">
+                    เมื่อนำ 5 คำนี้ไปเทียบกับ Top 10 คีย์เวิร์ดของเดือนอื่นๆ
+                    อาจได้ข้อสรุปว่า
+                  </p>
+
+                  <div class="">
+                    <p class="b3 pb-[10px]">
+                      ข่าวอาชญากรรมมักหลีกหนีไม่พ้นตัวละคร<span
+                        class="font-bold"
+                        >ตำรวจ</span
+                      >ที่ต้องทำ<span class="font-bold">คดี</span>เมื่อมีคน<span
+                        class="font-bold"
+                        >ยิง</span
+                      >กัน เพราะ 3 คำนี้โผล่ให้เห็นใน Top 10
+                      คีย์เวิร์ดของทุกเดือน
+                    </p>
+                  </div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card9"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวอาชญากรรม</p>
@@ -2651,53 +2920,43 @@ onMounted(async () => {
                       <p class="b4 text-end">(712 ข่าว)</p>
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ตำรวจ (217)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       กำนันนก (145)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       คดี (110)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       บิ๊กโจ๊ก (98)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ยิง (93)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       จับ (89)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       บ้าน (83)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ฆ่า (65)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       ปืน (56)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       ผกก. (55)
                     </div>
                   </div>
@@ -2707,53 +2966,43 @@ onMounted(async () => {
                       <p class="b4 text-start">(415 ข่าว)</p>
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ตำรวจ (127)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       จับ (112)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       ดับ/ตาย (87)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ยิง (59)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       คดี (57)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       รถ (52)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
                       ฆ่า (51)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       หนี (47)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       หนุ่ม (46)
                     </div>
                     <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50"
-                    >
+                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
                       แม่ (40)
                     </div>
                   </div>
@@ -2779,14 +3028,51 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card10">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวกีฬา</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 5,538 ข่าว (3% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px]">
+                  <p>
+                    เทรนด์ข่าวมีขึ้นและลง แต่หากลองสำรวจเทรนด์ของเดือนที่โดดเด่น
+                    หรือมีจำนวนข่าวสูงกว่าเดือนใกล้เคียง
+                    คนไทยคนแรกอย่างเราจะรู้ว่า
+                  </p>
+                </div>
+                <div class="b3">
+                  <ul class="list-disc">
+                    <li>
+                      <span class="font-bold">พ.ค. 2022</span>
+                      <span class="text-[#717070]"> (250 ข่าว) </span>
+                      <br />
+                      <p class="">มีแข่งซีเกมส์ครั้งที่ 31 ที่เวียดนาม</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">พ.ย. 2022</span>
+                      <span class="text-[#717070]"> (313 ข่าว) </span>
+                      <br />
+                      <p class="">เริ่มแข่งฟุตบอลโลก 2022 ที่กาตาร์</p>
+                    </li>
+                    <li>
+                      <span class="font-bold">ก.ย. 2023</span>
+                      <span class="text-[#717070]"> (434 ข่าว) </span>
+                      <br />
+                      <p class="">ศึกเอเชียนเกมส์ครั้งที่ 19 ที่จีน</p>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card10"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวกีฬา</p>
@@ -2825,14 +3111,55 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card11">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 4,408 ข่าว (2.3% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px] space-y-[10px]">
+                  <p>
+                    แม้หมวดข่าวจะชื่อวิทยาศาสตร์/เทคโนโลยี แต่ข่าวหมวดนี้ขยี้แต่
+                    ‘เทคโนโลยี’ เน้นๆ
+                    เพราะสัดส่วนข่าวเทคโนโลยีเห็นทีจะมีมากกว่าข่าววิทยาศาสตร์
+                    หากสำรวจคำที่โผล่ในพาดหัวข่าวหมวดนี้บ่อยๆ ในช่วง 2 ปี จะเจอ
+                  </p>
+                </div>
+                <div class="gap-[10px]">
+                  <div class="b4 grid grid-cols-2 gap-[5px] text-end">
+                    <p class="b3 font-bold">ตัวละคร</p>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold"> อีลอน มัสก์ </span>(288)
+                    </div>
+                    <p class="b3 font-bold">แพลตฟอร์ม</p>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">Twitter/X</span>(459)
+                    </div>
+                    <p class="b3 font-bold">สมาร์ตโฟน</p>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">iPhone15</span> (63)
+                    </div>
+                    <p class="b3 font-bold">ประเทศ</p>
+                    <div
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                      <span class="font-bold">รัสเซีย</span>(75)
+                    </div>
+                  </div>
+                  <div class="b4 flex flex-col items-start gap-[5px]"></div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card11"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
@@ -2852,26 +3179,22 @@ onMounted(async () => {
                   <div class="b4 grid grid-cols-2 gap-[5px] text-end">
                     <p class="b3 font-bold">ตัวละคร</p>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold"> อีลอน มัสก์ </span>(288)
                     </div>
                     <p class="b3 font-bold">แพลตฟอร์ม</p>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">Twitter/X</span>(459)
                     </div>
                     <p class="b3 font-bold">สมาร์ตโฟน</p>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">iPhone15</span> (63)
                     </div>
                     <p class="b3 font-bold">ประเทศ</p>
                     <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                    >
+                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                       <span class="font-bold">รัสเซีย</span>(75)
                     </div>
                   </div>
@@ -2879,14 +3202,83 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+          <StoryCard id="card12">
+            <div>
+                <div class="border-b border-[#C5C4C4] pb-[10px]">
+                  <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
+                  <p class="b4 text-[#717070]">
+                    รวม 3,194 ข่าว (1.7% ของข่าวทั้งหมด)
+                  </p>
+                </div>
+                <div class="b3 py-[10px] space-y-[10px]">
+                  <p>
+                    แนมโน้มจำนวนข่าวสิ่งแวดล้อมที่เพิ่มขึ้น
+                    อาจสะท้อนการเพิ่มขึ้นของข่าวร้ายมากกว่าข่าวดี
+                    เพราะคุณจะพบคำเกี่ยวกับภัยธรรมชาติ
+                    หรืออุบัติภัยที่มนุษย์ก่อในข่าวหมวดนี้อยู่บ่อยๆ เช่น
+                  </p>
+                </div>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px] pt-[10px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">น้ำท่วม</span>(256)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ฝนตกหนัก</span>(196)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ฝุ่น PM2.5</span>(94)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">น้ำป่า</span>(66)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ฝนถล่ม</span>(34)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">คราบน้ำมัน</span>(34)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">มลพิษ</span>(33)
+                  </div>
+
+                  <div class="b4 flex flex-col items-start gap-[5px]"></div>
+                </div>
+                <div class="b3 pt-[10px] space-y-[10px]">
+                  <p>
+                    อย่างเดือน
+                    <span class="font-bold"> ก.ย. 2022</span>
+                    ที่มีจำนวนข่าวสูงสุด (254 ข่าว) ก็เป็นเดือนที่เกิดเหตุการณ์
+                    <span class="font-bold">น้ำท่วม และพายุโนรู</span>
+                  </p>
+                </div>
+                <div class="b3 pt-[10px]">
+                  <p>
+                    แต่ก็ไม่ได้แปลว่าจะไม่มีข่าวน่าสนใจอื่นๆ เลย
+                    ตัวอย่างข่าวน่าติดตามที่มีคีย์เวิร์ดโผล่มาใน Top 10
+                    ของบางเดือนก็เช่น
+                  </p>
+                  <div class="font-bold">
+                    <p>ข่าวพลายศักดิ์สุรินทร์</p>
+                    <p>คดีสินบนกรมอุทยานฯ</p>
+                    <p>หรือแก้มลิงเกาะพระทอง</p>
+                  </div>
+                </div>
+              </div>
+          </StoryCard>
+          <!-- <div
             id="card12"
-            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]"
-          >
+            class="flex items-center justify-center xl:items-end xl:justify-end top-0 left-0 w-full mb-[70vh] mt-[10vh]">
             <div
-              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]"
-            >
+              class="bg-white p-[20px] w-full lg:w-[350px] text-center mx-[16px]">
               <div>
                 <div class="border-b border-[#C5C4C4] pb-[10px]">
                   <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
@@ -2903,41 +3295,33 @@ onMounted(async () => {
                   </p>
                 </div>
                 <div
-                  class="b4 flex flex-wrap items-center justify-center gap-[5px] pt-[10px]"
-                >
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px] pt-[10px]">
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">น้ำท่วม</span>(256)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">ฝนตกหนัก</span>(196)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">ฝุ่น PM2.5</span>(94)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">น้ำป่า</span>(66)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">ฝนถล่ม</span>(34)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">คราบน้ำมัน</span>(34)
                   </div>
                   <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
                     <span class="font-bold">มลพิษ</span>(33)
                   </div>
 
@@ -2965,7 +3349,7 @@ onMounted(async () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -2975,13 +3359,11 @@ onMounted(async () => {
           2022-2023 ด้วยตัวเอง ผ่าน
         </h1>
         <div
-          class="b1 font-bold flex justify-center border-collapse pt-[10px] mb-[5px] w-full"
-        >
+          class="b1 font-bold flex justify-center border-collapse pt-[10px] mb-[5px] w-full">
           <button
             :class="exploreModeSelected === 'หมวดข่าว' ? 'bg-black cream' : ''"
             class="border-black border p-[5px] w-full"
-            @click="selectExploreMode('หมวดข่าว')"
-          >
+            @click="selectExploreMode('หมวดข่าว')">
             หมวดข่าว
           </button>
           <button
@@ -2989,8 +3371,7 @@ onMounted(async () => {
               exploreModeSelected === 'คีย์เวิร์ด' ? 'bg-black cream' : ''
             "
             class="border-black border p-[5px] w-full"
-            @click="selectExploreMode('คีย์เวิร์ด')"
-          >
+            @click="selectExploreMode('คีย์เวิร์ด')">
             คีย์เวิร์ด
           </button>
         </div>
@@ -2998,14 +3379,12 @@ onMounted(async () => {
           <div v-if="exploreModeSelected === 'คีย์เวิร์ด'" class="relative">
             <div
               :class="{ 'bg-white': isInputFocused }"
-              class="group-focus:bg-white bg-[#EBE8DE] flex justify-between w-full h-full"
-            >
+              class="group-focus:bg-white bg-[#EBE8DE] flex justify-between w-full h-full">
               <div class="flex border-b border-[#939393] w-full">
                 <img
                   src="/image/trends/Search.svg"
                   alt=""
-                  class="w-[16px] m-[5px]"
-                />
+                  class="w-[16px] m-[5px]" />
                 <input
                   autocomplete="off"
                   type="text"
@@ -3018,8 +3397,7 @@ onMounted(async () => {
                   @keydown.down="handleTyping"
                   v-model="inputKeyword"
                   @input="handleInput"
-                  class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]"
-                />
+                  class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]" />
               </div>
 
               <img
@@ -3027,27 +3405,23 @@ onMounted(async () => {
                 alt=""
                 class="w-[16px] cursor-pointer border-b border-[#939393]"
                 @click="clearInput"
-                v-if="!isInputFocused"
-              />
+                v-if="!isInputFocused" />
               <button
                 v-else
                 class="border border-[#FF006B] text-[#FF006B] b4 px-[10px] flex items-center cursor-pointer"
-                @mousedown.prevent="searchKeyword"
-              >
+                @mousedown.prevent="searchKeyword">
                 ค้นหา
               </button>
             </div>
             <ul
               v-if="showSuggestions && filteredSuggestions.length > 0"
-              class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0"
-            >
+              class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0">
               <li
                 v-for="(suggestion, index) in filteredSuggestions"
                 :key="index"
                 @mousedown="handleSuggestionMouseDown(suggestion)"
                 @click.stop="hideSuggestions"
-                class="cursor-pointer"
-              >
+                class="cursor-pointer">
                 <span v-html="highlightMatchedText(suggestion)"></span>
               </li>
             </ul>
@@ -3055,16 +3429,14 @@ onMounted(async () => {
 
           <div
             class="flex items-center pb-[10px] w-full"
-            v-if="exploreModeSelected === 'หมวดข่าว'"
-          >
+            v-if="exploreModeSelected === 'หมวดข่าว'">
             <p class="b4">หมวด</p>
             <select
               v-model="categorySelected"
               @change="selectCategory($event.target.value)"
               name=""
               id=""
-              class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4 focus:outline-none"
-            >
+              class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4 focus:outline-none">
               <option value="การเมือง">การเมือง</option>
               <option value="สังคมไทย">สังคมไทย</option>
               <option value="เศรษฐกิจ/การเงิน">เศรษฐกิจ/การเงิน</option>
@@ -3083,8 +3455,7 @@ onMounted(async () => {
             v-if="
               (exploreModeSelected === 'คีย์เวิร์ด' && dataForKW) ||
               exploreModeSelected === 'หมวดข่าว'
-            "
-          >
+            ">
             <div class="grid grid-cols-2 my-[10px]">
               <div class="flex items-center">
                 <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
@@ -3101,8 +3472,7 @@ onMounted(async () => {
               <div class="relative items-end justify-center w-full mt-6">
                 <div class="relative w-full">
                   <div
-                    class="z-10 flex items-end gap-[1px] justify-center lg:w-full"
-                  >
+                    class="z-10 flex items-end gap-[1px] justify-center lg:w-full">
                     <div
                       v-if="
                         exploreModeSelected === 'หมวดข่าว' &&
@@ -3112,8 +3482,7 @@ onMounted(async () => {
                         categorySelected
                       ]['monthly']"
                       :key="index"
-                      class="group flex flex-col items-center gap-2 w-[3.75%] lg:w-[4.06%]"
-                    >
+                      class="group flex flex-col items-center gap-2 w-[3.75%] lg:w-[4.06%]">
                       <div
                         v-if="
                           totalDataEachCategory.length > 0 &&
@@ -3136,29 +3505,24 @@ onMounted(async () => {
                               item.category.includes(categorySelected)
                             ).max
                           )}px`,
-                        }"
-                      ></div>
+                        }"></div>
                       <p
                         class="text-[#939393] -rotate-90 b6"
-                        style="pointer-events: none"
-                      >
+                        style="pointer-events: none">
                         {{ monthShortTH[item.month - 1] }}
                       </p>
                     </div>
                     <div
                       v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                      class="flex flex-col items-end"
-                    >
+                      class="flex flex-col items-end">
                       <div
-                        class="cursor-pointer relative flex gap-[1px] w-[90vw] lg:px-[9vw] justify-center"
-                      >
+                        class="cursor-pointer relative flex gap-[1px] w-[90vw] lg:px-[9vw] justify-center">
                         <div
                           v-for="(item, itemIndex) in dataForKW.montly"
                           class="flex flex-col cursor-pointer relative justify-end"
                           :style="{
                             width: `${90 / dataForKW.montly.length}%`,
-                          }"
-                        >
+                          }">
                           <div
                             v-if="totalDataEachCategory.length > 0"
                             class="group relative"
@@ -3173,13 +3537,11 @@ onMounted(async () => {
                                 200,
                                 maxOfMonthly
                               )}px`,
-                            }"
-                          >
+                            }">
                             <div
                               id="popupDetail"
                               :class="itemIndex > 12 ? 'right-0' : 'left-0'"
-                              class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]"
-                            >
+                              class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]">
                               <p class="font-bold flex b5">
                                 {{ monthShortTH[item.month - 1] }}
                                 {{ item.year % 100 }}
@@ -3194,16 +3556,15 @@ onMounted(async () => {
                                 <div
                                   v-for="(cate, cateNo) in Object.keys(
                                     dataForKW.categories_total
-                                  )"
-                                >
+                                  )">
                                   <div
                                     class="flex items-center gap-[2px]"
-                                    v-if="item[cate] > 0"
-                                  >
+                                    v-if="item[cate] > 0">
                                     <div
                                       class="w-[10px] h-[10px] bg-orange"
-                                      :class="getCategoryColorClass(cate)"
-                                    ></div>
+                                      :class="
+                                        getCategoryColorClass(cate)
+                                      "></div>
                                     <p>{{ item[cate] }}</p>
                                   </div>
                                 </div>
@@ -3212,8 +3573,7 @@ onMounted(async () => {
                           </div>
                           <p
                             class="text-[#939393] -rotate-90 b5 py-[10px]"
-                            style="pointer-events: none"
-                          >
+                            style="pointer-events: none">
                             {{ monthShortTH[item.month - 1] }}
                           </p>
                         </div>
@@ -3224,8 +3584,7 @@ onMounted(async () => {
                   <div
                     v-if="exploreModeSelected === 'หมวดข่าว'"
                     class="z-0 absolute bottom-0 w-full h-full"
-                    style="pointer-events: none"
-                  >
+                    style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div>
                         <p class="b5 border-b border-black border-dotted">
@@ -3243,28 +3602,24 @@ onMounted(async () => {
                 </div>
 
                 <div
-                  class="b5 text-[#939393] grid grid-cols-2 place-items-center lg:pt-[30px] lg:mb-[10px] font-bold"
-                >
+                  class="b5 text-[#939393] grid grid-cols-2 place-items-center lg:pt-[30px] lg:mb-[10px] font-bold">
                   <p>2022</p>
                   <p>2023</p>
                 </div>
               </div>
               <div
                 class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
-                style="pointer-events: none"
-              ></div>
+                style="pointer-events: none"></div>
             </div>
 
             <div
               class="flex flex-col justify-center items-center"
-              ref="exploreRef"
-            >
+              ref="exploreRef">
               <div v-if="exploreModeSelected === 'หมวดข่าว'">
                 <div class="flex justify-center items-center">
                   <button
                     @click="handleExploreMounthYear('prev')"
-                    class="cursor-pointer"
-                  >
+                    class="cursor-pointer">
                     <img src="/image/trends/PreviousBtn.svg" alt="" />
                   </button>
                   <p class="b3 font-bold">
@@ -3272,8 +3627,7 @@ onMounted(async () => {
                   </p>
                   <button
                     @click="handleExploreMounthYear('next')"
-                    class="cursor-pointer"
-                  >
+                    class="cursor-pointer">
                     <img src="/image/trends/NextBtn.svg" alt="" />
                   </button>
                 </div>
@@ -3296,8 +3650,7 @@ onMounted(async () => {
                   และมักพบ 10 คำ*เหล่านี้อยู่บ่อยๆ
                 </p>
                 <div
-                  class="grid grid-cols-2 lg:flex lg:flex-wrap lg:justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center"
-                >
+                  class="grid grid-cols-2 lg:flex lg:flex-wrap lg:justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center">
                   <div
                     v-for="(kw, index) in top10Keywords"
                     :class="
@@ -3305,8 +3658,7 @@ onMounted(async () => {
                         ? 'justify-self-end'
                         : 'justify-self-start'
                     "
-                    class="bg-black flex items-center gap-[2px] px-[5px] justify-center text-center w-fit"
-                  >
+                    class="bg-black flex items-center gap-[2px] px-[5px] justify-center text-center w-fit">
                     <p class="b3">{{ kw.keyword }}</p>
                     <p class="b4">({{ kw.frequency }})</p>
                   </div>
@@ -3320,13 +3672,11 @@ onMounted(async () => {
                   พาดหัวข่าว โดยอยู่ในหมวด
                 </p>
                 <div
-                  class="flex flex-wrap items-center justify-center gap-[5px] py-[5px]"
-                >
+                  class="flex flex-wrap items-center justify-center gap-[5px] py-[5px]">
                   <div
                     v-for="(ct, index) in Object.keys(
                       dataForKW.categories_total
-                    )"
-                  >
+                    )">
                     <p :class="getCategoryColorClass(ct)" class="b3 px-2">
                       {{ ct
                       }}<span class="b4">
@@ -3344,8 +3694,7 @@ onMounted(async () => {
                   exploreModeSelected === 'หมวดข่าว'
                 "
                 :class="getCategoryBorderColor(categorySelected)"
-                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]"
-              >
+                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]">
                 <p class="b4 font-bold">
                   {{
                     formatMonth(
@@ -3360,8 +3709,7 @@ onMounted(async () => {
                       filteredSampleHeadlineCategory[sampleIndex].headline,
                       'a'
                     )
-                  "
-                ></h1>
+                  "></h1>
                 <p class="b5">
                   ที่มา:
                   <a :href="filteredSampleHeadlineCategory[sampleIndex].link">{{
@@ -3382,8 +3730,7 @@ onMounted(async () => {
                   dataForKW.sample_headlines[sampleIndex] &&
                   exploreModeSelected === 'คีย์เวิร์ด'
                 "
-                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]"
-              >
+                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]">
                 <p class="b4 font-bold">
                   {{
                     formatMonth(dataForKW.sample_headlines[sampleIndex].date)
@@ -3396,8 +3743,7 @@ onMounted(async () => {
                       dataForKW.sample_headlines[sampleIndex].headline,
                       inputKeyword
                     )
-                  "
-                ></h1>
+                  "></h1>
                 <p class="b5">
                   ที่มา:
                   <a :href="dataForKW.sample_headlines[sampleIndex].link">{{
@@ -3406,8 +3752,7 @@ onMounted(async () => {
                 </p>
               </div>
               <button
-                class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]"
-              >
+                class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]">
                 <img src="/image/Reset.svg" alt="" />
                 <p @click="handleNewSample">สุ่มตัวอย่างเพิ่ม</p>
               </button>
@@ -3426,8 +3771,7 @@ onMounted(async () => {
         </div>
         <p
           @click="showRefPopup"
-          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto my-[10px] border-[#EBE8DE]"
-        >
+          class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto my-[10px] border-[#EBE8DE]">
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
         <div class="py-[40px] text-center">
@@ -3437,8 +3781,7 @@ onMounted(async () => {
           <SectionBtn link="/lifecycle" />
           <NuxtLink
             to="/"
-            class="text-[#FF006B] b4 border-b-1 border-[#FF006B] w-fit mx-auto"
-          >
+            class="text-[#FF006B] b4 border-b-1 border-[#FF006B] w-fit mx-auto">
             <p class="my-[20px]">กลับไปหน้าแรก</p>
           </NuxtLink>
           <Share :hasMsgerLink="false" />
