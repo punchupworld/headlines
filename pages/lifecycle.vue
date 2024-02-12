@@ -238,7 +238,7 @@ function selectNews(news) {
             </div>
           </div>
           <div
-            class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none hidden"
+            class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none"
           >
             <div class="step" data-step="1">
               <div class="bg-white p-5 h-fit">
