@@ -1,0 +1,835 @@
+[
+  {
+    "headline": "โตโน่ ตั้งใจว่ายน้ำข้ามประเทศ หาเงินบริจาคให้ 2 โรงพยาบาลริมฝั่งโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2459886",
+    "date": "2022-07-30",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“โตโน่” เล่าภาพฟิน จูงมือแม่และ “ณิชา” นานๆว่างตรงกัน เตรียมกลับมาว่ายน้ำข้ามแม่น้ำโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2462474",
+    "date": "2022-08-03",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน จะว่ายข้ามโขงนครพนม-แขวงคำม่วน 22 ต.ค. เพื่อระดมทุนช่วย รพ.",
+    "link": "https://www.thairath.co.th/news/local/northeast/2495276",
+    "date": "2022-09-08",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "ณิชา สุดห่วง โตโน่ ลงภาพนอนเฝ้าแฟนหนุ่มหลังโหมใช้ร่างกายหนักจนแอดมิต",
+    "link": "https://www.thairath.co.th/entertain/news/2505565",
+    "date": "2022-09-20",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“ณิชา” ห่วงแฟนมาก! เกาะขอบเตียงเฝ้าไข้ “โตโน่” เล่าออกจากโรงพยาบาลเดินหน้าลุยต่อ",
+    "link": "https://www.thairath.co.th/entertain/news/2509581",
+    "date": "2022-09-26",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ใจถึง โตโน่ ภาคิน ว่ายข้ามโขงไม่กลัวน้ำเชี่ยว รู้ว่าเสี่ยงแต่ก็ทำ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2518788",
+    "date": "2022-10-05",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "หมอริท โพสต์กลืนไม่เข้า คายไม่ออก คนเดาสื่อถึง โตโน่ เตรียมว่ายน้ำข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2520130",
+    "date": "2022-10-06",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "สรุปดราม่าเดือด โตโน่ ว่ายน้ำข้ามโขงระดมทุน ถูกวิจารณ์สนั่นติดเทรนด์ทวิต",
+    "link": "https://www.thairath.co.th/entertain/news/2519565",
+    "date": "2022-10-06",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ เปิดใจดราม่าว่ายน้ำข้ามโขง เหนื่อยกับความดังตัวเอง ดีใจยอดบริจาคทะลุล้าน (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2520715",
+    "date": "2022-10-07",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ยุ้ย ญาติเยอะ ฟาดแรง โตโน่ ภาคิน ว่ายน้ำข้ามโขงระดมทุนซื้อเครื่องมือแพทย์",
+    "link": "https://www.thairath.co.th/entertain/news/2520688",
+    "date": "2022-10-07",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เสี่ยงแต่ไหว “โตโน่” ว่ายน้ำข้ามโขงระดมทุนช่วยรพ.ไทย-ลาว มี “ณิชา” ซัพพอร์ต",
+    "link": "https://www.thairath.co.th/entertain/news/2519971",
+    "date": "2022-10-07",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ โพสต์หลังมีดราม่าว่ายน้ำข้ามโขง ด้านผู้จัดการเผยข้อความจากใจผู้จัด",
+    "link": "https://www.thairath.co.th/entertain/news/2521120",
+    "date": "2022-10-07",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เปิดใจ \"โตโน่\" ดรามาว่ายน้ำข้ามโขง \"ผมถนัดแบบนี้ขอลงมือทำ\" ",
+    "link": "https://www.thaipbs.or.th/news/content/320261",
+    "date": "2022-10-08",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ เดินหน้าต่อ ซ้อมว่ายน้ำวันแรก 1,650 ม. ก่อนลงว่ายจริงในน้ำโขง  ",
+    "link": "https://www.thairath.co.th/entertain/news/2522226",
+    "date": "2022-10-09",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ฟังอีกมุม เซียนว่ายน้ำข้ามโขง ยืนยันไม่อันตรายอย่างที่คิด มั่นใจ \"โตโน่\" ทำได้ (คลิป)",
+    "link": "https://www.thairath.co.th/news/society/2522556",
+    "date": "2022-10-09",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ตอบข้อสงสัย ว่ายน้ำข้ามประเทศได้ขออนุญาตเข้าเมืองถูกต้องหรือยัง",
+    "link": "https://www.thairath.co.th/entertain/news/2522576",
+    "date": "2022-10-09",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ผอ.รพ.นครพนม ยืนยัน \"โตโน่\" ว่ายข้ามโขง ไม่เป็นภาระแพทย์",
+    "link": "https://www.thaipbs.or.th/news/content/320339",
+    "date": "2022-10-10",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เผยคำพูด นก สินจัย ฝากถึง โตโน่ ภาคิน ก่อนทำภารกิจว่ายน้ำข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2522961",
+    "date": "2022-10-10",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ชื่นใจยอดบริจาค 2 ล้าน พร้อมสู้ว่ายน้ำต่อ ชาวเน็ตส่งกำลังใจเพียบ",
+    "link": "https://www.thairath.co.th/entertain/news/2524365",
+    "date": "2022-10-11",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "คอนเสิร์ตสุดท้ายเดือนนี้ โตโน่ พักงานในวงการ เตรียมร่างกายว่ายข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2525046",
+    "date": "2022-10-12",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เปิดคลิป โตโน่ ทดสอบปอดวัดความอึด พยายามถึง 3 ครั้ง กว่าจะได้ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2525468",
+    "date": "2022-10-12",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ทดสอบหัวใจผ่านแล้ว เหลืออีก 8 วันจะเริ่มภารกิจว่ายน้ำข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2526798",
+    "date": "2022-10-14",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เผยสาเหตุ ณิชา ทำไมไม่ห้าม โตโน่ เลิกว่ายน้ำ มาจัดคอนเสิร์ตแทน",
+    "link": "https://www.thairath.co.th/entertain/news/2528235",
+    "date": "2022-10-16",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ นับถอยหลัง 5 วัน ตั้งใจซ้อมว่ายน้ำอย่างหนัก ไม่ขอรับรู้ยอดเงินบริจาค ",
+    "link": "https://www.thairath.co.th/entertain/news/2529028",
+    "date": "2022-10-17",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "กู้ภัยทางน้ำ เตือน \"โตโน่\" ว่ายข้ามน้ำโขง เชี่ยวไหลลึก อันตรายกว่าทะเล (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2529571",
+    "date": "2022-10-18",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "เพจดังเปิดเอกสาร โตโน่ ว่ายน้ำ 33 ภารกิจ-หน่วยงานรับผิดชอบ สงสัยใครออกค่าใช้จ่าย",
+    "link": "https://www.thairath.co.th/entertain/news/2529573",
+    "date": "2022-10-18",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“ณิชา” เชื่อ “โตโน่” ว่ายน้ำข้ามโขงปลอดภัย ห้ามความคิดคนไม่ได้ โฟกัสแต่ภารกิจ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2529263",
+    "date": "2022-10-18",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เสร็จสิ้นการฝึกซ้อม โตโน่ เตรียมว่ายจริง อีก 4 วัน ก็จะรู้ว่าจบลงแบบไหน",
+    "link": "https://www.thairath.co.th/entertain/news/2530120",
+    "date": "2022-10-18",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ผจก.โตโน่ยันงบจัดว่ายข้ามโขงไม่ใช่เงินรัฐ ทุกฝ่ายช่วยหวังกระตุ้นท่องเที่ยว (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2529800",
+    "date": "2022-10-18",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ถึงนครพนมแล้ว แต่ขอไม่ดูแม่น้ำโขง อยากเห็นวันจริง (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2530811",
+    "date": "2022-10-19",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "รู้จัก \"อุโมงค์น้ำ\" แห่งเดียวในไทย มูลค่ากว่า 30 ล้าน หลังมีดราม่า \"โตโน่\"",
+    "link": "https://www.thairath.co.th/news/society/2530818",
+    "date": "2022-10-19",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "คณะวิทยาศาสตร์การกีฬา จุฬาฯ ชี้แจงดราม่าปม \"โตโน่\" ใช้ \"อุโมงค์น้ำ\"",
+    "link": "https://www.thairath.co.th/news/society/2530890",
+    "date": "2022-10-19",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ เมินดราม่า ลงเรือดูสภาพน้ำโขงนครพนม มั่นใจว่าย 15 กม.สำเร็จ",
+    "link": "https://www.thairath.co.th/news/local/northeast/2531103",
+    "date": "2022-10-19",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "\"โตโน่\" ถึงนครพนม ยันเดินหน้าว่ายข้ามโขง แจงปมใช้อุโมงค์น้ำ",
+    "link": "https://www.thaipbs.or.th/news/content/320608",
+    "date": "2022-10-19",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "นิสิตโวย โตโน่ ทดสอบอุโมงค์น้ำฟรี ไม่เสียสักบาท ไม่เคยให้นักศึกษาใช้",
+    "link": "https://www.thairath.co.th/entertain/news/2530523",
+    "date": "2022-10-19",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“อนุทิน” ยินดี “โตโน่” ว่ายน้ำระดมเงินบริจาคให้ รพ.ยัน ไม่ขวางคนทำดี ",
+    "link": "https://www.thairath.co.th/news/politic/2531753",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน สุดกลั้นน้ำตา หลังไปกินข้าวและแฟนๆ ให้กำลังใจว่ายน้ำข้ามโขง (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2531510",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "รู้จัก \"อุโมงค์น้ำ\" แห่งเดียวในไทย 30 ล้าน หลัง \"โตโน่\" ฝึกปอด ",
+    "link": "https://www.thaipbs.or.th/news/content/320626",
+    "date": "2022-10-20",
+    "news_station": "ThaiPBS",
+    "category": "กีฬา"
+  },
+  {
+    "headline": "โตโน่ โพสต์ภาพกับทารกในตู้อบที่ รพ.นครพนม บอกเราจะช่วยกันหามาเพิ่ม",
+    "link": "https://www.thairath.co.th/entertain/news/2531788",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "คณะวิทยาศาสตร์การกีฬา จุฬาฯ แจงปม \"โตโน่\" เข้าใช้อุโมงค์น้ำ โดยไม่มีค่าใช้จ่าย",
+    "link": "https://www.thairath.co.th/news/society/2531725",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่มั่นใจ ไม่ซ้อมสนามจริง ลงน้ำโขงว่ายเลย ยอดบริจาคพุ่ง 7 ล้าน",
+    "link": "https://www.thairath.co.th/news/local/northeast/2531913",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "ศรีสุวรรณ โพสต์รัว ตั้งข้อสังเกตถึง \"โตโน่-ลุงศักดิ์\" สงสัยสังคมเป็นอะไร",
+    "link": "https://www.thairath.co.th/news/society/2531585",
+    "date": "2022-10-20",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "จุฬาฯ ตอบปม \"โตโน่\" ใช้อุโมงค์น้ำฟรี อยู่ระหว่างซ่อม-การกุศล ",
+    "link": "https://www.thaipbs.or.th/news/content/320636",
+    "date": "2022-10-20",
+    "news_station": "ThaiPBS",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "อ.ยิ่งศักดิ์ ฝากไว้ให้คิด แนะ โตโน่ ภาคิน เจตนาดี แต่การกระทำต้องเลือก",
+    "link": "https://www.thairath.co.th/entertain/news/2532841",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "นครพนม ยัน ไทย-ลาว พร้อมรับ \"โตโน่\" ว่ายข้ามโขง เชื่อส่งผลดีท่องเที่ยว",
+    "link": "https://www.thairath.co.th/news/local/northeast/2532298",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ขอพระธาตุพนม พญาศรีสัตตนาคราชช่วยคุ้มครอง ยอดบริจาคทะลุ 12 ล้าน",
+    "link": "https://www.thairath.co.th/news/local/northeast/2532870",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "ยอดบริจาคภารกิจโตโน่ \"หนึ่งคนว่าย หลายคนให้\" ทะลุ 10 ล้านบาท",
+    "link": "https://www.thaipbs.or.th/news/content/320683",
+    "date": "2022-10-21",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ฝ่าดราม่า เผยความตั้งใจว่ายน้ำข้ามโขง สานฝันหมอ-พยาบาล",
+    "link": "https://www.thairath.co.th/entertain/news/2531710",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"โตโน่\" พร้อมว่ายข้ามโขง ยอดบริจาคเกิน 7 ล้านบาทแล้ว (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2532165",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"โตโน่\" โชว์พระเครื่องคู่กาย แจงเทคนิคว่ายน้ำทางไกล มั่นใจฟิตมาอย่างดี (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2532678",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เปิดประวัติน่าสนใจ โตโน่ ภาคิน พระเอก-นักร้อง ที่ตั้งใจจะว่ายน้ำข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2532596",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ศรีสุวรรณ เห็นต่าง สนับสนุน โตโน่ ภาคิน ว่ายข้ามโขง ขอให้ทำดีต่อไป",
+    "link": "https://www.thairath.co.th/entertain/news/2532798",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "#โตโน่ ติดเทรนด์เหนียวแน่น คนเฝ้าดู ฝ่าดราม่า ว่ายข้ามโขง",
+    "link": "https://www.thairath.co.th/news/society/2532456",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "จาก \"ตูน บอดี้สแลม\" ถึง \"โตโน่\" ย้อนเคสคนดังระดมทุนเพื่อสังคม",
+    "link": "https://www.thaipbs.or.th/news/content/320669",
+    "date": "2022-10-21",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"โตโน่\" พร้อมว่ายข้ามโขง ปลื้มยอดบริจาคทะลุ คาดไม่ต่ำ 10 ล้านบาท",
+    "link": "https://www.thairath.co.th/news/local/northeast/2532186",
+    "date": "2022-10-21",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "งาน \"โตโน่\" พรุ่งนี้พร้อม ปชช. มองต่างมุม \"ร่วมเชียร์-เสี่ยงเกินไป\"",
+    "link": "https://www.thaipbs.or.th/news/content/320690",
+    "date": "2022-10-21",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ขอบคุณ 'โตโน่' ยกเป็นวีรบุรุษ\n\n'อนุทิน' ยัน สธ. ไม่ขาดแคลนงบฯ",
+    "link": "https://voicetv.co.th/read/MhT6RPaPR",
+    "date": "2022-10-22",
+    "news_station": "VoiceTV",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ว่ายข้ามแม่น้ำโขงถึงฝั่งลาวแล้ว แฟนๆ แห่ต้อนรับแน่น (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2533388",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"อนุทิน\" ขอบคุณ \"โตโน่\" ยกเป็น ฮีโร่คนไทย สะท้อนภาพคนไทยรักกัน (คลิป)",
+    "link": "https://www.thairath.co.th/news/politic/2533646",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "ชาวลาวต้อนรับอบอุ่น \"โตโน่\" ว่ายน้ำข้ามโขง ส่งกำลังใจให้หมอ-พยาบาล",
+    "link": "https://www.thaipbs.or.th/news/content/320706",
+    "date": "2022-10-22",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"โตโน่\" ว่ายข้ามโขง ชาวนครพนมให้กำลังใจ ยอดบริจาคทะลุ 40 ล้านบาท",
+    "link": "https://www.thaipbs.or.th/news/content/320703",
+    "date": "2022-10-22",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“โตโน่” เริ่มว่าย 10.09 น. ยอดเงินบริจาคทะลุ 22 ล้านบาท",
+    "link": "https://www.thaipbs.or.th/news/content/320694",
+    "date": "2022-10-22",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "อัปเดตยอดบริจาค โตโน่ ว่ายน้ำข้ามโขง พุ่งทะลุ 46 ล้านบาท ",
+    "link": "https://www.thairath.co.th/entertain/news/2533500",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "อนุทินขอบคุณโตโน่ ยกเป็นฮีโร่คนไทย ชี้ยอดเงินบริจาคสะท้อนภาพคนไทยรักกันไม่เปลี่ยนแปลง ",
+    "link": "https://thestandard.co/anutin-tono-is-hero/",
+    "date": "2022-10-22",
+    "news_station": "The Standard",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "ประมวลภาพความสำเร็จ โตโน่ ภาคิน ว่ายข้ามแม่น้ำโขง ได้ยอดเงินเกือบ 60 ล้าน",
+    "link": "https://www.thairath.co.th/entertain/news/2533623",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ว่ายน้ำข้ามแม่น้ำโขงกลับไทยแล้ว ยอดบริจาคพุ่ง 54 ล้านบาท (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2533560",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ว่ายน้ำกลับถึงไทยแล้ว ยอดบริจาคทะลุ 58 ล้าน (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2533573",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“โตโน่” เคลียร์ปมดราม่าเหนื่อยใจกว่าการ “ว่ายน้ำ” เผยเป้าหมายระดมทุนช่วยเหลือ",
+    "link": "https://www.thairath.co.th/entertain/news/2532876",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ประมวลภาพบรรยากาศ ณิชา รำถวายพ่อปู่พญานาค ก่อน โตโน่ ว่ายน้ำข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2533246",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ลงว่ายน้ำแล้ว แฟนๆ ชาวนครพนมแห่เชียร์แน่นงาน (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2533278",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ประมวลภาพ โตโน่ ภาคิน ว่ายน้ำข้ามโขง ประชาชนร่วมให้กำลังใจล้นหลาม ",
+    "link": "https://www.thairath.co.th/entertain/news/2533288",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ลุ้นระทึกกับ \"โตโน่ ภาคิน\" ว่ายข้ามแม่น้ำโขง เงินบริจาคทะลุ 14 ล้านบาท (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2533031",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "อัปเดตยอดบริจาคล่าสุด โตโน่ ภาคิน ว่ายน้ำข้ามโขง พุ่งทะยาน 29 ล้านบาท",
+    "link": "https://www.thairath.co.th/entertain/news/2533275",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ยอดเงินทะลุ 14 ล้าน ลุ้น \"โตโน่\" ว่ายข้ามโขง \"แม่ภูมิใจ-นิชารำขอพร\" (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2533095",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "นก สินจัย ส่งกำลังใจให้ โตโน่ และทีมงาน ยินดียอดบริจาคทะลุ 50 ล้าน",
+    "link": "https://www.thairath.co.th/entertain/news/2533566",
+    "date": "2022-10-22",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"โตโน่\" ว่ายน้ำข้ามแม่น้ำโขงถึงฝั่งไทย ยอดบริจาคพุ่ง 58 ล้านบาท",
+    "link": "https://www.thaipbs.or.th/news/content/320710",
+    "date": "2022-10-22",
+    "news_station": "ThaiPBS",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "\"โตโน่\" ขอบคุณ \"คนไทย-ลาว\" หลังภารกิจว่ายน้ำข้ามโขงสำเร็จ",
+    "link": "https://www.thaipbs.or.th/news/content/320712",
+    "date": "2022-10-22",
+    "news_station": "ThaiPBS",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "“บิ๊กตู่” แสดงความยินดี “โตโน่” ว่ายข้ามโขงสำเร็จ ชื่นชมทำดีเพื่อสังคม",
+    "link": "https://www.thairath.co.th/news/politic/2533851",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "หมอริท ฝากถึง โตโน่ ถึงยอดบริจาคพันล้าน แต่หมอ-พยาบาลยังเหนื่อยเท่าเดิม",
+    "link": "https://www.thairath.co.th/entertain/news/2533911",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ภารกิจ \"โตโน่ ภาคิน\" ทำสำเร็จ ว่ายข้ามแม่น้ำโขง ยอดบริจาค 62 ล้านบาททะลุเป้า (คลิป)",
+    "link": "https://www.thairath.co.th/news/society/2533735",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "อั๋น ภูวนาท ชื่นชม โตโน่ แต่ไม่ส่งเสริม ถ้าวิ่ง-ว่ายน้ำรายสัปดาห์ น่าจะปวดหัว",
+    "link": "https://www.thairath.co.th/entertain/news/2533975",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เผยคำพูด ท็อป ดารณีนุช ฝากถึง โตโน่ หลังว่ายน้ำข้ามโขงสำเร็จ ชาวเน็ตเมนต์สนั่น",
+    "link": "https://www.thairath.co.th/entertain/news/2533981",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เทพ โพธิ์งาม ซัดเดือดถึงคนขี้อิจฉามัวแต่วิจารณ์ ชื่นชม โตโน่ ว่ายน้ำสำเร็จ",
+    "link": "https://www.thairath.co.th/entertain/news/2534245",
+    "date": "2022-10-23",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ประยุทธ์ยินดีและชื่นชม ‘โตโน่’ เสียสละ ทำความดีเพื่อสังคม ",
+    "link": "https://thestandard.co/prayut-pleased-tono/",
+    "date": "2022-10-23",
+    "news_station": "The Standard",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "นายกฯ ยินดี \"โตโน่\" บรรลุภารกิจช่วย รพ. ยอดบริจาคทะลุ 63 ล้าน",
+    "link": "https://www.thaipbs.or.th/news/content/320718",
+    "date": "2022-10-23",
+    "news_station": "ThaiPBS",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "แฟนคลับส่งกำลังใจ หมอริท หลังชาวเน็ตเห็นต่าง ปมฝากถึง โตโน่ ",
+    "link": "https://www.thairath.co.th/entertain/news/2534945",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "นางเอกสาว เล่าเหตุการณ์ขนลุก ขณะรำบวงสรวง โตโน่ ว่ายข้ามโขง",
+    "link": "https://www.thairath.co.th/entertain/news/2534918",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โต้เดือด หมอก้อง สวน หมอริท วิจารณ์ โตโน่ พูดเพื่อ ไม่เห็นด้วยก็อยู่เฉยไว้",
+    "link": "https://www.thairath.co.th/entertain/news/2534645",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ณิชา โพสต์ข้อความน่าคิด หลัง โตโน่ ว่ายน้ำข้ามโขงสำเร็จ",
+    "link": "https://www.thairath.co.th/entertain/news/2534788",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ขอบคุณเจตนาดี โตโน่ และคนร่วมบริจาค ยันงบ สธ.เพียงพอ แต่ไม่ปิดกั้น",
+    "link": "https://www.thairath.co.th/news/politic/2534933",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "การเมือง"
+  },
+  {
+    "headline": "“โตโน่” เก็บตัว ยอดบริจาคเฉียด 68 ล้าน แจงรายการจัดซื้ออุปกรณ์ให้แพทย์ นายกฯชื่นชมด้วย",
+    "link": "https://www.thairath.co.th/news/society/2534451",
+    "date": "2022-10-24",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ประกาศลาบวช หลังว่ายข้ามโขงสำเร็จ ยอดบริจาคทะลุ 68 ล้าน",
+    "link": "https://www.thairath.co.th/entertain/news/2535426",
+    "date": "2022-10-25",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เผยคำพูด ผู้พันเบิร์ด เคลื่อนไหวถึง โตโน่ ทำนึกถึงพระมหาชนก ",
+    "link": "https://www.thairath.co.th/entertain/news/2535525",
+    "date": "2022-10-25",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "“โตโน่” ประกาศขอบวช ตอบแทนน้ำใจคนไทย-ลาว ยอดบริจาคทะลุ 68 ล้าน",
+    "link": "https://www.thaipbs.or.th/news/content/320782",
+    "date": "2022-10-25",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ป๋าเทพ บอกโตโน่ไปช่วย รพ.เป็นเรื่องดี แต่ขอรัฐดูแลชาวบ้านด้วยอย่าแค่แจกเงิน (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/central/2535366",
+    "date": "2022-10-25",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ควง ณิชา เที่ยวเขาใหญ่ ขอบคุณที่ยอมไม่ไปเที่ยวต่างประเทศ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2536866",
+    "date": "2022-10-26",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "เปิดยอดบริจาค โตโน่ ว่ายน้ำข้ามโขง ใกล้ 70 ล้าน เหลือเวลาบริจาคอีก 3 วัน",
+    "link": "https://www.thairath.co.th/entertain/news/2538346",
+    "date": "2022-10-28",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ผู้ช่วยเจ้าอาวาสวัดพระธาตุพนม ยืนยัน โตโน่ บวช 7 วัน ถือฤกษ์หลังปีใหม่",
+    "link": "https://www.thairath.co.th/news/local/northeast/2539440",
+    "date": "2022-10-29",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ปิดยอดบริจาควันนี้ ตัวเลขยังพุ่งไม่หยุด พร้อมถามชื่นใจมั้ยครับ",
+    "link": "https://www.thairath.co.th/entertain/news/2540575",
+    "date": "2022-10-31",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ปิดรับบริจาคแล้ว โตโน่ ปลื้มว่ายน้ำข้ามโขง ยอดล่าสุดทะลุเกิน 80 ล้าน",
+    "link": "https://www.thairath.co.th/entertain/news/2541278",
+    "date": "2022-11-01",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "นิชคุณ ไม่สบายใจถูกขุดคลิปโจมตี โตโน่ ย้ำคำเดิมถ้าไม่มีอะไรดีๆ ก็ไม่ต้องพูด",
+    "link": "https://www.thairath.co.th/entertain/news/2545166",
+    "date": "2022-11-05",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ ภาคิน ปลื้มใจ เข้ารับพระราชสาส์นกำลังใจจากในหลวง-พระราชินี",
+    "link": "https://www.thairath.co.th/entertain/news/2547805",
+    "date": "2022-11-08",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ณิชา ดีใจ โตโน่ ว่ายข้ามโขงสำเร็จ ปล่อยผ่านดราม่าขอโฟกัสแต่สิ่งที่ทำ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2548006",
+    "date": "2022-11-09",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ เผยฤกษ์บวช พร้อมสถานที่ รีบตอบแทนคนไทย-ลาว ",
+    "link": "https://www.thairath.co.th/entertain/news/2551805",
+    "date": "2022-11-13",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ เตรียมนำเงินว่ายน้ำ 87 ล้าน ช่วย 2 รพ. ยันมูลนิธิหัก 10% ถูกแล้ว",
+    "link": "https://www.thairath.co.th/news/local/northeast/2565751",
+    "date": "2022-11-29",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "9 ม.ค.นี้ \"โตโน่\" ถือฤกษ์บวชขอบคุณยอดบริจาคว่ายข้ามโขง ",
+    "link": "https://www.thaipbs.or.th/news/content/323292",
+    "date": "2023-01-06",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ อินบทเสือดำ โดนครอบงำจนสลัดออกไม่ได้ ทำคนรอบข้างกลัวไม่อยากเข้าใกล้ (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2596791",
+    "date": "2023-01-07",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "โตโน่ปลงผมพร้อมบวช ได้ฉายา สุทธิสัทโธ ผู้มีจิตบริสุทธิ์ แม่น้อยสุดปลื้ม",
+    "link": "https://www.thairath.co.th/news/local/east/2597520",
+    "date": "2023-01-08",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "\"โตโน่\" ปลงผมนาคที่นครพนม เตรียมบวช 9 ม.ค.นี้",
+    "link": "https://www.thaipbs.or.th/news/content/323332",
+    "date": "2023-01-08",
+    "news_station": "ThaiPBS",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "ประมวลภาพ โตโน่ ภาคิน โกนผมเตรียมบวช เพื่อถวายเป็นพระราชกุศล",
+    "link": "https://www.thairath.co.th/entertain/news/2597350",
+    "date": "2023-01-08",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "นาคโตโน่ เดินรับบาตรเรียนรู้กิจสงฆ์ก่อนบวช แฟนคลับร่วมโมทนาบุญ (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2597793",
+    "date": "2023-01-09",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "บวชแล้ว พระโตโน่รูปงามพร้อมทีมงาน 4 รูป เตรียมไปจำวัดที่ลาว (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2597940",
+    "date": "2023-01-09",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ ภาคิน เข้าพิธีบวชแล้ว ได้ฉายาทางธรรม “สุทฺธสทฺโธ” (คลิป)",
+    "link": "https://www.thairath.co.th/entertain/news/2597963",
+    "date": "2023-01-09",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "\"พระโตโน่\" ออกบิณฑบาตวันแรก ระยะทางเดินไปกลับกว่า 4 กิโล-แห่ร่วมทำบุญ (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2598785",
+    "date": "2023-01-10",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "พระโตโน่ข้ามโขง โปรดญาติโยมลาว คนแห่ส่องทะเบียนรถ",
+    "link": "https://www.thairath.co.th/news/local/northeast/2600303",
+    "date": "2023-01-11",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "ชาวลาวสาธุ พระโตโน่ ออกบิณฑบาตโปรดญาติโยมแขวงคำม่วน",
+    "link": "https://www.thairath.co.th/news/local/northeast/2600936",
+    "date": "2023-01-12",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่บวชครบ 7 วัน เข้ากราบลาสิกขากับอุปัชฌาย์ มุ่งมั่นทำความดีต่อไป (คลิป)",
+    "link": "https://www.thairath.co.th/news/local/northeast/2603336",
+    "date": "2023-01-15",
+    "news_station": "ไทยรัฐ",
+    "category": "สังคมไทย"
+  },
+  {
+    "headline": "โตโน่ แจงเงินบริจาค เตรียมสร้างศูนย์สวนหัวใจและหลอดเลือด งบ 50 กว่าล้าน",
+    "link": "https://www.thairath.co.th/entertain/news/2605283",
+    "date": "2023-01-17",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  },
+  {
+    "headline": "อัดอั้นมานาน โตโน่ เปิดใจถึงดราม่าถล่มที่ผ่านมา ใครไม่ชอบผมก็ช่วยไม่ได้",
+    "link": "https://www.thairath.co.th/entertain/news/2690419",
+    "date": "2023-05-01",
+    "news_station": "ไทยรัฐ",
+    "category": "บันเทิง"
+  }
+]

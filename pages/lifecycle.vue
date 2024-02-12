@@ -18,12 +18,16 @@ function selectNews(news) {
     scroller
       .setup({
         step: "#main-box .step-list .step",
-        offset: 0.2,
+        offset: 0.5,
       })
       .onStepEnter((response) => {
         step.value = response.index;
-        console.log(response);
         // { element, index, direction }
+        if (response.index > 0 && response.index < 4) {
+          nextTick(() => {
+            document.getElementById("tangmo-news-list").scrollLeft = 275.377;
+          });
+        }
       })
       .onStepExit((response) => {
         // { element, index, direction }
@@ -189,22 +193,27 @@ function selectNews(news) {
       <div class="relative">
         <div
           id="tangmo-news-list"
-          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col justify-center scroll-smooth"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth pt-[20vh]"
           v-if="step > 0 && isSelectNews"
         >
-          <TangmoNews />
+          <TangmoNews :current_step="step" />
           <div>
-            <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
+            <img
+              src="/image/lifecycle/date.svg"
+              alt=""
+              class="max-w-fit"
+              id="tangmo-news-date"
+            />
           </div>
         </div>
         <div
           id="main-box"
-          class="flex flex-col lg:flex-row max-w-[850px] mx-auto"
+          class="flex flex-col lg:flex-row max-w-[900px] mx-auto"
         >
           <div
             class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
           >
-            <div class="max-w-full md:max-w-[450px] px-3">
+            <div class="max-w-full md:max-w-[500px] px-3">
               <template v-if="step == 0">
                 <img
                   src="/image/lifecycle/tangmo.svg"
@@ -220,12 +229,16 @@ function selectNews(news) {
                 />
               </template>
               <template v-if="step < 7 && step > 0">
-                <!-- <RandomNews :current_step="step" :isInStorytelling="true" /> -->
+                <RandomNews
+                  :current_step="step"
+                  :isInStorytelling="true"
+                  news="คดีแตงโม-นิดา"
+                />
               </template>
             </div>
           </div>
           <div
-            class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none"
+            class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none hidden"
           >
             <div class="step" data-step="1">
               <div class="bg-white p-5 h-fit">
@@ -406,6 +419,6 @@ function selectNews(news) {
 }
 
 .chart-wrapper::-webkit-scrollbar {
-  // display: none;
+  display: none;
 }
 </style>
