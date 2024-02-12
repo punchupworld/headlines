@@ -7,7 +7,7 @@ const props = defineProps({
   totalMonthData: Array,
   height: Number,
   color: String,
-  isExplore: Boolean,
+  isExplore: Boolean
 })
 
 const monthShortTH = [
@@ -85,6 +85,7 @@ const yAxis = {
 
 <template>
   <div
+
     class="opacity-0 absolute pointer-events-none"
     style="transition: opacity 0.5s ease">
     <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
@@ -129,7 +130,7 @@ const yAxis = {
         </div>
 
         <div
-          class="z-0 absolute bottom-0 w-full h-full"
+          class="z-0 absolute bottom-0 w-full h-full md:px-[10px]"
           style="pointer-events: none">
           <div class="flex flex-col justify-between h-full p-[5px]">
             <div>
@@ -149,7 +150,7 @@ const yAxis = {
         <p>2023</p>
       </div>
       <div
-        class="absolute top-0 right-[50%] w-full h-full border-r border-[#939393]"
+        class="absolute top-0 right-[50%] w-full h-full border-r-[2px] border-[#C5C4C4]"
         style="pointer-events: none"></div>
     </div>
 

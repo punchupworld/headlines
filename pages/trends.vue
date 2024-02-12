@@ -99,8 +99,6 @@ const summaryData = async () => {
 
   let allArr = []
   for (const category in exploreCategoryHeadlineData.value) {
-
-
     const monthly = exploreCategoryHeadlineData.value[category].monthly
 
     monthly.forEach((item) => {
@@ -145,7 +143,6 @@ const summaryData = async () => {
   totalDataEachMonth.value = arrTotalEachMonth
   console.log("totalDataEachMonth", totalDataEachMonth.value)
   console.log("totalDataEachCategory", totalDataEachCategory.value)
-  
 }
 
 const filterSampleHeadlineCategory = async (category) => {
@@ -460,11 +457,25 @@ const findWidthandHeight = (section) => {
   if (sectionFocus) {
     const width = sectionFocus.offsetWidth
     const height = (3 / 4) * width
+    console.log(section)
+    console.log(height)
     return height
   } else {
     return 0
   }
 }
+
+
+const findAllWidthForGraph = (el) => {
+  const elFocus = document.getElementById(el)
+  if (elFocus) {
+    const width = elFocus.offsetWidth
+    return width
+  } else {
+    return 0
+  }
+}
+
 const suggestionsKW = ref([])
 
 const filteredSuggestions = computed(() => {
@@ -590,6 +601,28 @@ const currentText = computed(() => {
   return headlineShow.value[currentIndex.value]
 })
 
+const findPlaceValue = (num) => {
+  let placeValue = 1
+  while (num >= 10) {
+    num /= 10
+    placeValue *= 10
+  }
+  return placeValue
+}
+
+const findYAxisScale = () => {
+  let num
+  if(exploreModeSelected.value==='หมวดข่าว'){
+    num = ((totalDataEachCategory.value.find((item) => item.category === categorySelected.value)?.max || "N/A"))
+  }else if(exploreModeSelected.value==="คีย์เวิร์ด"){
+    num = maxOfMonthly.value
+  }
+   
+  let placeValue = findPlaceValue(num)
+  return Math.floor(num /placeValue) * placeValue
+}
+
+const cardIndex = ref(0)
 onMounted(async () => {
   // await fetchData()
   await fetchExploreData10Keyword()
@@ -599,41 +632,84 @@ onMounted(async () => {
   await fetchSampleHeadlineCategory()
   await fetchExploreCategoryHeadline()
   await summaryData()
-  const handleSectionOpacity = (currentSection, direction) => {
+  // const handleSectionOpacity = (currentSection, direction) => {
+  //   const sections = Array.from({ length: 12 }, (_, index) =>
+  //     document.getElementById(`section${index + 1}`)
+  //   )
+
+  //   for (let i = 0; i < sections.length; i++) {
+  //     if (i === currentSection - 1) {
+  //       if (direction === "down") {
+  //         sections[i].style.opacity = 1
+  //         sections[i - 1].style.opacity = 0
+  //       } else if (direction === "up") {
+  //         sections[i].style.opacity = 1
+  //         sections[i + 1].style.opacity = 0
+  //       } else {
+  //         sections[i].style.opacity = 1
+  //         sections[i + 1].style.opacity = 0
+  //       }
+  //     }
+  //   }
+  // }
+  const handleSectionOpacity = (currentSection) => {
     const sections = Array.from({ length: 12 }, (_, index) =>
       document.getElementById(`section${index + 1}`)
     )
 
     for (let i = 0; i < sections.length; i++) {
       if (i === currentSection - 1) {
-        if (direction === "down") {
-          sections[i].style.opacity = 1
-          sections[i - 1].style.opacity = 0
-        } else if (direction === "up") {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
-        } else {
-          sections[i].style.opacity = 1
-          sections[i + 1].style.opacity = 0
-        }
+        sections.forEach((section) => {
+          section.style.opacity =
+            section.id === `section${currentSection}` ? 1 : 0
+        })
       }
     }
   }
+
   const handleStepEnter = (response) => {
     const currentSection = parseInt(response.element.id.replace("card", ""), 10)
+    console.log("section ", currentSection)
     handleSectionOpacity(currentSection, response.direction)
   }
   const init = () => {
-    scroller
-      .setup({
-        step: "#card1, #card2, #card3, #card4, #card5, #card6 ,#card7, #card8, #card9, #card10, #card11, #card12",
-        offset: 0.9,
-        debug: false,
-      })
-      .onStepEnter(handleStepEnter)
-    window.addEventListener("resize", scroller.resize)
+    nextTick(() => {
+      scroller
+        .setup({
+          step: "#card1, #card2, #card3, #card4, #card5, #card6 ,#card7, #card8, #card9, #card10, #card11, #card12",
+          offset: 0.9,
+          debug: false,
+        })
+        .onStepEnter((response) => {
+          cardIndex.value = response.index
+          handleStepEnter(response)
+          console.log(response)
+        })
+      window.addEventListener("resize", scroller.resize)
+    })
   }
   init()
+
+  const handleStoryCard = () => {
+    nextTick(() => {
+      scroller
+        .setup({
+          step: "#card1, #card2, #card3, #card4, #card5, #card6 ,#card7, #card8, #card9, #card10, #card11, #card12",
+          offset: 0.9,
+          debug: false,
+        })
+        .onStepEnter((response) => {
+          cardIndex.value = response.index
+          console.log(response)
+        })
+        .onStepExit((response) => {
+          console.log(response)
+        })
+      window.addEventListener("resize", scroller.resize)
+    })
+  }
+
+  // handleStoryCard()
 })
 </script>
 
@@ -691,7 +767,7 @@ onMounted(async () => {
           <p class="b3 pt-[10px]">
             หากมีข้อสงสัยหรือคำแนะนำเพิ่มเติมใดๆ เกี่ยวกับงานนี้
             ทักมาหาพวกเราได้ที่
-            <a href="" class="text-[#FF006B] font-bold">m.me/punchupworld</a>
+            <a href="https://m.me/punchupworld" class="text-[#FF006B] font-bold">m.me/punchupworld</a>
           </p>
         </div>
       </div>
@@ -719,11 +795,6 @@ onMounted(async () => {
               class="max-w-[450px] w-[90vw]" />
           </ClientOnly>
         </div>
-
-        <!-- <div class="flex gap-[19px] justify-center pl-[43px] pr-[88px]">
-          <img src="/image/trends/Watch.svg" alt="" class="w-[100px]" />
-          <img src="/image/trends/Color.svg" alt="" class="w-[38px]" />
-        </div> -->
       </div>
       <div class="max-w-[850px] mx-auto">
         <div id="section" class="h-screen sticky top-0 overflow-hidden">
@@ -735,7 +806,10 @@ onMounted(async () => {
               class="absolute flex justify-center items-center z-0">
               <div
                 ref="headlineRef"
-                class="relative bg-black p-[10px] max-[375px]:w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] xl:h-[550px] flex items-center">
+                class="relative bg-black p-[10px] max-[375px]:w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px]  flex items-center"
+                :style="findWidthandHeight('section1')"
+                style="overflow: hidden;"
+                >
                 <p class="cream t2">
                   {{ currentText }}
                 </p>
@@ -776,24 +850,29 @@ onMounted(async () => {
                     </p>
                   </div>
                   <div
-                    class="z-0 absolute bottom-0 w-full h-full"
+                    class="z-0 absolute bottom-0 w-full h-full md:px-[10px]"
                     style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div class="space-y-2">
                         <p class="b5 border-b border-black border-dotted">
-                          8000
+                          {{ (8000).toLocaleString() }}
                         </p>
                         <div class="border-b border-[#FF006B] relative">
                           <p
                             class="absolute -top-1.5 b5 text-[#FF006B] font-bold stoke">
-                            7816
+                            {{ (7816).toLocaleString() }}
                           </p>
                         </div>
                       </div>
-                      <p class="b5 border-b border-black border-dotted">6000</p>
-                      <p class="b5 border-b border-black border-dotted">4000</p>
-                      <p class="b5 border-b border-black border-dotted">2000</p>
-
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (6000).toLocaleString() }}
+                      </p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (4000).toLocaleString() }}
+                      </p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (2000).toLocaleString() }}
+                      </p>
                       <p></p>
                     </div>
                   </div>
@@ -820,9 +899,10 @@ onMounted(async () => {
             </div>
             <div
               id="section3"
-              class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-center"
+              class="opacity-0 absolute pointer-events-none flex flex-col justify-center items-start max-[1024px]:items-center"
               style="transition: opacity 0.5s ease">
-              <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
+              <p
+                class="text-[#717070] b4 font-bold text-center pb-[10px] mx-auto">
                 จำนวนข่าวรายเดือน แบ่งตามหมวด
               </p>
               <div class="relative">
@@ -850,10 +930,7 @@ onMounted(async () => {
                                 findWidthandHeight('section2'),
                                 maxOfMonthCategory
                               )}px`,
-                            }">
-                            <!-- {{ ct.name }} -->
-                            <!-- {{  exploreCategoryHeadlineData[ct]['monthly'][no - 1].total }} -->
-                          </div>
+                            }"></div>
                         </div>
                       </div>
 
@@ -870,17 +947,23 @@ onMounted(async () => {
                   </div>
 
                   <div
-                    class="z-0 absolute bottom-0 w-full h-full"
+                    class="z-0 absolute bottom-0 w-full h-full md:px-[10px]"
                     style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div>
                         <p class="b5 border-b border-black border-dotted">
-                          8000
+                          {{ (8000).toLocaleString() }}
                         </p>
                       </div>
-                      <p class="b5 border-b border-black border-dotted">6000</p>
-                      <p class="b5 border-b border-black border-dotted">4000</p>
-                      <p class="b5 border-b border-black border-dotted">2000</p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (6000).toLocaleString() }}
+                      </p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (4000).toLocaleString() }}
+                      </p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{ (2000).toLocaleString() }}
+                      </p>
 
                       <p></p>
                     </div>
@@ -2053,133 +2136,133 @@ onMounted(async () => {
               </div>
             </div>
           </div> -->
-          
+
           <StoryCard id="card5">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวสังคมไทย</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 48,745 ข่าว (26% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px] border-b border-[#C5C4C4]">
-                  <p>
-                    แม้จำนวนพาดหัวข่าวสังคมไทยจะมีแนวโน้มลดลงอย่างต่อเนื่องตั้งแต่
-                    ก.ย. 2022 แต่ในภาพรวม 2 ปี ยังถือว่ามีสัดส่วนมากเป็นอันดับ 2
-                    รองจากข่าวการเมือง
-                    ด้วยประเด็นข่าวที่กว้างและครอบคลุมหลายเรื่องในสังคม
-                    หลายคำที่เจอในพาดหัวข่าวบ่อยๆ
-                    จึงเป็นคำที่สามารถพบในข่าวหมวดอื่นๆ ได้เช่นกัน
-                    จำแนกเป็นประเภทต่างๆ ได้ ดังนี้
-                  </p>
-                </div>
-                <div>
-                  <p class="b3 font-bold pt-[10px] pb-[5px]">เหตุการณ์สำคัญ</p>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวสังคมไทย</p>
+                <p class="b4 text-[#717070]">
+                  รวม 48,745 ข่าว (26% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 py-[10px] border-b border-[#C5C4C4]">
+                <p>
+                  แม้จำนวนพาดหัวข่าวสังคมไทยจะมีแนวโน้มลดลงอย่างต่อเนื่องตั้งแต่
+                  ก.ย. 2022 แต่ในภาพรวม 2 ปี ยังถือว่ามีสัดส่วนมากเป็นอันดับ 2
+                  รองจากข่าวการเมือง
+                  ด้วยประเด็นข่าวที่กว้างและครอบคลุมหลายเรื่องในสังคม
+                  หลายคำที่เจอในพาดหัวข่าวบ่อยๆ
+                  จึงเป็นคำที่สามารถพบในข่าวหมวดอื่นๆ ได้เช่นกัน
+                  จำแนกเป็นประเภทต่างๆ ได้ ดังนี้
+                </p>
+              </div>
+              <div>
+                <p class="b3 font-bold pt-[10px] pb-[5px]">เหตุการณ์สำคัญ</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">สงกรานต์</span>(478)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> ลอยกระทง</span>(148)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> APEC</span>(105)
-                    </div>
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">สงกรานต์</span>(478)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> เรือหลวงสุโขทัย</span>(150)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> ลอยกระทง</span>(148)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> APEC</span>(105)
+                  </div>
 
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
-                    </div>
-                  </div>
-                </div>
-                <div class="py-[10px] border-b border-[#C5C4C4]">
-                  <p class="b3 font-bold pb-[5px]">ภัยธรรมชาติ</p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> น้ำท่วม</span>(1,153)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ฝุ่น PM2.5</span>(505)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
-                    </div>
-                  </div>
-                </div>
-                <div class="border-b border-[#C5C4C4] py-[10px]">
-                  <p class="b3 font-bold">โรค</p>
-                  <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> โควิด-19</span>(2,703)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">โอมิครอน</span>(301)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ฝีดาษลิง</span>(254)
-                    </div>
-                  </div>
-                </div>
-                <div class="border-b border-[#C5C4C4] py-[10px]">
-                  <p class="b3 font-bold pb-[5px ]">บุคคล</p>
-                  <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ชัชชาติ</span>(912)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> พิธา</span>(177)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> ทักษิณ</span>(146)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> แตงโมนิดา</span>(104)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> กำนันนก</span>(54)
-                    </div>
-                  </div>
-                </div>
-                <div class="pt-[10px]">
-                  <p class="b3 py-[5px]">
-                    นอกจากนี้ยังมีคำที่บ่งชี้เพศสภาพซึ่งปรากฏในพาดหัวข่าวอยู่บ่อยๆ
-                    อย่าง
-                  </p>
-                  <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">สาว</span>(2,283)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">หนุ่ม</span>(1,736)
-                    </div>
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">กราดยิงหนองบัวลำภู</span>(59)
                   </div>
                 </div>
               </div>
+              <div class="py-[10px] border-b border-[#C5C4C4]">
+                <p class="b3 font-bold pb-[5px]">ภัยธรรมชาติ</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> น้ำท่วม</span>(1,153)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ฝุ่น PM2.5</span>(505)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ไต้ฝุ่นโนรู</span>(108)
+                  </div>
+                </div>
+              </div>
+              <div class="border-b border-[#C5C4C4] py-[10px]">
+                <p class="b3 font-bold">โรค</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> โควิด-19</span>(2,703)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">โอมิครอน</span>(301)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ฝีดาษลิง</span>(254)
+                  </div>
+                </div>
+              </div>
+              <div class="border-b border-[#C5C4C4] py-[10px]">
+                <p class="b3 font-bold pb-[5px ]">บุคคล</p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ชัชชาติ</span>(912)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> พิธา</span>(177)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> ทักษิณ</span>(146)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> แตงโมนิดา</span>(104)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> กำนันนก</span>(54)
+                  </div>
+                </div>
+              </div>
+              <div class="pt-[10px]">
+                <p class="b3 py-[5px]">
+                  นอกจากนี้ยังมีคำที่บ่งชี้เพศสภาพซึ่งปรากฏในพาดหัวข่าวอยู่บ่อยๆ
+                  อย่าง
+                </p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">สาว</span>(2,283)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">หนุ่ม</span>(1,736)
+                  </div>
+                </div>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card5"
@@ -2315,61 +2398,61 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card6">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 24,586 ข่าว (13.1% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 pt-[10px]">
-                  <p>
-                    ในขณะที่ข่าวหมวดอื่นมีการเปลี่ยนแปลงสัดส่วนของจำนวนข่าวระหว่าง
-                    2 ปี บ้างลดลง บ้างเพิ่มขึ้น แต่ข่าวเศรษฐกิจ/การเงิน
-                    <span class="font-bold"
-                      >เป็นหมวดเดียวที่มีสัดส่วนข่าวเท่าเดิมเป๊ะ</span
-                    >
-                  </p>
-                </div>
-                <div class="py-[10px] border-b border-[#C5C4C4]">
-                  <p class="b4 text-[#717070]">
-                    สัดส่วนข่าวแต่ละหมวดต่อจำนวนข่าวทั้งหมดในแต่ละปี
-                  </p>
-                  <img src="/image/trends/economyChart.svg" alt="" />
-                </div>
-                <div class="b3 py-[10px]">
-                  <p class="font-bold">Top</p>
-                  <p>
-                    <span class="font-bold">คีย์เวิร์ดพบบ่อย</span>
-                    ในแต่ละเดือนของข่าวหมวดนี้ไม่ค่อยแตกต่างกันมากนัก
-                    โดยจะวนเวียนอยู่กับประเด็นเหล่านี้
-                  </p>
-                </div>
-                <div class="">
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวเศรษฐกิจ/การเงิน</p>
+                <p class="b4 text-[#717070]">
+                  รวม 24,586 ข่าว (13.1% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 pt-[10px]">
+                <p>
+                  ในขณะที่ข่าวหมวดอื่นมีการเปลี่ยนแปลงสัดส่วนของจำนวนข่าวระหว่าง
+                  2 ปี บ้างลดลง บ้างเพิ่มขึ้น แต่ข่าวเศรษฐกิจ/การเงิน
+                  <span class="font-bold"
+                    >เป็นหมวดเดียวที่มีสัดส่วนข่าวเท่าเดิมเป๊ะ</span
+                  >
+                </p>
+              </div>
+              <div class="py-[10px] border-b border-[#C5C4C4]">
+                <p class="b4 text-[#717070]">
+                  สัดส่วนข่าวแต่ละหมวดต่อจำนวนข่าวทั้งหมดในแต่ละปี
+                </p>
+                <img src="/image/trends/economyChart.svg" alt="" />
+              </div>
+              <div class="b3 py-[10px]">
+                <p class="font-bold">Top</p>
+                <p>
+                  <span class="font-bold">คีย์เวิร์ดพบบ่อย</span>
+                  ในแต่ละเดือนของข่าวหมวดนี้ไม่ค่อยแตกต่างกันมากนัก
+                  โดยจะวนเวียนอยู่กับประเด็นเหล่านี้
+                </p>
+              </div>
+              <div class="">
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">หุ้น</span>(4,024)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> จีน</span>(1,555)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ดอกเบี้ย</span>(1,296)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">กำไร</span>(1,067)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">สหรัฐ</span>(976)
-                    </div>
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">หุ้น</span>(4,024)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> จีน</span>(1,555)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ดอกเบี้ย</span>(1,296)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">กำไร</span>(1,067)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">สหรัฐ</span>(976)
                   </div>
                 </div>
               </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card6"
@@ -2436,66 +2519,66 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card7">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวต่างประเทศ</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 20,236 ข่าว (10.8% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 pt-[10px]">
-                  <p>
-                    เทรนด์ข่าวต่างประเทศมี
-                    <span class="font-bold">6 ช่วงเวลา</span>
-                    ที่จำนวนข่าวสูงกว่าเดือนอื่นๆ
-                    เมื่อส่องดูคีย์เวิร์ดในพาดหัวข่าว 6 เดือนนี้
-                    พบว่ามีเหตุการณ์ระดับโลก หรือบุคคลสำคัญของชาติอื่นๆ
-                    มาเกี่ยวข้อง
-                  </p>
-                </div>
-                <div>
-                  <ul class="list-disc">
-                    <li>
-                      <span class="font-bold">มี.ค. 2022</span>
-                      <span class="text-[#717070]"> (1,017 ข่าว) </span>
-                      <br />
-                      <p class="text-[#BD4553]">#สงครามยูเครนรัสเซีย</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">ก.ค. 2022</span>
-                      <span class="text-[#717070]"> (933 ข่าว)</span>
-                      <br />
-                      <p class="text-[#BD4553]">#ลอบสังหารชินโซ อาเบะ</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">ก.ย. 2022</span>
-                      <span class="text-[#717070]"> (1,021 ข่าว)</span> มี
-                      <br />
-                      <p class="text-[#BD4553]">#ควีนเอลิซาเบธที่ 2 สวรรคต</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">พ.ย. 2022</span>
-                      <span class="text-[#717070]"> (972 ข่าว)</span> มี
-                      <br />
-                      <p class="text-[#BD4553]">#ประท้วงมาตรการโควิดในจีน,</p>
-                      <p class="text-[#BD4553]">#เลือกตั้งกลางเทอมที่สหรัฐฯ</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">มี.ค. 2023</span>
-                      <span class="text-[#717070]"> (954 ข่าว)</span> มี
-                      <br />
-                      <p class="text-[#BD4553]">
-                        #การเมืองระหว่างประเทศสหรัฐฯ จีน และรัสเซีย
-                      </p>
-                    </li>
-                    <li>
-                      <span class="font-bold">ต.ค. 2023</span>
-                      <span class="text-[#717070]"> (929 ข่าว)</span> มี
-                      <br />
-                      <p class="text-[#BD4553]">#สงครามอิสราเอล-ฮามาส</p>
-                    </li>
-                  </ul>
-                </div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวต่างประเทศ</p>
+                <p class="b4 text-[#717070]">
+                  รวม 20,236 ข่าว (10.8% ของข่าวทั้งหมด)
+                </p>
               </div>
+              <div class="b3 pt-[10px]">
+                <p>
+                  เทรนด์ข่าวต่างประเทศมี
+                  <span class="font-bold">6 ช่วงเวลา</span>
+                  ที่จำนวนข่าวสูงกว่าเดือนอื่นๆ
+                  เมื่อส่องดูคีย์เวิร์ดในพาดหัวข่าว 6 เดือนนี้
+                  พบว่ามีเหตุการณ์ระดับโลก หรือบุคคลสำคัญของชาติอื่นๆ
+                  มาเกี่ยวข้อง
+                </p>
+              </div>
+              <div>
+                <ul class="list-disc">
+                  <li>
+                    <span class="font-bold">มี.ค. 2022</span>
+                    <span class="text-[#717070]"> (1,017 ข่าว) </span>
+                    <br />
+                    <p class="text-[#BD4553]">#สงครามยูเครนรัสเซีย</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">ก.ค. 2022</span>
+                    <span class="text-[#717070]"> (933 ข่าว)</span>
+                    <br />
+                    <p class="text-[#BD4553]">#ลอบสังหารชินโซ อาเบะ</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">ก.ย. 2022</span>
+                    <span class="text-[#717070]"> (1,021 ข่าว)</span> มี
+                    <br />
+                    <p class="text-[#BD4553]">#ควีนเอลิซาเบธที่ 2 สวรรคต</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">พ.ย. 2022</span>
+                    <span class="text-[#717070]"> (972 ข่าว)</span> มี
+                    <br />
+                    <p class="text-[#BD4553]">#ประท้วงมาตรการโควิดในจีน,</p>
+                    <p class="text-[#BD4553]">#เลือกตั้งกลางเทอมที่สหรัฐฯ</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">มี.ค. 2023</span>
+                    <span class="text-[#717070]"> (954 ข่าว)</span> มี
+                    <br />
+                    <p class="text-[#BD4553]">
+                      #การเมืองระหว่างประเทศสหรัฐฯ จีน และรัสเซีย
+                    </p>
+                  </li>
+                  <li>
+                    <span class="font-bold">ต.ค. 2023</span>
+                    <span class="text-[#717070]"> (929 ข่าว)</span> มี
+                    <br />
+                    <p class="text-[#BD4553]">#สงครามอิสราเอล-ฮามาส</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card7"
@@ -2567,100 +2650,99 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card8">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวบันเทิง</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 14,253 ข่าว (7.6% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px] space-y-[10px]">
-                  <p>
-                    คนไทยให้ความสนใจต่อวงการบันเทิงไทยน้อยลงหรือเปล่านะ ?
-                    เพราะดูเหมือนว่าจำนวนข่าวบันเทิงจะ
-                    <span class="font-bold"
-                      >ลดลงเกือบครึ่งหนึ่งตั้งแต่เดือน เม.ย. 2023
-                      เป็นต้นมา</span
-                    >
-                  </p>
-                  <p>
-                    แต่แล้วไงใครแคร์
-                    เช็กกันสักนิดว่าสำนักข่าวไทยเขียนข่าวอะไรในหมวดข่าวบันเทิง
-                  </p>
-                  <p>
-                    แม้คีย์เวิร์ดที่โผล่มาให้เห็นบ่อยๆจะเป็นชื่อคนในวงการ เช่น
-                  </p>
-                </div>
-                <div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวบันเทิง</p>
+                <p class="b4 text-[#717070]">
+                  รวม 14,253 ข่าว (7.6% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 py-[10px] space-y-[10px]">
+                <p>
+                  คนไทยให้ความสนใจต่อวงการบันเทิงไทยน้อยลงหรือเปล่านะ ?
+                  เพราะดูเหมือนว่าจำนวนข่าวบันเทิงจะ
+                  <span class="font-bold"
+                    >ลดลงเกือบครึ่งหนึ่งตั้งแต่เดือน เม.ย. 2023 เป็นต้นมา</span
+                  >
+                </p>
+                <p>
+                  แต่แล้วไงใครแคร์
+                  เช็กกันสักนิดว่าสำนักข่าวไทยเขียนข่าวอะไรในหมวดข่าวบันเทิง
+                </p>
+                <p>
+                  แม้คีย์เวิร์ดที่โผล่มาให้เห็นบ่อยๆจะเป็นชื่อคนในวงการ เช่น
+                </p>
+              </div>
+              <div>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px]">
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">แตงโม-นิดา</span>(199)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">อิงฟ้า</span>(180)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ดิว-อริสรา</span>(97)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
-                    </div>
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">แตงโม-นิดา</span>(199)
                   </div>
-                </div>
-                <div class="pt-[10px]">
-                  <p class="b3">
-                    แต่คำกริยาและคำคุณศัพท์ในพาดหัวข่าวนี่แหละ
-                    บอกสถานะโดยรวมของคนวงการนี้ หรือคนบันเทิงจะชอบ
-                  </p>
                   <div
-                    class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]">
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">รัก</span>(1,347)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">โพสต์</span>(978)
-                    </div>
-
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">แซ่บ</span>(646)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">โชว์</span>(517)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">สวย</span>(512)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">อวด</span>(440)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">เลิก</span>(437)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ดราม่า</span>(423)
-                    </div>
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">อิงฟ้า</span>(180)
                   </div>
-                  <div class="flex flex-col items-center">
-                    <p class="b3 pb-[10px]">หรือแม้แต่</p>
-                    <div
-                      class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">ติดโควิด</span>(148)
-                    </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ดิว-อริสรา</span>(97)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">แอนโทเนีย โพซิ้ว</span>(35)
                   </div>
                 </div>
               </div>
+              <div class="pt-[10px]">
+                <p class="b3">
+                  แต่คำกริยาและคำคุณศัพท์ในพาดหัวข่าวนี่แหละ
+                  บอกสถานะโดยรวมของคนวงการนี้ หรือคนบันเทิงจะชอบ
+                </p>
+                <div
+                  class="b4 flex flex-wrap items-center justify-center gap-[5px] py-[10px]">
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">รัก</span>(1,347)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">โพสต์</span>(978)
+                  </div>
+
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">แซ่บ</span>(646)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">โชว์</span>(517)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">สวย</span>(512)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">อวด</span>(440)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">เลิก</span>(437)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ดราม่า</span>(423)
+                  </div>
+                </div>
+                <div class="flex flex-col items-center">
+                  <p class="b3 pb-[10px]">หรือแม้แต่</p>
+                  <div
+                    class="b4 bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">ติดโควิด</span>(148)
+                  </div>
+                </div>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card8"
@@ -2766,133 +2848,131 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card9">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวอาชญากรรม</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 13,651 ข่าว (7.3% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px] space-y-[10px]">
-                  <p>
-                    เมื่อลองเปรียบเทียบ Top 10
-                    คีย์เวิร์ดพบบ่อยในพาดหัวข่าวอาชญากรรมของเดือนที่มีจำนวนข่าวอาชญากรรมมากที่สุดกับน้อยที่สุด
-                    จะพบประเด็นที่มีร่วมกัน คือ
-                  </p>
-                </div>
-                <div class="grid grid-cols-2 gap-[10px]">
-                  <div class="b4 flex flex-col justify-end items-end gap-[5px]">
-                    <div>
-                      <p class="b3 font-bold">ก.ย. 2023</p>
-                      <p class="b4 text-end">(712 ข่าว)</p>
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ตำรวจ (217)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      กำนันนก (145)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      คดี (110)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      บิ๊กโจ๊ก (98)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ยิง (93)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      จับ (89)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      บ้าน (83)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ฆ่า (65)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      ปืน (56)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      ผกก. (55)
-                    </div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวอาชญากรรม</p>
+                <p class="b4 text-[#717070]">
+                  รวม 13,651 ข่าว (7.3% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 py-[10px] space-y-[10px]">
+                <p>
+                  เมื่อลองเปรียบเทียบ Top 10
+                  คีย์เวิร์ดพบบ่อยในพาดหัวข่าวอาชญากรรมของเดือนที่มีจำนวนข่าวอาชญากรรมมากที่สุดกับน้อยที่สุด
+                  จะพบประเด็นที่มีร่วมกัน คือ
+                </p>
+              </div>
+              <div class="grid grid-cols-2 gap-[10px]">
+                <div class="b4 flex flex-col justify-end items-end gap-[5px]">
+                  <div>
+                    <p class="b3 font-bold">ก.ย. 2023</p>
+                    <p class="b4 text-end">(712 ข่าว)</p>
                   </div>
-                  <div class="b4 flex flex-col items-start gap-[5px]">
-                    <div>
-                      <p class="b3 font-bold">ก.ค. 2022</p>
-                      <p class="b4 text-start">(415 ข่าว)</p>
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ตำรวจ (127)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      จับ (112)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      ดับ/ตาย (87)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ยิง (59)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      คดี (57)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      รถ (52)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
-                      ฆ่า (51)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      หนี (47)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      หนุ่ม (46)
-                    </div>
-                    <div
-                      class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
-                      แม่ (40)
-                    </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ตำรวจ (217)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    กำนันนก (145)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    คดี (110)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    บิ๊กโจ๊ก (98)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ยิง (93)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    จับ (89)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    บ้าน (83)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ฆ่า (65)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    ปืน (56)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    ผกก. (55)
                   </div>
                 </div>
-                <div class="pt-[10px]">
-                  <p class="b3">
-                    เมื่อนำ 5 คำนี้ไปเทียบกับ Top 10 คีย์เวิร์ดของเดือนอื่นๆ
-                    อาจได้ข้อสรุปว่า
-                  </p>
-
-                  <div class="">
-                    <p class="b3 pb-[10px]">
-                      ข่าวอาชญากรรมมักหลีกหนีไม่พ้นตัวละคร<span
-                        class="font-bold"
-                        >ตำรวจ</span
-                      >ที่ต้องทำ<span class="font-bold">คดี</span>เมื่อมีคน<span
-                        class="font-bold"
-                        >ยิง</span
-                      >กัน เพราะ 3 คำนี้โผล่ให้เห็นใน Top 10
-                      คีย์เวิร์ดของทุกเดือน
-                    </p>
+                <div class="b4 flex flex-col items-start gap-[5px]">
+                  <div>
+                    <p class="b3 font-bold">ก.ค. 2022</p>
+                    <p class="b4 text-start">(415 ข่าว)</p>
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ตำรวจ (127)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    จับ (112)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    ดับ/ตาย (87)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ยิง (59)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    คดี (57)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    รถ (52)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit">
+                    ฆ่า (51)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    หนี (47)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    หนุ่ม (46)
+                  </div>
+                  <div
+                    class="bg-black flex items-center gap-2 px-2 text-[#FFF8B5] w-fit opacity-50">
+                    แม่ (40)
                   </div>
                 </div>
               </div>
+              <div class="pt-[10px]">
+                <p class="b3">
+                  เมื่อนำ 5 คำนี้ไปเทียบกับ Top 10 คีย์เวิร์ดของเดือนอื่นๆ
+                  อาจได้ข้อสรุปว่า
+                </p>
+
+                <div class="">
+                  <p class="b3 pb-[10px]">
+                    ข่าวอาชญากรรมมักหลีกหนีไม่พ้นตัวละคร<span class="font-bold"
+                      >ตำรวจ</span
+                    >ที่ต้องทำ<span class="font-bold">คดี</span>เมื่อมีคน<span
+                      class="font-bold"
+                      >ยิง</span
+                    >กัน เพราะ 3 คำนี้โผล่ให้เห็นใน Top 10 คีย์เวิร์ดของทุกเดือน
+                  </p>
+                </div>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card9"
@@ -3031,42 +3111,42 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card10">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวกีฬา</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 5,538 ข่าว (3% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px]">
-                  <p>
-                    เทรนด์ข่าวมีขึ้นและลง แต่หากลองสำรวจเทรนด์ของเดือนที่โดดเด่น
-                    หรือมีจำนวนข่าวสูงกว่าเดือนใกล้เคียง
-                    คนไทยคนแรกอย่างเราจะรู้ว่า
-                  </p>
-                </div>
-                <div class="b3">
-                  <ul class="list-disc">
-                    <li>
-                      <span class="font-bold">พ.ค. 2022</span>
-                      <span class="text-[#717070]"> (250 ข่าว) </span>
-                      <br />
-                      <p class="">มีแข่งซีเกมส์ครั้งที่ 31 ที่เวียดนาม</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">พ.ย. 2022</span>
-                      <span class="text-[#717070]"> (313 ข่าว) </span>
-                      <br />
-                      <p class="">เริ่มแข่งฟุตบอลโลก 2022 ที่กาตาร์</p>
-                    </li>
-                    <li>
-                      <span class="font-bold">ก.ย. 2023</span>
-                      <span class="text-[#717070]"> (434 ข่าว) </span>
-                      <br />
-                      <p class="">ศึกเอเชียนเกมส์ครั้งที่ 19 ที่จีน</p>
-                    </li>
-                  </ul>
-                </div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวกีฬา</p>
+                <p class="b4 text-[#717070]">
+                  รวม 5,538 ข่าว (3% ของข่าวทั้งหมด)
+                </p>
               </div>
+              <div class="b3 py-[10px]">
+                <p>
+                  เทรนด์ข่าวมีขึ้นและลง แต่หากลองสำรวจเทรนด์ของเดือนที่โดดเด่น
+                  หรือมีจำนวนข่าวสูงกว่าเดือนใกล้เคียง
+                  คนไทยคนแรกอย่างเราจะรู้ว่า
+                </p>
+              </div>
+              <div class="b3">
+                <ul class="list-disc">
+                  <li>
+                    <span class="font-bold">พ.ค. 2022</span>
+                    <span class="text-[#717070]"> (250 ข่าว) </span>
+                    <br />
+                    <p class="">มีแข่งซีเกมส์ครั้งที่ 31 ที่เวียดนาม</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">พ.ย. 2022</span>
+                    <span class="text-[#717070]"> (313 ข่าว) </span>
+                    <br />
+                    <p class="">เริ่มแข่งฟุตบอลโลก 2022 ที่กาตาร์</p>
+                  </li>
+                  <li>
+                    <span class="font-bold">ก.ย. 2023</span>
+                    <span class="text-[#717070]"> (434 ข่าว) </span>
+                    <br />
+                    <p class="">ศึกเอเชียนเกมส์ครั้งที่ 19 ที่จีน</p>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card10"
@@ -3114,46 +3194,46 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card11">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 4,408 ข่าว (2.3% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px] space-y-[10px]">
-                  <p>
-                    แม้หมวดข่าวจะชื่อวิทยาศาสตร์/เทคโนโลยี แต่ข่าวหมวดนี้ขยี้แต่
-                    ‘เทคโนโลยี’ เน้นๆ
-                    เพราะสัดส่วนข่าวเทคโนโลยีเห็นทีจะมีมากกว่าข่าววิทยาศาสตร์
-                    หากสำรวจคำที่โผล่ในพาดหัวข่าวหมวดนี้บ่อยๆ ในช่วง 2 ปี จะเจอ
-                  </p>
-                </div>
-                <div class="gap-[10px]">
-                  <div class="b4 grid grid-cols-2 gap-[5px] text-end">
-                    <p class="b3 font-bold">ตัวละคร</p>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold"> อีลอน มัสก์ </span>(288)
-                    </div>
-                    <p class="b3 font-bold">แพลตฟอร์ม</p>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">Twitter/X</span>(459)
-                    </div>
-                    <p class="b3 font-bold">สมาร์ตโฟน</p>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">iPhone15</span> (63)
-                    </div>
-                    <p class="b3 font-bold">ประเทศ</p>
-                    <div
-                      class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                      <span class="font-bold">รัสเซีย</span>(75)
-                    </div>
-                  </div>
-                  <div class="b4 flex flex-col items-start gap-[5px]"></div>
-                </div>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าววิทยาศาสตร์/เทคโนโลยี</p>
+                <p class="b4 text-[#717070]">
+                  รวม 4,408 ข่าว (2.3% ของข่าวทั้งหมด)
+                </p>
               </div>
+              <div class="b3 py-[10px] space-y-[10px]">
+                <p>
+                  แม้หมวดข่าวจะชื่อวิทยาศาสตร์/เทคโนโลยี แต่ข่าวหมวดนี้ขยี้แต่
+                  ‘เทคโนโลยี’ เน้นๆ
+                  เพราะสัดส่วนข่าวเทคโนโลยีเห็นทีจะมีมากกว่าข่าววิทยาศาสตร์
+                  หากสำรวจคำที่โผล่ในพาดหัวข่าวหมวดนี้บ่อยๆ ในช่วง 2 ปี จะเจอ
+                </p>
+              </div>
+              <div class="gap-[10px]">
+                <div class="b4 grid grid-cols-2 gap-[5px] text-end">
+                  <p class="b3 font-bold">ตัวละคร</p>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold"> อีลอน มัสก์ </span>(288)
+                  </div>
+                  <p class="b3 font-bold">แพลตฟอร์ม</p>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">Twitter/X</span>(459)
+                  </div>
+                  <p class="b3 font-bold">สมาร์ตโฟน</p>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">iPhone15</span> (63)
+                  </div>
+                  <p class="b3 font-bold">ประเทศ</p>
+                  <div
+                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                    <span class="font-bold">รัสเซีย</span>(75)
+                  </div>
+                </div>
+                <div class="b4 flex flex-col items-start gap-[5px]"></div>
+              </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card11"
@@ -3205,74 +3285,74 @@ onMounted(async () => {
           </div> -->
           <StoryCard id="card12">
             <div>
-                <div class="border-b border-[#C5C4C4] pb-[10px]">
-                  <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
-                  <p class="b4 text-[#717070]">
-                    รวม 3,194 ข่าว (1.7% ของข่าวทั้งหมด)
-                  </p>
-                </div>
-                <div class="b3 py-[10px] space-y-[10px]">
-                  <p>
-                    แนมโน้มจำนวนข่าวสิ่งแวดล้อมที่เพิ่มขึ้น
-                    อาจสะท้อนการเพิ่มขึ้นของข่าวร้ายมากกว่าข่าวดี
-                    เพราะคุณจะพบคำเกี่ยวกับภัยธรรมชาติ
-                    หรืออุบัติภัยที่มนุษย์ก่อในข่าวหมวดนี้อยู่บ่อยๆ เช่น
-                  </p>
+              <div class="border-b border-[#C5C4C4] pb-[10px]">
+                <p class="b1 font-bold">ข่าวสิ่งแวดล้อม</p>
+                <p class="b4 text-[#717070]">
+                  รวม 3,194 ข่าว (1.7% ของข่าวทั้งหมด)
+                </p>
+              </div>
+              <div class="b3 py-[10px] space-y-[10px]">
+                <p>
+                  แนมโน้มจำนวนข่าวสิ่งแวดล้อมที่เพิ่มขึ้น
+                  อาจสะท้อนการเพิ่มขึ้นของข่าวร้ายมากกว่าข่าวดี
+                  เพราะคุณจะพบคำเกี่ยวกับภัยธรรมชาติ
+                  หรืออุบัติภัยที่มนุษย์ก่อในข่าวหมวดนี้อยู่บ่อยๆ เช่น
+                </p>
+              </div>
+              <div
+                class="b4 flex flex-wrap items-center justify-center gap-[5px] pt-[10px]">
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">น้ำท่วม</span>(256)
                 </div>
                 <div
-                  class="b4 flex flex-wrap items-center justify-center gap-[5px] pt-[10px]">
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">น้ำท่วม</span>(256)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">ฝนตกหนัก</span>(196)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">ฝุ่น PM2.5</span>(94)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">น้ำป่า</span>(66)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">ฝนถล่ม</span>(34)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">คราบน้ำมัน</span>(34)
-                  </div>
-                  <div
-                    class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
-                    <span class="font-bold">มลพิษ</span>(33)
-                  </div>
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">ฝนตกหนัก</span>(196)
+                </div>
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">ฝุ่น PM2.5</span>(94)
+                </div>
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">น้ำป่า</span>(66)
+                </div>
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">ฝนถล่ม</span>(34)
+                </div>
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">คราบน้ำมัน</span>(34)
+                </div>
+                <div
+                  class="bg-black flex items-center gap-[2px] px-2 text-[#FFF8B5] w-fit">
+                  <span class="font-bold">มลพิษ</span>(33)
+                </div>
 
-                  <div class="b4 flex flex-col items-start gap-[5px]"></div>
-                </div>
-                <div class="b3 pt-[10px] space-y-[10px]">
-                  <p>
-                    อย่างเดือน
-                    <span class="font-bold"> ก.ย. 2022</span>
-                    ที่มีจำนวนข่าวสูงสุด (254 ข่าว) ก็เป็นเดือนที่เกิดเหตุการณ์
-                    <span class="font-bold">น้ำท่วม และพายุโนรู</span>
-                  </p>
-                </div>
-                <div class="b3 pt-[10px]">
-                  <p>
-                    แต่ก็ไม่ได้แปลว่าจะไม่มีข่าวน่าสนใจอื่นๆ เลย
-                    ตัวอย่างข่าวน่าติดตามที่มีคีย์เวิร์ดโผล่มาใน Top 10
-                    ของบางเดือนก็เช่น
-                  </p>
-                  <div class="font-bold">
-                    <p>ข่าวพลายศักดิ์สุรินทร์</p>
-                    <p>คดีสินบนกรมอุทยานฯ</p>
-                    <p>หรือแก้มลิงเกาะพระทอง</p>
-                  </div>
+                <div class="b4 flex flex-col items-start gap-[5px]"></div>
+              </div>
+              <div class="b3 pt-[10px] space-y-[10px]">
+                <p>
+                  อย่างเดือน
+                  <span class="font-bold"> ก.ย. 2022</span>
+                  ที่มีจำนวนข่าวสูงสุด (254 ข่าว) ก็เป็นเดือนที่เกิดเหตุการณ์
+                  <span class="font-bold">น้ำท่วม และพายุโนรู</span>
+                </p>
+              </div>
+              <div class="b3 pt-[10px]">
+                <p>
+                  แต่ก็ไม่ได้แปลว่าจะไม่มีข่าวน่าสนใจอื่นๆ เลย
+                  ตัวอย่างข่าวน่าติดตามที่มีคีย์เวิร์ดโผล่มาใน Top 10
+                  ของบางเดือนก็เช่น
+                </p>
+                <div class="font-bold">
+                  <p>ข่าวพลายศักดิ์สุรินทร์</p>
+                  <p>คดีสินบนกรมอุทยานฯ</p>
+                  <p>หรือแก้มลิงเกาะพระทอง</p>
                 </div>
               </div>
+            </div>
           </StoryCard>
           <!-- <div
             id="card12"
@@ -3470,9 +3550,9 @@ onMounted(async () => {
             </div>
             <div class="relative">
               <div class="relative items-end justify-center w-full mt-6">
-                <div class="relative w-full">
+                <div class="relative w-full" id="exploreGraph">
                   <div
-                    class="z-10 flex items-end gap-[1px] justify-center lg:w-full">
+                    class="z-10 flex items-end gap-[2px] justify-center lg:w-full">
                     <div
                       v-if="
                         exploreModeSelected === 'หมวดข่าว' &&
@@ -3482,7 +3562,10 @@ onMounted(async () => {
                         categorySelected
                       ]['monthly']"
                       :key="index"
-                      class="group flex flex-col items-center gap-2 w-[3.75%] lg:w-[4.06%]">
+                      class="group flex flex-col items-center gap-2"
+                      :style="{
+                            width: `${(findAllWidthForGraph('exploreGraph')-50)/24}px`,
+                          }">
                       <div
                         v-if="
                           totalDataEachCategory.length > 0 &&
@@ -3516,12 +3599,12 @@ onMounted(async () => {
                       v-if="exploreModeSelected === 'คีย์เวิร์ด'"
                       class="flex flex-col items-end">
                       <div
-                        class="cursor-pointer relative flex gap-[1px] w-[90vw] lg:px-[9vw] justify-center">
+                        class="cursor-pointer relative flex gap-[2px] w-[90vw] md:px-[9vw] justify-center">
                         <div
                           v-for="(item, itemIndex) in dataForKW.montly"
                           class="flex flex-col cursor-pointer relative justify-end"
                           :style="{
-                            width: `${90 / dataForKW.montly.length}%`,
+                            width: `${(findAllWidthForGraph('exploreGraph')-50)/24}px`,
                           }">
                           <div
                             v-if="totalDataEachCategory.length > 0"
@@ -3582,18 +3665,19 @@ onMounted(async () => {
                   </div>
 
                   <div
-                    v-if="exploreModeSelected === 'หมวดข่าว'"
                     class="z-0 absolute bottom-0 w-full h-full"
                     style="pointer-events: none">
                     <div class="flex flex-col justify-between h-full p-[5px]">
                       <div>
                         <p class="b5 border-b border-black border-dotted">
-                          xxx
+                          {{ Math.floor(findYAxisScale() * 4/4).toLocaleString() }}
                         </p>
                       </div>
-                      <p class="b5 border-b border-black border-dotted">xxx</p>
-                      <p class="b5 border-b border-black border-dotted">xxx</p>
-                      <p class="b5 border-b border-black border-dotted">xxx</p>
+                      <p class="b5 border-b border-black border-dotted">
+                        {{Math.floor(findYAxisScale() * 3/4).toLocaleString() }}
+                      </p>
+                      <p class="b5 border-b border-black border-dotted"> {{Math.floor(findYAxisScale() * 2/4).toLocaleString() }}</p>
+                      <p class="b5 border-b border-black border-dotted"> {{Math.floor(findYAxisScale() * 1/4).toLocaleString() }}</p>
 
                       <p></p>
                       <p></p>
@@ -3608,7 +3692,7 @@ onMounted(async () => {
                 </div>
               </div>
               <div
-                class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
+                class="absolute top-0 right-[50%] w-full h-full border-r-[2px] border-[#C5C4C4] "
                 style="pointer-events: none"></div>
             </div>
 
@@ -3650,14 +3734,9 @@ onMounted(async () => {
                   และมักพบ 10 คำ*เหล่านี้อยู่บ่อยๆ
                 </p>
                 <div
-                  class="grid grid-cols-2 lg:flex lg:flex-wrap lg:justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center">
+                  class="flex flex-wrap justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center">
                   <div
                     v-for="(kw, index) in top10Keywords"
-                    :class="
-                      index % 2 === 0
-                        ? 'justify-self-end'
-                        : 'justify-self-start'
-                    "
                     class="bg-black flex items-center gap-[2px] px-[5px] justify-center text-center w-fit">
                     <p class="b3">{{ kw.keyword }}</p>
                     <p class="b4">({{ kw.frequency }})</p>
@@ -3694,7 +3773,7 @@ onMounted(async () => {
                   exploreModeSelected === 'หมวดข่าว'
                 "
                 :class="getCategoryBorderColor(categorySelected)"
-                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]">
+                class="bg-black border-l-[5px] md:border-l-[10px] text-white p-[10px] space-y-[5px] w-[90vw] max-w-[500px]">
                 <p class="b4 font-bold">
                   {{
                     formatMonth(
@@ -3730,7 +3809,7 @@ onMounted(async () => {
                   dataForKW.sample_headlines[sampleIndex] &&
                   exploreModeSelected === 'คีย์เวิร์ด'
                 "
-                class="bg-black border-l-[5px] lg:border-l-[10px] text-white p-[10px] space-y-[5px] w-[288px] lg:w-[400px]">
+                class="bg-black border-l-[5px] md:border-l-[10px] text-white p-[10px] space-y-[5px] w-[90vw] max-w-[500px]">
                 <p class="b4 font-bold">
                   {{
                     formatMonth(dataForKW.sample_headlines[sampleIndex].date)
@@ -3792,6 +3871,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+
 option {
   background-color: white;
 }
