@@ -1,57 +1,57 @@
 <script setup>
-import draggable from "vuedraggable";
-import { Vue3Lottie } from "vue3-lottie";
-import lottie_intro from "public/lottie/lottie-0.json";
-const isShowAnswer = ref(false);
-const resultTextHead = ref("");
-const resultTextDesc = ref();
-const numOfCorrect = ref(0);
-const isShowContent = ref(false);
-const isShowQuiz = ref(true);
-const isShowRefPopup = ref(false);
-const quizData = ref([]);
-const reference = ref(null);
-const quizSet = ref(1);
-const quiz = ref([]);
+import draggable from "vuedraggable"
+import { Vue3Lottie } from "vue3-lottie"
+import lottie_intro from "public/lottie/lottie-0.json"
+const isShowAnswer = ref(false)
+const resultTextHead = ref("")
+const resultTextDesc = ref()
+const numOfCorrect = ref(0)
+const isShowContent = ref(false)
+const isShowQuiz = ref(true)
+const isShowRefPopup = ref(false)
+const quizData = ref([])
+const reference = ref(null)
+const quizSet = ref(1)
+const quiz = ref([])
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value;
-};
+  isShowRefPopup.value = !isShowRefPopup.value
+}
 const showContent = () => {
-  isShowContent.value = true;
-  isShowQuiz.value = false;
-};
+  isShowContent.value = true
+  isShowQuiz.value = false
+}
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
-  });
-});
+    return new Date(a.date) - new Date(b.date)
+  })
+})
 
 const checkAnswer = () => {
-  console.log(quiz.value);
+  console.log(quiz.value)
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name;
-  }).length;
+    return item.name === answer.value[index].name
+  }).length
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%";
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
+      "%"
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย";
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
+    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย"
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%";
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
+      "%"
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
   }
-  isShowAnswer.value = true;
-  isShowContent.value = true;
-};
+  isShowAnswer.value = true
+  isShowContent.value = true
+}
 const formatDate = (inputDate) => {
   const months = [
     "ม.ค.",
@@ -66,60 +66,56 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ];
-  const dateObject = new Date(inputDate);
-  const day = dateObject.getDate();
-  const monthIndex = dateObject.getMonth();
-  const year = dateObject.getFullYear() % 100;
-  return `${day} ${months[monthIndex]} ${year}`;
-};
+  ]
+  const dateObject = new Date(inputDate)
+  const day = dateObject.getDate()
+  const monthIndex = dateObject.getMonth()
+  const year = dateObject.getFullYear() % 100
+  return `${day} ${months[monthIndex]} ${year}`
+}
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    );
-    console.log(quiz.value);
-    quizSet.value++;
+    )
+    console.log(quiz.value)
+    quizSet.value++
   } else {
-    quizSet.value = 1;
+    quizSet.value = 1
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    );
+    )
   }
   const addFieldToObject = (obj, fieldName, fieldValue) => {
-    obj[fieldName] = fieldValue;
-  };
-  addFieldToObject(quiz.value[0], "no", 1);
-  addFieldToObject(quiz.value[1], "no", 2);
-  addFieldToObject(quiz.value[2], "no", 3);
-};
+    obj[fieldName] = fieldValue
+  }
+  addFieldToObject(quiz.value[0], "no", 1)
+  addFieldToObject(quiz.value[1], "no", 2)
+  addFieldToObject(quiz.value[2], "no", 3)
+}
 const restartQuiz = async () => {
-  isShowAnswer.value = false;
-  isShowContent.value = false;
-  await setQuiz();
-};
-
-const scrollToReference = () => {
-  reference.value.scrollIntoView({ behavior: "smooth" });
-};
+  isShowAnswer.value = false
+  isShowContent.value = false
+  await setQuiz()
+}
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv");
-    const csvText = await response.text();
+    const response = await fetch("/data/quiz.csv")
+    const csvText = await response.text()
     const rows = csvText.split("\n").map((line) => {
-      const [id, name, link, date] = line.split(",");
-      return { id, name, link, date };
-    });
-    quizData.value = rows;
-    console.log(quizData.value);
-    setQuiz();
+      const [id, name, link, date] = line.split(",")
+      return { id, name, link, date }
+    })
+    quizData.value = rows
+    console.log(quizData.value)
+    setQuiz()
   } catch (error) {
-    console.error("Error fetching CSV data:", error);
+    console.error("Error fetching CSV data:", error)
   }
-};
+}
 
-const bgLoopIndex = ref(0);
+const bgLoopIndex = ref(0)
 const bgColor = [
   "bg-vermillion",
   "bg-lightblue",
@@ -130,20 +126,20 @@ const bgColor = [
   "bg-purple",
   "bg-blue",
   "bg-green",
-];
+]
 const startLoop = () => {
   setInterval(() => {
-    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length;
-  }, 1000);
-};
+    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length
+  }, 1000)
+}
 
 const blockCategryStyle =
-  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center";
+  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center"
 onMounted(() => {
-  fetchData();
-  startLoop();
-  quizSet.value = 1;
-});
+  fetchData()
+  startLoop()
+  quizSet.value = 1
+})
 </script>
 
 <template>
