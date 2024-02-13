@@ -8,6 +8,9 @@ const newsDataHeatmap = ref([]);
 const typeOfNewsDropdown = ref([]);
 const selectedTypeOfNews = ref("ทุกหมวด");
 const selectedTypeOfNewsEn = ref("total");
+const newsName = ref("");
+const currentDate = ref("");
+const isShowScroll = ref(false);
 
 const news_type_list = ref([
   "การเมือง",
@@ -86,46 +89,11 @@ const news_list = ref([
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/lifecycle/total_news_list.csv");
-    const csvText = await response.text();
+    const response = await fetch("/data/lifecycle/total_news_list.json");
+    const csvText = await response.json();
     // console.log(csvText);
-    const rows = csvText.split("\n").map((line) => {
-      const [
-        topics,
-        number_of_headlines,
-        total_day,
-        start_date,
-        left_margin,
-        end_date,
-        การเมือง,
-        สังคมไทย,
-        เศรษฐกิจ,
-        ต่างประเทศ,
-        บันเทิง,
-        อาชญากรรม,
-        กีฬา,
-        วิทยาศาสตร์,
-        สิ่งแวดล้อม,
-      ] = line.split(",");
-      return {
-        topics,
-        number_of_headlines,
-        total_day,
-        start_date,
-        left_margin,
-        end_date,
-        การเมือง,
-        สังคมไทย,
-        เศรษฐกิจ,
-        ต่างประเทศ,
-        บันเทิง,
-        อาชญากรรม,
-        กีฬา,
-        วิทยาศาสตร์,
-        สิ่งแวดล้อม,
-      };
-    });
-    newsDetailsList.value = rows;
+
+    newsDetailsList.value = csvText;
   } catch (error) {
     console.error("Error fetching CSV data:", error);
   }
@@ -135,10 +103,10 @@ const fetchDataHeatmap = async (name) => {
   const response = await fetch("/data/lifecycle/" + name + ".json");
   const csvText = await response.json();
 
-  newsDataHeatmap.value = csvText;
+  newsDataHeatmap.value = csvText[0];
 
   let data = newsDetailsList.value.filter((x) => x.topics == name);
-  newsDetails.value = data;
+  newsDetails.value = data[0];
 
   setDataForHeatmap();
 };
@@ -148,7 +116,7 @@ function setDataForHeatmap() {
   totalOfTypeOfNews.value = 0;
 
   if (selectedTypeOfNews.value != "ทุกหมวด") {
-    let x = newsDataHeatmap.value[0].total_of_news.filter(
+    let x = newsDataHeatmap.value.total_of_news.filter(
       (x) => x.name == selectedTypeOfNews.value
     );
 
@@ -157,7 +125,7 @@ function setDataForHeatmap() {
     selectedTypeOfNewsEn.value = "total";
   }
 
-  let arr = newsDataHeatmap.value[0].list.map((object) => {
+  let arr = newsDataHeatmap.value.list.map((object) => {
     return object[selectedTypeOfNewsEn.value];
   });
 
@@ -165,11 +133,10 @@ function setDataForHeatmap() {
 
   maxOfTotalNews.value = max;
 
-  // console.log("max:" + maxOfTotalNews.value);
-  // console.log("----------");
+  currentDate.value = newsDataHeatmap.value.list[0].date;
 
   if (newsDataHeatmap.value != []) {
-    newsDataHeatmap.value[0].total_of_news.forEach((element) => {
+    newsDataHeatmap.value.total_of_news.forEach((element) => {
       if (element.total != 0) {
         totalOfTypeOfNews.value++;
 
@@ -180,14 +147,38 @@ function setDataForHeatmap() {
       }
     });
   }
+
+  onCheckScrollOnHeatmap();
+}
+
+function onCheckScrollOnHeatmap() {
+  isShowScroll.value = false;
+
+  nextTick(() => {
+    var popup = document.getElementById("heatmap-wrapper").offsetWidth;
+    var heatmap = document.getElementById("heatmap-wrapper").scrollWidth;
+
+    // console.log(heatmap, popup);
+
+    if (heatmap > popup) isShowScroll.value = true;
+  });
 }
 
 function setDate(date) {
-  return new Date(date).toLocaleString("th-TH", {
+  let formatdate = new Date(date).toLocaleString("th-TH", {
     year: "2-digit",
     month: "short",
     day: "numeric",
   });
+
+  formatdate =
+    formatdate.split(" ")[0] +
+    " " +
+    formatdate.split(" ")[1] +
+    " " +
+    (parseInt(formatdate.split(" ")[2]) - 43);
+
+  return formatdate;
 }
 
 function setOpacity(total) {
@@ -200,8 +191,13 @@ function setOpacity(total) {
 
 function showDetails(name) {
   fetchDataHeatmap(name);
+  newsName.value = name;
   totalOfTypeOfNews.value = 0;
   isShowDetailsPopup.value = true;
+}
+
+function setCurrentDate(date) {
+  currentDate.value = date;
 }
 
 onMounted(() => {
@@ -292,35 +288,38 @@ onMounted(() => {
       </div>
     </div>
 
-    <div
-      class="px-[16px] lg:px-[50px] overflow-x-auto cursor-grab relative"
-      id="news-list"
-    >
-      <div class="py-5 sticky left-0 top-0">
-        <div class="flex items-center">
-          <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
-          <p class="b5">คลิกแต่ละข่าวเพื่อดูรายละเอียด</p>
+    <div class="relative">
+      <div
+        class="px-[16px] lg:px-[50px] overflow-x-auto cursor-grab"
+        id="news-list"
+      >
+        <div class="py-5 sticky top-0">
+          <div class="flex items-center">
+            <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
+            <p class="b5">คลิกแต่ละข่าวเพื่อดูรายละเอียด</p>
+          </div>
+          <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
         </div>
-        <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
-      </div>
 
-      <template v-for="item in news_list">
-        <div class="sticky left-0 pt-3">
-          <p class="b4 font-bold" @click="showDetails(item.name)">
-            {{ item.name }}
-          </p>
-          <p class="b4 text-[#717070]">{{ item.date }}</p>
-        </div>
-        <img
-          :src="'/image/lifecycle/timeline_chart/' + item.img"
-          class="max-w-fit pb-3"
-          alt=""
-        />
-      </template>
+        <template v-for="item in news_list">
+          <div class="sticky left-0 pt-3">
+            <p class="b4 font-bold" @click="showDetails(item.name)">
+              {{ item.name }}
+            </p>
+            <p class="b4 text-[#717070]">{{ item.date }}</p>
+          </div>
+          <img
+            :src="'/image/lifecycle/timeline_chart/' + item.img"
+            class="max-w-fit pb-3"
+            alt=""
+          />
+        </template>
+      </div>
 
       <div class="absolute top-0 left-0 right-0 z-10" v-if="isShowDetailsPopup">
         <div
-          class="max-w-[95vw] md:max-w-[820px] bg-white mx-auto p-5 md:p-10 relative"
+          id="popup-wrapper"
+          class="max-w-[95vw] lg:max-w-[820px] bg-white mx-auto p-5 md:p-10 relative"
         >
           <img
             @click="isShowDetailsPopup = false"
@@ -328,12 +327,14 @@ onMounted(() => {
             alt=""
             class="absolute -top-2 -right-2 cursor-pointer"
           />
-          <h4 class="t4">{{ newsDetails[0].topics }}</h4>
+          <h4 class="t4">
+            {{ newsDetails.topics }}
+          </h4>
           <p class="b3 py-1 md:py-3">
             พบ
             <b
               >{{
-                parseInt(newsDetails[0].number_of_headlines).toLocaleString()
+                parseInt(newsDetails.number_of_headlines).toLocaleString()
               }}
               ข่าว</b
             >
@@ -341,7 +342,7 @@ onMounted(() => {
             <b>{{ totalOfTypeOfNews }} หมวดข่าว</b>
           </p>
 
-          <template v-for="item in newsDataHeatmap[0].total_of_news">
+          <template v-for="item in newsDataHeatmap.total_of_news">
             <div
               v-if="item.total != 0"
               class="w-[8px] h-[8px] inline-block mx-1"
@@ -366,23 +367,16 @@ onMounted(() => {
           <hr class="border-[#C5C4C4] my-4" />
 
           <p class="b3">
-            <b
-              >ได้พื้นที่สื่อ
-              {{ newsDataHeatmap[0].list.length }} วันที่มีข่าว</b
-            >
+            <b>ได้พื้นที่สื่อ {{ newsDetails.total_day }} วันที่มีข่าว</b>
             <span class="text-[#C5C4C4] b5"> (นับเฉพาะวันที่มีข่าว)</span>
           </p>
           <p class="b5">
             วันที่มีข่าวครั้งแรก :
-            {{ setDate(newsDataHeatmap[0].list[0].date) }}
+            {{ setDate(newsDetails.start_date) }}
           </p>
           <p class="b5">
             วันที่มีข่าวครั้งสุดท้าย :
-            {{
-              setDate(
-                newsDataHeatmap[0].list[newsDataHeatmap[0].list.length - 1].date
-              )
-            }}
+            {{ setDate(newsDetails.end_date) }}
           </p>
 
           <div class="flex items-center justify-between py-1 md:py-3">
@@ -405,9 +399,13 @@ onMounted(() => {
             </div>
           </div>
 
-          <div class="flex pb-3 overflow-x-auto">
+          <div
+            class="flex pb-3 overflow-x-auto"
+            id="heatmap-wrapper"
+            v-if="newsDataHeatmap != null"
+          >
             <div
-              v-for="item in newsDataHeatmap[0].list"
+              v-for="item in newsDataHeatmap.list"
               class="heatmap-bar"
               :class="{
                 'bg-black': selectedTypeOfNews == 'ทุกหมวด',
@@ -421,14 +419,20 @@ onMounted(() => {
                 'bg-blue': selectedTypeOfNews == 'วิทยาศาสตร์/เทคโนโลยี',
                 'bg-green': selectedTypeOfNews == 'สิ่งแวดล้อม',
                 'pointer-events-none': item[selectedTypeOfNewsEn] == 0,
+                selected: currentDate == item.date,
               }"
               :style="{ opacity: setOpacity(item[selectedTypeOfNewsEn]) }"
-            >
-              <div class="selected-bar"></div>
-            </div>
+              @click="setCurrentDate(item.date)"
+            ></div>
           </div>
 
-          <RandomNews :isInStorytelling="false" />
+          <p class="b5 text-right" v-if="isShowScroll">เลื่อน</p>
+
+          <RandomNews
+            :isInStorytelling="false"
+            :news="newsName"
+            :current_date="currentDate"
+          />
         </div>
       </div>
     </div>
@@ -449,11 +453,16 @@ onMounted(() => {
   @include mobile {
     width: 2px;
     height: 30px;
-    border: 1px solid transparent;
+    border: 2px solid transparent;
   }
 }
 
-.heatmap-bar:hover {
-  border: 1px solid #ff006b;
+.heatmap-bar:hover,
+.selected {
+  border: 2px solid #ff006b;
+}
+
+#heatmap-wrapper::-webkit-scrollbar {
+  display: none;
 }
 </style>

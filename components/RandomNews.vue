@@ -2,28 +2,35 @@
 const props = defineProps({
   current_step: Number,
   isInStorytelling: Boolean,
+  hasSelectDate: Boolean,
+  news: String,
+  current_date: String,
 });
 
 const selectedNews = ref([]);
 const random_news = ref([]);
 const total = ref(0);
+const firstDate = ref("");
+const lastDate = ref("");
 
 const fetchData = async () => {
-  try {
-    const response = await fetch("/data/lifecycle/คดีแตงโม-นิดา-newslist.csv");
-    const csvText = await response.text();
-    // console.log(csvText);
-    const rows = csvText.split("\n").map((line) => {
-      const [headline, sample, link, date, news_station, category] =
-        line.split(",");
-      return { headline, sample, link, date, news_station, category };
-    });
+  const response = await fetch(
+    "/data/lifecycle/" + props.news + "-newslist.json"
+  );
+  const csvText = await response.json();
 
-    random_news.value = rows.filter((x) => x.headline != '"');
-    randomNews();
-  } catch (error) {
-    console.error("Error fetching CSV data:", error);
-  }
+  let selecteddate = new Date(props.current_date);
+
+  if (props.current_date != null)
+    random_news.value = csvText.filter(
+      (x) => new Date(x.date).toDateString() == selecteddate.toDateString()
+    );
+  else random_news.value = csvText;
+
+  firstDate.value = csvText[0].date;
+  lastDate.value = csvText[csvText.length - 1].date;
+
+  randomNews();
 };
 
 function getRandomInt(max) {
@@ -32,6 +39,7 @@ function getRandomInt(max) {
 
 function randomNews() {
   let data = null;
+
   if (props.isInStorytelling) {
     data = random_news.value.filter(
       (x) => x.sample == "part_2_" + props.current_step
@@ -39,22 +47,30 @@ function randomNews() {
   } else data = random_news.value;
 
   selectedNews.value = data[getRandomInt(data.length)];
-  // console.log(selectedNews.value);
 
   total.value = data.length;
 }
 
 function setDate(date) {
-  return new Date(date).toLocaleString("th-TH", {
+  let formatdate = new Date(date).toLocaleString("th-TH", {
     year: "2-digit",
     month: "short",
     day: "numeric",
   });
+
+  formatdate =
+    formatdate.split(" ")[0] +
+    " " +
+    formatdate.split(" ")[1] +
+    " " +
+    (parseInt(formatdate.split(" ")[2]) - 43);
+
+  return formatdate;
 }
 
-function removeQuote(name) {
-  return name.replaceAll('^"|"$', "");
-}
+const handleExploreMounthYear = (action) => {
+  console.log(123);
+};
 
 onMounted(() => {
   fetchData();
@@ -66,11 +82,41 @@ watch(
     randomNews();
   }
 );
+
+watch(
+  () => props.current_date,
+  (count, prevCount) => {
+    fetchData();
+  }
+);
 </script>
 
 <template>
-  <div :class="{ 'mt-[40vh]': props.isInStorytelling }">
-    {{ selectedNews.category }}
+  <div :class="{ 'mt-[50vh]': props.isInStorytelling }">
+    <div class="flex justify-center items-center pb-5">
+      <button
+        @click="handleExploreMounthYear('prev')"
+        class="cursor-pointer"
+        :class="{
+          cantclick: setDate(props.current_date) == setDate(firstDate),
+        }"
+      >
+        <img src="/image/trends/PreviousBtn.svg" alt="" />
+      </button>
+      <p class="b3">
+        <b>{{ setDate(selectedNews.date) }}</b> ({{ random_news.length }} ข่าว)
+      </p>
+      <button
+        @click="handleExploreMounthYear('next')"
+        class="cursor-pointer"
+        :class="{
+          cantclick: setDate(props.current_date) == setDate(lastDate),
+        }"
+      >
+        <img src="/image/trends/NextBtn.svg" alt="" />
+      </button>
+    </div>
+
     <div class="flex justify-center" v-if="selectedNews != []">
       <div
         class="type-of-news"
@@ -79,6 +125,11 @@ watch(
           'bg-pink': selectedNews.category == 'บันเทิง',
           'bg-lightblue': selectedNews.category == 'สังคมไทย',
           'bg-vermillion': selectedNews.category == 'การเมือง',
+          'bg-orange': selectedNews.category == 'เศรษฐกิจ/การเงิน',
+          'bg-rose': selectedNews.category == 'ต่างประเทศ',
+          'bg-purple': selectedNews.category == 'กีฬา',
+          'bg-blue': selectedNews.category == 'วิทยาศาสตร์/เทคโนโลยี',
+          'bg-green': selectedNews.category == 'สิ่งแวดล้อม',
         }"
       ></div>
       <div
@@ -96,6 +147,7 @@ watch(
         </p>
       </div>
     </div>
+
     <div class="mt-3 flex justify-center items-center" v-if="total > 1">
       <div class="mr-1">
         <img src="/image/Reset.svg" alt="" />
@@ -110,5 +162,14 @@ watch(
 <style lang="scss" scoped>
 .type-of-news {
   flex: 0 0 20px;
+
+  @include mobile {
+    flex: 0 0 5px;
+  }
+}
+
+.cantclick {
+  opacity: 0.3;
+  pointer-events: none;
 }
 </style>
