@@ -7,6 +7,7 @@ import BarChart from "/components/BarChart.vue"
 import StoryCard from "/components/StoryCard.vue"
 import SampleNews from "/components/SampleNews.vue"
 import BarAxis from "/components/BarAxis.vue"
+import RandomNews from "~/components/RandomNews.vue"
 
 const headlineRef = ref(null)
 const currentIndex = ref(0)
@@ -1869,7 +1870,7 @@ onMounted(async () => {
                 :exploreModeSelected="exploreModeSelected"
                 :borderColor="getCategoryBorderColor(categorySelected)"
                 :top10Keywords="top10Keywords" />
-
+                <!-- <RandomNews /> -->
               <SampleNews
                 v-if="exploreModeSelected === 'คีย์เวิร์ด'"
                 :dataSet="dataForKW.sample_headlines"
