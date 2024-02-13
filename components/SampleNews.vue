@@ -4,8 +4,8 @@ const props = defineProps({
   dataSet: Object,
   sampleIndex: Number,
   borderColor: String,
-top10Keywords: Array,
-inputKeyword: String,
+  top10Keywords: Array,
+  inputKeyword: String,
 })
 const monthShortTH = [
   "ม.ค.",
@@ -61,10 +61,7 @@ const highlightKeyword = (headline, keyword) => {
     <h1
       class="t4 font-black"
       v-html="
-        highlightKeyword(
-            dataSet[sampleIndex].headline,
-            inputKeyword
-        )
+        highlightKeyword(dataSet[sampleIndex].headline, inputKeyword)
       "></h1>
     <p class="b5">
       ที่มา:

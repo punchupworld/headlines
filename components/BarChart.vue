@@ -132,13 +132,13 @@ const yAxis = {
         <div
           class="z-0 absolute bottom-0 w-full h-full md:px-[10px]"
           style="pointer-events: none">
-          <div class="flex flex-col justify-between h-full p-[5px]">
+          <div class="flex flex-col justify-between h-full p-[6px]">
             <div>
-              <p class="b5 border-b border-black border-dotted">{{ yAxis[category][0].toLocaleString() }}</p>
+              <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][0].toLocaleString() }}</p>
             </div>
-            <p class="b5 border-b border-black border-dotted">{{ yAxis[category][1].toLocaleString() }}</p>
-            <p class="b5 border-b border-black border-dotted">{{ yAxis[category][2].toLocaleString() }}</p>
-            <p class="b5 border-b border-black border-dotted">{{ yAxis[category][3].toLocaleString() }}</p>
+            <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][1].toLocaleString() }}</p>
+            <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][2].toLocaleString() }}</p>
+            <p class="b6 border-b border-black border-dotted pl-[5px]" >{{ yAxis[category][3].toLocaleString() }}</p>
             <p></p>
             <p></p>
           </div>
