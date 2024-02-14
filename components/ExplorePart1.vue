@@ -177,7 +177,7 @@ const findMaxOfMonthly = () => {
 const selectExploreMode = async (mode) => {
   exploreModeSelected.value = mode
   sampleIndex.value = 0
-  console.log('เปลี่ยนโหมด')
+  console.log("เปลี่ยนโหมด")
   console.log(exploreModeSelected.value)
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
     dataForKW.value = await keywords.value[inputKeyword.value]
@@ -337,8 +337,6 @@ const fullMonthAndYear = computed(() => {
     }`
   }
 })
-
-
 
 const findAllWidthForGraph = (el) => {
   const elFocus = document.getElementById(el)
@@ -572,9 +570,7 @@ onMounted(async () => {
                     }px`,
                   }">
                   <div
-                    v-if="
-                      totalDataEachCategory.length > 0
-                    "
+                    v-if="totalDataEachCategory.length > 0"
                     @click="handleCurrentIndex(index)"
                     :class="
                       index === categoryIndex
@@ -609,9 +605,7 @@ onMounted(async () => {
                       class="flex flex-col cursor-pointer relative justify-end"
                       :style="{
                         width: `${
-                          (parseInt(findAllWidthForGraph('explore')) -
-                            50) /
-                          24
+                          (parseInt(findAllWidthForGraph('explore')) - 50) / 24
                         }px`,
                       }">
                       <div
@@ -677,7 +671,7 @@ onMounted(async () => {
                 :categorySelected="categorySelected" />
             </div>
             <div
-              class="b5 text-[#939393] grid grid-cols-2 place-items-center lg:pt-[30px] lg:mb-[10px] font-bold">
+              class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[5px] lg:pt-[30px] lg:mb-[10px] font-bold">
               <p>2022</p>
               <p>2023</p>
             </div>

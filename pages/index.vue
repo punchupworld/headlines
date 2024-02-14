@@ -416,7 +416,7 @@ onMounted(() => {
                 </div>
               </div>
               <div
-                class="absolute bottom-10 lg:left-1/3 left-0 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]">
+                class="absolute bottom-5 lg:left-1/3 left-10 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]">
                 <img src="/image/SlideIcon.svg" alt="" />
                 <p>เลื่อน</p>
               </div>
@@ -577,75 +577,6 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <!-- <div class="w-full lg:hidden block h-[100vh]">
-          <div class="flex flex-col p-[20px]">
-            <div
-              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
-            >
-              ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?
-            </div>
-            <div>
-              <div class="grid grid-cols-2">
-                <div>
-                  <img src="/image/DotBgMobile.svg" alt="" class="h-full w-full" />
-                </div>
-           
-                  <div
-                    class="h5 text-pretty bg-[#FFF8B5] font-bold  flex items-center justify-center border-black border"
-                  >
-                    ย้อนดูเทรนด์ข่าวออนไลน์ไทย ช่วงปี
-                  </div>
-              </div>
-              <div class="grid grid-cols-9 bg-white t3 font-black">
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  2
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  0
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  2
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  2
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  -
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  2
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  0
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  2
-                </div>
-                <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
-                >
-                  3
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> -->
         <img src="/image/Head.svg" alt="" class="w-full xl:hidden block" />
       </div>
 

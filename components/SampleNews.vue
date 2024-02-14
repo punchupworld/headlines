@@ -58,18 +58,24 @@ const highlightKeyword = (headline, keyword) => {
     <p class="b4 font-bold">
       {{ formatMonth(dataSet[sampleIndex].date) }}
     </p>
-    <h1
-      class="t4 font-black"
+    <p
+      class="t4 font-black text-pretty p-[3px]"
       v-html="
         highlightKeyword(dataSet[sampleIndex].headline, inputKeyword)
-      "></h1>
+      "></p>
     <p class="b5">
       ที่มา:
-      <a :href="dataSet[sampleIndex].link">{{
+      <a :href="dataSet[sampleIndex].link" target="_blank">{{
         dataSet[sampleIndex].news_station
       }}</a>
     </p>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.overflow-hidden {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>
