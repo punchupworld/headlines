@@ -440,7 +440,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="explore" class="pะ-[40px] bg-[#EBE8DE] z-10 relative">
+  <div id="explore" class="py-[40px] bg-[#EBE8DE] z-10 relative max-w-[850px] mx-auto">
     <h1 class="h5 font-bold text-center">
       สำรวจเทรนด์ข่าวในปี<br />
       2022-2023 ด้วยตัวเอง ผ่าน
