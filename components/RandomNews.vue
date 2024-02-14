@@ -5,30 +5,39 @@ const props = defineProps({
   hasSelectDate: Boolean,
   news: String,
   current_date: String,
+  date_list: Array || Object,
 });
+
+const emit = defineEmits(["changeDate"]);
 
 const selectedNews = ref([]);
 const random_news = ref([]);
 const total = ref(0);
 const firstDate = ref("");
 const lastDate = ref("");
+const currentDate = ref("");
 
-const fetchData = async () => {
+const fetchData = async (cdate) => {
+  currentDate.value = cdate != null ? cdate : props.current_date;
+
   const response = await fetch(
     "/data/lifecycle/" + props.news + "-newslist.json"
   );
   const csvText = await response.json();
 
-  let selecteddate = new Date(props.current_date);
+  firstDate.value = props.date_list[0];
+  lastDate.value = props.date_list[props.date_list.length - 1];
+
+  let selecteddate = "";
+
+  if (cdate != null) selecteddate = new Date(cdate);
+  else selecteddate = new Date(currentDate.value);
 
   if (props.current_date != null)
     random_news.value = csvText.filter(
       (x) => new Date(x.date).toDateString() == selecteddate.toDateString()
     );
   else random_news.value = csvText;
-
-  firstDate.value = csvText[0].date;
-  lastDate.value = csvText[csvText.length - 1].date;
 
   randomNews();
 };
@@ -68,8 +77,21 @@ function setDate(date) {
   return formatdate;
 }
 
-const handleExploreMounthYear = (action) => {
-  console.log(123);
+const onChangeCurrentDate = (action) => {
+  const isLargeNumber = (element) => element == currentDate.value;
+  let index = 0;
+  index = props.date_list.findIndex(isLargeNumber);
+  // console.log(currentDate);
+  // console.log(index);
+  if (action == "prev") {
+    currentDate.value = props.date_list[index - 1];
+    fetchData(props.date_list[index - 1]);
+  } else {
+    currentDate.value = props.date_list[index + 1];
+    fetchData(props.date_list[index + 1]);
+  }
+
+  emit("changeDate", currentDate.value);
 };
 
 onMounted(() => {
@@ -93,21 +115,24 @@ watch(
 
 <template>
   <div :class="{ 'mt-[50vh]': props.isInStorytelling }">
-    <div class="flex justify-center items-center pb-5">
+    <div class="flex justify-center items-center pb-5" v-if="hasSelectDate">
       <button
-        @click="handleExploreMounthYear('prev')"
+        @click="onChangeCurrentDate('prev')"
         class="cursor-pointer"
         :class="{
-          cantclick: setDate(props.current_date) == setDate(firstDate),
+          cantclick: setDate(currentDate) == setDate(firstDate),
         }"
       >
         <img src="/image/trends/PreviousBtn.svg" alt="" />
       </button>
       <p class="b3">
-        <b>{{ setDate(selectedNews.date) }}</b> ({{ random_news.length }} ข่าว)
+        <b>{{ setDate(currentDate) }}</b> ({{
+          random_news.length.toLocaleString()
+        }}
+        ข่าว)
       </p>
       <button
-        @click="handleExploreMounthYear('next')"
+        @click="onChangeCurrentDate('next')"
         class="cursor-pointer"
         :class="{
           cantclick: setDate(props.current_date) == setDate(lastDate),
@@ -153,7 +178,11 @@ watch(
         <img src="/image/Reset.svg" alt="" />
       </div>
       <p class="b4 text-[#FF006B] cursor-pointer" @click="randomNews">
-        สุ่มตัวอย่างเพิ่ม
+        {{
+          isInStorytelling
+            ? "สุ่มตัวอย่างเพิ่ม"
+            : "สุ่มตัวอย่างข่าวในวันนี้เพิ่ม"
+        }}
       </p>
     </div>
   </div>

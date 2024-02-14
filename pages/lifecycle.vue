@@ -232,6 +232,7 @@ function selectNews(news) {
                 <RandomNews
                   :current_step="step"
                   :isInStorytelling="true"
+                  :hasSelectDate="false"
                   news="คดีแตงโม-นิดา"
                 />
               </template>
@@ -241,7 +242,7 @@ function selectNews(news) {
             class="step-list mt-[-100vh] lg:mt-0 z-10 relative w-full lg:w-2/4 pointer-events-none"
           >
             <div class="step" data-step="1">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <template v-if="typeOfNews == 'tangmo'">
                   <p class="b1 font-bold">ใช่เลย!</p>
                   <p class="b3 font-bold">“คดีแตงโม-นิดา”</p>
@@ -266,7 +267,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="2">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   <b>“คดีแตงโม-นิดา”</b> พลัดตกเรือเริ่มต้นในเช้ามืดของวันที่ 25
                   ก.พ. 2022!
@@ -274,7 +275,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="3">
-              <div class="bg-white p-5 h-fit b3">
+              <div class="bg-white p-3 sm:p-5 h-fit b3">
                 <p class="">
                   มีจำนวนข่าววันแรกทั้งวันรวมกัน
                   <b> 85 ข่าว</b> โดยเป็นข่าวในหมวด
@@ -295,7 +296,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="4">
-              <div class="bg-white p-5 h-fit b3">
+              <div class="bg-white p-3 sm:p-5 h-fit b3">
                 ก่อนจะแผ่ขยายไปสู่หมวด
                 <div class="w-[8px] h-[8px] bg-vermillion inline-block"></div>
                 <b class="px-1">การเมือง</b>ในวันต่อมา
@@ -303,7 +304,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="5">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   <b> 100 วันผ่านไป</b> เทรนด์ข่าว "คดีแตงโม-นิดา" ค่อยๆ ลดลง
                   แต่ยังไม่มีทีท่าจะหายไปจากหน้าสื่อ เพราะมีเหตุการณ์ใหม่ๆ
@@ -312,7 +313,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="6">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   ข่าวการไว้อาลัย
                   ควบคู่ไปกับการเปิดโปงพยานหลักฐานเพิ่มเติมจากตำรวจ
@@ -321,7 +322,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="7">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   แม้หลังจากเดือนกรกฎาคม 2022 จำนวนข่าว “คดีแตงโม-นิดา”
                   จะเบาบางลงมาก
@@ -332,7 +333,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="8">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   <b>ยกเว้นเดือนกรกฎาคม 2023</b>
                   เดือนเดียวนับตั้งแต่เกิดเหตุการณ์ที่ไม่มีข่าว “คดีแตงโม-นิดา”
@@ -345,7 +346,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="9">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   โดยสรุปแล้ว
                   <b
@@ -361,7 +362,7 @@ function selectNews(news) {
               </div>
             </div>
             <div class="step" data-step="10">
-              <div class="bg-white p-5 h-fit">
+              <div class="bg-white p-3 sm:p-5 h-fit">
                 <p class="b3">
                   นอกจาก “คดีแตงโม-นิดา” แล้ว
                   <b
@@ -416,6 +417,10 @@ function selectNews(news) {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @include mobile {
+    max-width: 250px;
+  }
 }
 
 .chart-wrapper::-webkit-scrollbar {

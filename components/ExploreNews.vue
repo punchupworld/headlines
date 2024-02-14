@@ -6,6 +6,7 @@ const totalOfTypeOfNews = ref(0);
 const maxOfTotalNews = ref(0);
 const newsDataHeatmap = ref([]);
 const typeOfNewsDropdown = ref([]);
+const newsDateHeatmapList = ref([]);
 const selectedTypeOfNews = ref("ทุกหมวด");
 const selectedTypeOfNewsEn = ref("total");
 const newsName = ref("");
@@ -111,6 +112,24 @@ const fetchDataHeatmap = async (name) => {
   setDataForHeatmap();
 };
 
+const setDateListForHeatmap = async () => {
+  newsDateHeatmapList.value = [];
+
+  let x;
+
+  if (selectedTypeOfNews.value != "ทุกหมวด")
+    x = newsDataHeatmap.value.list.filter(
+      (x) => x[selectedTypeOfNewsEn.value] != 0
+    );
+  else x = newsDataHeatmap.value.list;
+
+  x.forEach((element) => {
+    newsDateHeatmapList.value.push(element.date);
+  });
+
+  setCurrentDate(newsDateHeatmapList.value[0]);
+};
+
 function setDataForHeatmap() {
   typeOfNewsDropdown.value = [];
   totalOfTypeOfNews.value = 0;
@@ -148,6 +167,7 @@ function setDataForHeatmap() {
     });
   }
 
+  setDateListForHeatmap();
   onCheckScrollOnHeatmap();
 }
 
@@ -157,8 +177,6 @@ function onCheckScrollOnHeatmap() {
   nextTick(() => {
     var popup = document.getElementById("heatmap-wrapper").offsetWidth;
     var heatmap = document.getElementById("heatmap-wrapper").scrollWidth;
-
-    // console.log(heatmap, popup);
 
     if (heatmap > popup) isShowScroll.value = true;
   });
@@ -182,16 +200,32 @@ function setDate(date) {
 }
 
 function setOpacity(total) {
-  let x = 0;
-  if (total == maxOfTotalNews.value) x = 1;
-  else if (total == 1) x = 0.2;
-  else x = total / maxOfTotalNews.value;
+  let x = "";
+  let rgb = "";
+
+  if (selectedTypeOfNews.value == "ทุกหมวด") rgb = "0,0,0";
+  else if (selectedTypeOfNews.value == "การเมือง") rgb = "255,61,0";
+  else if (selectedTypeOfNews.value == "สังคมไทย") rgb = "74,218,218";
+  else if (selectedTypeOfNews.value == "เศรษฐกิจ/การเงิน") rgb = "255, 152, 77";
+  else if (selectedTypeOfNews.value == "ต่างประเทศ") rgb = "189, 69, 83";
+  else if (selectedTypeOfNews.value == "บันเทิง") rgb = "255, 178, 172";
+  else if (selectedTypeOfNews.value == "อาชญากรรม") rgb = "140, 99, 69";
+  else if (selectedTypeOfNews.value == "กีฬา") rgb = "170, 146, 227";
+  else if (selectedTypeOfNews.value == "วิทยาศาสตร์/เทคโนโลยี")
+    rgb = "37, 125, 204";
+  else if (selectedTypeOfNews.value == "สิ่งแวดล้อม") rgb = "155,185,90";
+
+  if (total == maxOfTotalNews.value) x = "rgba(" + rgb + ",1)";
+  else if (total == 1) x = "rgba(" + rgb + ",0.2)";
+  else x = "rgba(" + rgb + "," + total / maxOfTotalNews.value + ")";
+
   return x;
 }
 
 function showDetails(name) {
   fetchDataHeatmap(name);
   newsName.value = name;
+  selectedTypeOfNews.value = "ทุกหมวด";
   totalOfTypeOfNews.value = 0;
   isShowDetailsPopup.value = true;
 }
@@ -388,7 +422,7 @@ onMounted(() => {
             <div>
               <select
                 v-model="selectedTypeOfNews"
-                class="b5 bg-[#F4F4F4] w-[100px]"
+                class="b5 bg-[#F4F4F4] w-[100px] p-1"
                 @change="setDataForHeatmap()"
               >
                 <option value="ทุกหมวด">ทุกหมวด</option>
@@ -407,31 +441,31 @@ onMounted(() => {
             <div
               v-for="item in newsDataHeatmap.list"
               class="heatmap-bar"
+              :date="item.date"
+              :total="item[selectedTypeOfNewsEn]"
               :class="{
-                'bg-black': selectedTypeOfNews == 'ทุกหมวด',
-                'bg-vermillion': selectedTypeOfNews == 'การเมือง',
-                'bg-lightblue': selectedTypeOfNews == 'สังคมไทย',
-                'bg-orange': selectedTypeOfNews == 'เศรษฐกิจ/การเงิน',
-                'bg-rose': selectedTypeOfNews == 'ต่างประเทศ',
-                'bg-pink': selectedTypeOfNews == 'บันเทิง',
-                'bg-brown': selectedTypeOfNews == 'อาชญากรรม',
-                'bg-purple': selectedTypeOfNews == 'กีฬา',
-                'bg-blue': selectedTypeOfNews == 'วิทยาศาสตร์/เทคโนโลยี',
-                'bg-green': selectedTypeOfNews == 'สิ่งแวดล้อม',
                 'pointer-events-none': item[selectedTypeOfNewsEn] == 0,
                 selected: currentDate == item.date,
               }"
-              :style="{ opacity: setOpacity(item[selectedTypeOfNewsEn]) }"
+              :style="{
+                backgroundColor: setOpacity(item[selectedTypeOfNewsEn]),
+              }"
               @click="setCurrentDate(item.date)"
             ></div>
           </div>
 
-          <p class="b5 text-right" v-if="isShowScroll">เลื่อน</p>
+          <div class="flex justify-end items-center" v-if="isShowScroll">
+            <p class="b5 text-right pr-1">เลื่อน</p>
+            <img src="/image/lifecycle/drag.svg" alt="" class="w-[12px]" />
+          </div>
 
           <RandomNews
             :isInStorytelling="false"
+            :hasSelectDate="true"
             :news="newsName"
             :current_date="currentDate"
+            :date_list="newsDateHeatmapList"
+            @changeDate="setCurrentDate"
           />
         </div>
       </div>
@@ -464,5 +498,9 @@ onMounted(() => {
 
 #heatmap-wrapper::-webkit-scrollbar {
   display: none;
+}
+
+option:checked {
+  font-weight: bold;
 }
 </style>

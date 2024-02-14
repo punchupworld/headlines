@@ -48,6 +48,7 @@ function setScrollTangmoNews() {
     [new Date("2022/1/1"), new Date("2023/12/31")],
     [0, 3650]
   );
+  const w = window.innerWidth;
 
   if (props.current_step == 4)
     document.getElementById("tangmo-news-list").scrollLeft = x(
@@ -62,9 +63,14 @@ function setScrollTangmoNews() {
       new Date("2022/6/27")
     );
   else if (props.current_step == 7) {
+    let date = "";
+    if (w > 992) date = "2023/3/12";
+    else if (w > 600) date = "2023/4/25";
+    else date = "2023/6/12";
+
     nextTick(() => {
       document.getElementById("tangmo-news-list").scrollLeft = x(
-        new Date("2023/6/12")
+        new Date(date)
       );
     });
   } else if (props.current_step > 7) {
