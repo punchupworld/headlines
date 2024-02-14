@@ -1,10 +1,8 @@
 <script setup>
-import scrollama from "scrollama"
 import { sum, max } from "d3"
 import SampleNews from "/components/SampleNews.vue"
 import BarAxis from "/components/BarAxis.vue"
 
-const currentIndex = ref(0)
 const headlineShow = ref([])
 const exploreModeSelected = ref("หมวดข่าว")
 const categoryIndex = ref(0)
