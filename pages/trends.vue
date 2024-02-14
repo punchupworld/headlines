@@ -459,7 +459,7 @@ onMounted(async () => {
       <ExplorePart1 />
       <p
         @click="showRefPopup"
-        class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto my-[10px] border-[#EBE8DE]">
+        class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto my-[10px] border-[#EBE8DE] cursor-pointer">
         อ่านที่มาและข้อจำกัดของข้อมูล
       </p>
       <div class="py-[40px] text-center">
