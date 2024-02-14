@@ -25,8 +25,13 @@ const fetchData = async (cdate) => {
   );
   const csvText = await response.json();
 
-  firstDate.value = props.date_list[0];
-  lastDate.value = props.date_list[props.date_list.length - 1];
+  if (props.isInStorytelling) {
+    firstDate.value = csvText[0].date;
+    lastDate.value = csvText[csvText.length - 1].date;
+  } else {
+    firstDate.value = props.date_list[0];
+    lastDate.value = props.date_list[props.date_list.length - 1];
+  }
 
   let selecteddate = "";
 
@@ -81,8 +86,7 @@ const onChangeCurrentDate = (action) => {
   const isLargeNumber = (element) => element == currentDate.value;
   let index = 0;
   index = props.date_list.findIndex(isLargeNumber);
-  // console.log(currentDate);
-  // console.log(index);
+
   if (action == "prev") {
     currentDate.value = props.date_list[index - 1];
     fetchData(props.date_list[index - 1]);
