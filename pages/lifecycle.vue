@@ -2,6 +2,7 @@
 import scrollama from "scrollama";
 import { Vue3Lottie } from "vue3-lottie";
 import lottie_part2 from "public/lottie/lottie-2.json";
+import { vOnClickOutside } from "@vueuse/components";
 
 const isShowRefPopup = ref(false);
 const isSelectNews = ref(false);
@@ -36,10 +37,17 @@ function selectNews(news) {
     document.getElementById("story").scrollIntoView();
   });
 }
+
+function closeModal() {
+  isShowRefPopup.value = false;
+}
 </script>
 
 <template>
-  <div class="bg-[#EBE8DE] min-h-screen">
+  <div
+    class="bg-[#EBE8DE] min-h-screen"
+    :class="{ 'bg-black/30': isShowRefPopup }"
+  >
     <div
       class="max-w-[850px] mx-auto text-center px-3 relative min-h-screen py-[40px] flex justify-center items-center"
     >
@@ -62,11 +70,12 @@ function selectNews(news) {
         <div
           id="refPopup"
           class="left-0 fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
-          v-show="isShowRefPopup"
+          v-if="isShowRefPopup"
         >
           <div
             id="popUpScroll"
             class="relative bg-white max-w-[900px] h-[81vh] w-full text-left p-1"
+            v-on-click-outside="closeModal"
           >
             <img
               @click="isShowRefPopup = false"
@@ -79,7 +88,7 @@ function selectNews(news) {
               <p class="b1 font-bold">ที่มา</p>
               <ul class="list-disc b3">
                 <li>
-                  การหาประเด็นข่าวดัง ใช้ข้อมูลจาก
+                  <b>การหาประเด็นข่าวดัง</b> ใช้ข้อมูลจาก
                   <a
                     href="https://trends.google.co.th/trends/yis/2022/TH/?hl=en-US"
                     target="_blank"
@@ -107,7 +116,7 @@ function selectNews(news) {
                   เลือกตั้ง 2566, เลือกตั้ง กทม., ฟุตบอลโลก 2022, ซีเกมส์ 2021,
                   มิสแกรนด์ไทยแลนด์
                   เพราะความยาวนานของข่าวเหล่านี้เป็นไปตามหมุดหมายเหตุการณ์ที่ผู้จัดงานกำหนดไว้แล้ว
-                  มากกว่าจะขึ้นอยู่กับการตัดสินใจของสื่
+                  มากกว่าจะขึ้นอยู่กับการตัดสินใจของสื่อ
                 </li>
                 <li>
                   <b> การรวบรวมพาดหัวข่าวทั้งหมดที่เกี่ยวข้องกับแต่ละประเด็น</b>
@@ -193,8 +202,9 @@ function selectNews(news) {
       <div class="relative">
         <div
           id="tangmo-news-list"
-          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth pt-[20vh]"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth pt-[20vh] ml-[5vw]"
           v-if="step > 0 && isSelectNews"
+          :class="{ 'mr-[5vw]': step > 7 }"
         >
           <TangmoNews :current_step="step" />
           <div>
@@ -396,7 +406,7 @@ function selectNews(news) {
           <p
             class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer py-5"
           >
-            กลับไปหน้าแรก
+            กลับหน้าหลัก
           </p>
         </NuxtLink>
 

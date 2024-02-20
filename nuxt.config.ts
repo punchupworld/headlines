@@ -3,6 +3,7 @@
 const BASE_URL = "https://headlines-3bc.pages.dev/";
 
 export default defineNuxtConfig({
+  modules: ["@vueuse/nuxt"],
   devtools: { enabled: true },
   ssr: true,
   postcss: {

@@ -1,4 +1,6 @@
 <script setup>
+import { vOnClickOutside } from "@vueuse/components";
+
 const isShowDetailsPopup = ref(false);
 const newsDetailsList = ref([]);
 const newsDetails = ref([]);
@@ -234,6 +236,10 @@ function setCurrentDate(date) {
   currentDate.value = date;
 }
 
+function closeModal() {
+  isShowDetailsPopup.value = false;
+}
+
 onMounted(() => {
   const ele = document.getElementById("news-list");
 
@@ -288,17 +294,17 @@ onMounted(() => {
 
       <div class="border-white border-2 p-2.5 mt-3 b5 text-left">
         <div class="w-[8px] h-[8px] bg-black inline-block mx-1"></div>
-        <span><b>มีสี = วันที่มีข่าว</b></span>
+        <span><b>มีสี </b>= วันที่มีข่าว</span>
         <div
           class="w-[8px] h-[8px] bg-[#E3DFCF] border border-[#939393] inline-block mx-1"
         ></div>
-        <span><b>ไม่มีสี = วันที่ไม่มีข่าว</b></span>
+        <span><b>ไม่มีสี </b>= วันที่ไม่มีข่าว</span>
         <img
           src="/image/lifecycle/many_news.svg"
           class="inline-block mx-1"
           alt=""
         />
-        <span><b>มีหลายสี = วันที่มีข่าวหลายหมวด</b></span>
+        <span><b>มีหลายสี </b>= วันที่มีข่าวหลายหมวด</span>
 
         <hr class="border-[#C5C4C4] my-2" />
 
@@ -324,10 +330,10 @@ onMounted(() => {
 
     <div class="relative">
       <div
-        class="px-[16px] lg:px-[50px] overflow-x-auto cursor-grab"
+        class="px-[16px] lg:px-[50px] overflow-x-auto cursor-grab relative"
         id="news-list"
       >
-        <div class="py-5 sticky top-0">
+        <div class="py-5">
           <div class="flex items-center">
             <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
             <p class="b5">คลิกแต่ละข่าวเพื่อดูรายละเอียด</p>
@@ -335,25 +341,33 @@ onMounted(() => {
           <img src="/image/lifecycle/date.svg" alt="" class="max-w-fit" />
         </div>
 
-        <template v-for="item in news_list">
-          <div class="sticky left-0 pt-3">
-            <p class="b4 font-bold" @click="showDetails(item.name)">
-              {{ item.name }}
-            </p>
-            <p class="b4 text-[#717070]">{{ item.date }}</p>
-          </div>
-          <img
-            :src="'/image/lifecycle/timeline_chart/' + item.img"
-            class="max-w-fit pb-3"
-            alt=""
-          />
-        </template>
+        <div class="relative w-fit">
+          <template v-for="item in news_list">
+            <div class="hover:bg-white/30" @click="showDetails(item.name)">
+              <div class="sticky left-0 pt-3 inline-block">
+                <p class="b4 font-bold">
+                  {{ item.name }}
+                </p>
+                <p class="b4 text-[#717070]">{{ item.date }}</p>
+              </div>
+              <img
+                :src="'/image/lifecycle/timeline_chart/' + item.img"
+                class="max-w-fit pb-3"
+                alt=""
+              />
+            </div>
+          </template>
+        </div>
       </div>
 
-      <div class="absolute top-0 left-0 right-0 z-10" v-if="isShowDetailsPopup">
+      <div
+        class="fixed bg-black/30 top-0 left-0 right-0 z-10 h-full bottom-0 items-center justify-center flex"
+        v-if="isShowDetailsPopup"
+      >
         <div
           id="popup-wrapper"
-          class="max-w-[95vw] lg:max-w-[820px] bg-white mx-auto p-5 md:p-10 relative"
+          class="max-w-[95vw] lg:max-w-[820px] bg-white m-auto p-5 md:p-10 relative h-fit w-full"
+          v-on-click-outside="closeModal"
         >
           <img
             @click="isShowDetailsPopup = false"
@@ -402,7 +416,7 @@ onMounted(() => {
 
           <p class="b3">
             <b>ได้พื้นที่สื่อ {{ newsDetails.total_day }} วันที่มีข่าว</b>
-            <span class="text-[#C5C4C4] b5"> (นับเฉพาะวันที่มีข่าว)</span>
+            <span class="text-[#717070] b5"> (นับเฉพาะวันที่มีข่าว)</span>
           </p>
           <p class="b5">
             วันที่มีข่าวครั้งแรก :
