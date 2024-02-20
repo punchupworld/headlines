@@ -258,7 +258,7 @@ const handleCurrentIndex = (index) => {
   categoryIndex.value = index
   filterCategoryKeyword(categorySelected.value)
   filterSampleHeadlineCategory(categorySelected.value)
-  scrollToSection()
+  // scrollToSection()
 }
 
 const scrollToSection = () => {
@@ -438,7 +438,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div id="explore" class="py-[40px] bg-[#EBE8DE] z-10 relative max-w-[850px] mx-auto">
+  <div
+    id="explore"
+    class="py-[40px] bg-[#EBE8DE] z-10 relative max-w-[850px] mx-auto">
     <h1 class="h5 font-bold text-center">
       สำรวจเทรนด์ข่าวในปี<br />
       2022-2023 ด้วยตัวเอง ผ่าน
@@ -574,7 +576,7 @@ onMounted(async () => {
                       index === categoryIndex
                         ? getCategoryColorClass(categorySelected)
                         : getCategoryColorClass(categorySelected) +
-                          ' opacity-50'
+                          ' opacity-50 hover:opacity-70'
                     "
                     class="w-full cursor-pointer relative"
                     :style="{
@@ -661,13 +663,13 @@ onMounted(async () => {
                   </div>
                 </div>
               </div>
-              <BarAxis
-                :maxOfMonthly="maxOfMonthly"
-                :isExplore="true"
-                :totalDataEachCategory="totalDataEachCategory"
-                :exploreModeSelected="exploreModeSelected"
-                :categorySelected="categorySelected" />
             </div>
+            <BarAxis
+              :maxOfMonthly="maxOfMonthly"
+              :isExplore="true"
+              :totalDataEachCategory="totalDataEachCategory"
+              :exploreModeSelected="exploreModeSelected"
+              :categorySelected="categorySelected" />
             <div
               class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[5px] lg:pt-[30px] lg:mb-[10px] font-bold">
               <p>2022</p>
@@ -703,9 +705,9 @@ onMounted(async () => {
                 v-if="totalDataEachCategory && totalDataEachCategory.length > 0"
                 >{{
                   parseInt(
-                    totalDataEachCategory.find((item) =>
-                      item.category.includes(categorySelected)
-                    ).total
+                    exploreCategoryHeadlineData[categorySelected].monthly[
+                      categoryIndex
+                    ].total
                   ).toLocaleString()
                 }}
                 พาดหัวข่าว</span
@@ -764,7 +766,7 @@ onMounted(async () => {
             :inputKeyword="inputKeyword" />
           <button
             class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]">
-            <img src="/image/Reset.svg" alt="" />
+            <img src="/image/intro/Reset.svg" alt="" />
             <p @click="handleNewSample">สุ่มตัวอย่างเพิ่ม</p>
           </button>
           <p class="b5 text-[#717070] text-center pt-[15px]">

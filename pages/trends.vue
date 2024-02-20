@@ -18,7 +18,6 @@ const exploreCategoryHeadlineData = ref()
 const totalDataEachMonth = ref([])
 const totalDataEachCategory = ref([])
 
-
 const monthShortTH = [
   "ม.ค.",
   "ก.พ.",
@@ -96,7 +95,6 @@ const summaryData = async () => {
   totalDataEachMonth.value = arrTotalEachMonth
 }
 
-
 const fetchSampleHeadlineCategory = async () => {
   const response = await fetch("/data/trends/HeadlinesSample.json")
   const data = await response.json()
@@ -108,8 +106,14 @@ const fetchSampleHeadlineCategory = async () => {
 
 const showRefPopup = () => {
   isShowRefPopup.value = !isShowRefPopup.value
-}
 
+  if (isShowRefPopup.value === true) {
+    document.body.style.overflow = "hidden"
+  } else if (isShowRefPopup.value === false) {
+    document.body.style.overflow = ""
+  }
+  console.log(isShowRefPopup.value)
+}
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
   const totalHeight = (total * maxHeigh) / max
@@ -136,7 +140,6 @@ const calculateHeight = (count, maxHeigh, category, max) => {
   }
 }
 
-
 const scroller = scrollama()
 
 const findWidthandHeight = (section) => {
@@ -149,7 +152,6 @@ const findWidthandHeight = (section) => {
     return 0
   }
 }
-
 
 watchEffect((onCleanup) => {
   if (process.client) {
@@ -169,7 +171,10 @@ const currentText = computed(() => {
   return headlineShow.value[currentIndex.value]
 })
 
+
+const step = ref(0)
 onMounted(async () => {
+  console.log(window.innerWidth)
   await fetchSampleHeadlineCategory()
   await fetchExploreCategoryHeadline()
   await summaryData()
@@ -190,6 +195,8 @@ onMounted(async () => {
   }
 
   const handleStepEnter = (response) => {
+    step.value = response.index
+    console.log("step", step.value)
     const currentSection = parseInt(response.element.id.replace("card", ""), 10)
     handleSectionOpacity(currentSection, response.direction)
   }
@@ -208,6 +215,20 @@ onMounted(async () => {
     })
   }
   init()
+  if(isShowRefPopup.value === true) {
+     document.addEventListener("click", (event) => {
+      console.log(event)
+    if (isShowRefPopup.value === true) {
+      const popUp = document.getElementById("popUpScroll")
+      const isClickInsidePopup = popUp.contains(event.target)
+      console.log('isClickInsidePopup', isClickInsidePopup)
+      // if (!isClickInsidePopup) {
+      //   isShowRefPopup.value = false
+      // }
+    }
+  })
+  }
+
 })
 </script>
 
@@ -220,10 +241,10 @@ onMounted(async () => {
       v-show="isShowRefPopup">
       <div
         id="popUpScroll"
-        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh]">
+        class="relative bg-white w-[90vw] max-w-[900px] max-h-[80vh] h-fit">
         <img
           @click="showRefPopup"
-          src="/image/CanclePink.svg"
+          src="/image/intro/CanclePink.svg"
           alt=""
           class="absolute -top-2 -right-2" />
         <div id="ref" class="p-[20px] overflow-y-auto h-full">
@@ -237,11 +258,21 @@ onMounted(async () => {
                 <p class="b3 font-bold">กระบวนการหาคีย์เวิร์ดในพาดหัวข่าว</p>
                 <p class="b3">
                   ทีมงานใช้เครื่องมือ
-                  <span class="underline">python library newmm-tokenizer</span>
+                  <a
+                    href="https://zenodo.org/records/8373578"
+                    target="_blank"
+                    class="underline"
+                    >python library newmm-tokenizer</a
+                  >
                   เพื่อตัดคำในพาดหัวข่าว และเครื่องมือ
-                  <span class="underline">LCS</span> (Longest Common Substring)
-                  เพื่อหาคีย์เวิร์ดที่มีความหมาย โดยการเทียบพาดหัวข่าว 2
-                  ข่าวและหาคำเหมือนกันที่ยาวที่สุด
+                  <a
+                    href="https://doi.nrct.go.th//ListDoi/listDetail?Resolve_DOI=10.14456/nuej.2022.14"
+                    target="_blank"
+                    class="underline"
+                    >LCS</a
+                  >
+                  (Longest Common Substring) เพื่อหาคีย์เวิร์ดที่มีความหมาย
+                  โดยการเทียบพาดหัวข่าว 2 ข่าวและหาคำเหมือนกันที่ยาวที่สุด
                   เมื่อได้ข้อมูลคีย์เวิร์ดครบแล้ว
                   คีย์เวิร์ดที่หาได้จะถูกเรียบเรียงและคัดเลือกอีกครั้ง
                   จากนั้นจะถูกหาความถี่ของจำนวนคำที่ปรากฏในข่าวด้วย Pandas
@@ -265,7 +296,10 @@ onMounted(async () => {
           <p class="b3 pt-[10px]">
             หากมีข้อสงสัยหรือคำแนะนำเพิ่มเติมใดๆ เกี่ยวกับงานนี้
             ทักมาหาพวกเราได้ที่
-            <a href="https://m.me/punchupworld" class="text-[#FF006B] font-bold"
+            <a
+              href="https://m.me/punchupworld"
+              target="_blank"
+              class="text-[#FF006B] font-bold"
               >m.me/punchupworld</a
             >
           </p>
@@ -295,15 +329,19 @@ onMounted(async () => {
               class="max-w-[450px] w-[90vw]" />
           </ClientOnly>
         </div>
+        <img
+          src="/image/trends/ArrowDown.svg"
+          alt="ArrowDown"
+          class="w-[20px] mx-auto mt-[10px] md:mt-[20px]" />
       </div>
       <div class="max-w-[850px] mx-auto">
-        <div id="section" class="h-screen sticky top-0 overflow-hidden">
+        <div id="section" class="h-screen sticky top-0 overflow-hidden z-0">
           <div
             class="flex flex-col items-center xl:items-start h-screen justify-center">
             <div
               id="section1"
               style="opacity: 1; transition: opacity 0.5s ease"
-              class="absolute flex justify-center items-center z-0">
+              class="absolute flex justify-center items-center z-0 pointer-events-none">
               <div
                 ref="headlineRef"
                 class="relative bg-black p-[10px] max-[375px]:w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] flex items-center"
@@ -348,8 +386,8 @@ onMounted(async () => {
                       {{ monthShortTH[item.month - 1] }}
                     </p>
                   </div>
-                  <BarAxis :isSection2="true" />
                 </div>
+                <BarAxis :isSection2="true" />
                 <div
                   class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]">
                   <p>2022</p>
@@ -358,16 +396,6 @@ onMounted(async () => {
                 <div
                   class="absolute top-0 right-[50%] w-full h-full border-r border-[#C5C4C4]"
                   style="pointer-events: none"></div>
-              </div>
-
-              <div
-                class="flex flex-wrap justify-center py-[10px] xl:max-w-[600px] mx-auto">
-                <div v-for="(item, index) in category">
-                  <div class="flex items-center gap-[5px] pr-[10px]">
-                    <div :class="item.color" class="w-[10px] h-[10px]"></div>
-                    <p class="b5">{{ item.name }}</p>
-                  </div>
-                </div>
               </div>
             </div>
             <div
@@ -418,8 +446,8 @@ onMounted(async () => {
                       </p>
                     </div>
                   </div>
-                  <BarAxis />
                 </div>
+                <BarAxis />
                 <div
                   class="b5 font-bold text-[#939393] grid grid-cols-2 justify-items-center pt-[10px]">
                   <p>2022</p>
@@ -442,6 +470,7 @@ onMounted(async () => {
             </div>
             <BarChart
               v-for="(ct, index) in category"
+              :step="step"
               :id="'section' + (index + 4)"
               :category="ct.name"
               :color="ct.color"
@@ -451,7 +480,7 @@ onMounted(async () => {
               :height="findWidthandHeight(`section${index + 4}`)" />
           </div>
         </div>
-        <div id="card" class="relative z-10 flex flex-col">
+        <div id="card" class="relative z-10 flex flex-col pointer-events-none">
           <StoryCardSet />
         </div>
       </div>

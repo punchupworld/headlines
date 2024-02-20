@@ -13,6 +13,11 @@ const quizData = ref([])
 const reference = ref(null)
 const quizSet = ref(1)
 const quiz = ref([])
+const intro = ref(null)
+
+const scrollToSelection = () => {
+  intro.value.scrollIntoView({ behavior: "smooth" })
+}
 
 const showRefPopup = () => {
   isShowRefPopup.value = !isShowRefPopup.value
@@ -28,8 +33,16 @@ const answer = computed(() => {
   })
 })
 
+const beforeAnswer = ref([])
+
 const checkAnswer = () => {
-  console.log(quiz.value)
+  beforeAnswer.value = [...quiz.value]
+  const addFieldToObject = (obj, fieldName, fieldValue) => {
+    obj[fieldName] = fieldValue
+  }
+  quiz.value.forEach((item, index) => {
+    addFieldToObject(item, "index", index + 1)
+  })
   numOfCorrect.value = quiz.value.filter((item, index) => {
     return item.name === answer.value[index].name
   }).length
@@ -49,9 +62,15 @@ const checkAnswer = () => {
       "%"
     resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
   }
+
+  quiz.value = [...quiz.value].sort((a, b) => {
+    return new Date(a.date) - new Date(b.date)
+  })
+
   isShowAnswer.value = true
   isShowContent.value = true
 }
+
 const formatDate = (inputDate) => {
   const months = [
     "ม.ค.",
@@ -78,7 +97,6 @@ const setQuiz = async () => {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
     )
-    console.log(quiz.value)
     quizSet.value++
   } else {
     quizSet.value = 1
@@ -86,12 +104,13 @@ const setQuiz = async () => {
       (item) => parseInt(item.id) === parseInt(quizSet.value)
     )
   }
-  const addFieldToObject = (obj, fieldName, fieldValue) => {
-    obj[fieldName] = fieldValue
-  }
-  addFieldToObject(quiz.value[0], "no", 1)
-  addFieldToObject(quiz.value[1], "no", 2)
-  addFieldToObject(quiz.value[2], "no", 3)
+  // const addFieldToObject = (obj, fieldName, fieldValue) => {
+  //   obj[fieldName] = fieldValue
+  // }
+  // addFieldToObject(quiz.value[0], "no", 1)
+  // addFieldToObject(quiz.value[1], "no", 2)
+  // addFieldToObject(quiz.value[2], "no", 3)
+  quiz.value = quiz.value.sort(() => Math.random() - 0.5)
 }
 const restartQuiz = async () => {
   isShowAnswer.value = false
@@ -108,7 +127,6 @@ const fetchData = async () => {
       return { id, name, link, date }
     })
     quizData.value = rows
-    console.log(quizData.value)
     setQuiz()
   } catch (error) {
     console.error("Error fetching CSV data:", error)
@@ -147,15 +165,15 @@ onMounted(() => {
     class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center">
     <div
       id="refPopup"
-      class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3"
+      class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3 text-balance"
       v-show="isShowRefPopup">
       <div
         id="popUpScroll"
         class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1">
         <img
           @click="showRefPopup"
-          src="/image/CanclePink.svg"
-          alt=""
+          src="/image/intro/CanclePink.svg"
+          alt="CanclePink"
           class="absolute -top-2 -right-2" />
         <div
           id="ref"
@@ -186,10 +204,10 @@ onMounted(() => {
             จึงทำให้เทรนด์ที่พบในงานนี้ได้รับอิทธิพลจากสำนักข่าวที่มีจำนวนข่าวเยอะเป็นพิเศษ
           </p>
           <div class="flex flex-col items-center">
-            <img src="/image/NewsAgency.svg" alt="" class="block lg:hidden" />
+            <img src="/image/intro/NewsAgency.svg" alt="NewsAgency" class="block lg:hidden" />
             <img
-              src="/image/NewsAgencyDesktop.svg"
-              alt=""
+              src="/image/intro/NewsAgencyDesktop.svg"
+              alt="NewsAgencyDesktop"
               class="hidden lg:block" />
             <div class="flex gap-[5px] py-5 content-center">
               <div>
@@ -214,11 +232,10 @@ onMounted(() => {
             หมวดข่าวจากแต่ละสำนัก
           </h2>
           <p class="b3 leading-[19.6px]">
-            สำนักข่าวแต่ละแห่งได้แบ่งประเภทข่าวไว้เป็นหมวดหมู่
-            เราได้รวบรวมและจำแนกหมวดหมู่ข่าวเหล่านี้ใหม่เป็น 9 ประเภท
-            เพื่อให้ทำการศึกษาได้สะดวกและนำเสนอข้อมูลออกมาได้ง่ายขึ้น
-            ทั้งนี้เราไม่ได้หยิบข่าวในบางหมวดหมู่มาใช้
-            เนื่องจากจำนวนข่าวมีไม่มากและไม่เกี่ยวข้องกับหมวดหมู่หลัก
+            สำนักข่าวแต่ละแห่งได้แบ่งการนำเสนอข่าวไว้เป็นหมวดหมู่ที่แตกต่างกัน
+            ทีมงานจึงทำการคัดเลือก ตัดทอน และนำมาจำแนกหมวดหมู่ใหม่เป็น 9 ประเภท
+            เพื่อการนำเสนอข้อมูลอย่างมีระบบ ทั้งนี้
+            อาจมีข่าวบางหมวดหมู่ที่ไม่ได้รวมอยู่ในการวิเคราะห์ข้อมูลครั้งนี้
           </p>
           <div class="flex justify-center gap-[5px] py-[20px]">
             <div
@@ -254,10 +271,10 @@ onMounted(() => {
             <div
               class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4">
               <div class="flex flex-col items-center">
-                <img src="/image/Thairath.svg" alt="" />
+                <img src="/image/intro/news_logo/Thairath.png" alt="Thairath"  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
-                    การเมื่อง
+                    การเมือง
                   </div>
                   <div :class="blockCategryStyle" class="bg-lightblue">
                     ในกระแส
@@ -290,10 +307,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/Today.svg" alt="" />
+                <img src="/image/intro/news_logo/TODAY.png" alt="TODAY"  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
-                    การเมื่อง
+                    การเมือง
                   </div>
                   <div :class="blockCategryStyle" class="bg-orange">
                     เศรษฐกิจ
@@ -316,10 +333,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/ThaiPBS.svg" alt="" />
+                <img src="/image/intro/news_logo/ThaiPBS.png" alt="ThaiPBS"  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
-                    การเมื่อง
+                    การเมือง
                   </div>
                   <div :class="blockCategryStyle" class="bg-lightblue">
                     สังคม
@@ -362,7 +379,7 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/Standard.svg" alt="" />
+                <img src="/image/intro/news_logo/THESTANDARD.png" alt="THESTANDARD" class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     Politics
@@ -392,10 +409,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/VOICE.svg" alt="" />
+                <img src="/image/intro/news_logo/VoiceTV.png" alt="VoiceTV" class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
-                    การเมื่อง
+                    การเมือง
                   </div>
                   <div :class="blockCategryStyle" class="bg-orange">
                     เศรษฐกิจ
@@ -417,10 +434,31 @@ onMounted(() => {
               </div>
               <div
                 class="absolute bottom-5 lg:left-1/3 left-10 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]">
-                <img src="/image/SlideIcon.svg" alt="" />
+                <img src="/image/intro/SlideIcon.svg" alt="SlideIcon" />
                 <p>เลื่อน</p>
               </div>
             </div>
+          </div>
+          <div class="border-[#C5C4C4] border-t pt-[20px] mt-[20px]">
+            <h2 class="b2 font-bold pb-[5px]">
+              วิธีที่ใช้ดึงข้อมูลจากเว็บไซต์ข่าว
+            </h2>
+            <p class="b3">
+              ข้อมูลที่ใช้ในงานมาจากการดึงข้อมูล (data scraping)
+              บนเว็บไซต์สำนักข่าวด้วยเครื่องมือ
+              <a
+                href="https://github.com/SeleniumHQ/selenium"
+                target="_blank"
+                class="underline"
+                >python library selenium</a
+              >
+              ผ่าน Google Colab ทั้งนี้
+              เว็บไซต์สำนักข่าวที่มีปริมาณข่าวค่อนข้างมากอย่างไทยรัฐออนไลน์
+              มีการใช้ API ของเว็บไซต์มาช่วยดึงข้อมูลด้วย
+              โดยข้อมูลที่ถูกดึงมาใช้ประกอบด้วย พาดหัวข่าว วันที่ลงข่าว
+              ประเภทข่าว และลิงก์ URL ของข่าว ข้อมูลดังกล่าวถูกรวมและสร้างเป็น
+              Pandas DataFrame เพื่อ export เป็นไฟล์นามสกุล CSV ตามลำดับ
+            </p>
           </div>
         </div>
       </div>
@@ -451,7 +489,7 @@ onMounted(() => {
         </div>
 
         <div class="flex gap-[2px] mx-auto px-7 items-center">
-          <img src="/image/Frame.svg" alt="" class="w-[33px]" />
+          <img src="/image/intro/Frame.svg" alt="Frame" class="w-[33px]" />
           <p class="b4">
             กดที่พาดหัวข่าวด้านล่าง แล้วลากขึ้น-ลง
             เพื่อเรียงลำดับเหตุการณ์ก่อน-หลัง
@@ -462,6 +500,7 @@ onMounted(() => {
         v-model="quiz"
         :component-data="{ name: 'fade' }"
         :sort="!isShowAnswer"
+        :disabled="isShowAnswer"
         item-key="id">
         <template #item="{ element, index }">
           <div
@@ -476,13 +515,13 @@ onMounted(() => {
             <div
               :class="
                 isShowAnswer
-                  ? element.name === answer[index].name
+                  ? beforeAnswer[index].index === answer[index].index
                     ? 'bg-[#4ADADA]'
                     : 'bg-[#FF3D00]'
                   : 'bg-[#FFF8B5]'
               "
               class="absolute -top-6 -left-2 b4 md:-left-4 md:-top-7 text-black border rounded-full w-[20px] h-[20px] md:w-[30px] md:h-[30px] text-center border-black flex items-center justify-center">
-              {{ element.no }}
+              {{ isShowAnswer ? element.index : index + 1 }}
             </div>
           </div>
         </template>
@@ -490,13 +529,15 @@ onMounted(() => {
       <div v-if="isShowAnswer" class="flex flex-col gap-[20px] pb-[40px]">
         <button
           @click="restartQuiz"
-          class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto">
-          <img src="/image/Reset.svg" alt="" />
+          class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto b3">
+          <img src="/image/intro/Reset.svg" alt="Reset" />
           เล่นอีกรอบ
         </button>
-        <button class="flex flex-col items-center mx-auto">
-          <p class="text-[16px] font-bold">เริ่มอ่าน</p>
-          <img src="/image/ArrowDown.svg" alt="" class="w-[20px]" />
+        <button
+          class="flex flex-col items-center mx-auto"
+          @click="scrollToSelection">
+          <p class="text-[16px] font-bold b2">เริ่มอ่าน</p>
+          <img src="/image/intro/ArrowDown.svg" alt="ArrowDown" class="w-[20px]" />
         </button>
       </div>
       <div v-else class="flex flex-col gap-[20px]">
@@ -512,7 +553,11 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <div id="intro" class="text-center" v-if="isShowContent">
+    <div
+      id="intro"
+      class="text-center"
+      v-if="isShowContent"
+      ref="intro">
       <div id="cover">
         <div class="hidden xl:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
@@ -523,7 +568,7 @@ onMounted(() => {
             <div>
               <div class="grid grid-cols-2">
                 <div>
-                  <img src="/image/DotBg.svg" alt="" class="h-full w-full" />
+                  <img src="/image/intro/DotBg.svg" alt="DotBg" class="h-full w-full" />
                 </div>
                 <div
                   class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]">
@@ -577,17 +622,17 @@ onMounted(() => {
             </div>
           </div>
         </div>
-        <img src="/image/Head.svg" alt="" class="w-full xl:hidden block" />
+        <img src="/image/intro/Head.svg" alt="Head" class="w-full xl:hidden block" />
       </div>
 
       <div
-        class="px-[16px] py-[40px] text-pretty space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
-        <div class="b3 space-y-[10px]">
+        class="px-[16px] xl:pt-[80px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+        <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
           <div class="flex flex-col items-center justify-center gap-[5px]">
             <p class="bg-vermillion w-fit text-white px-[10px]">
               BREAKING NEWS:
             </p>
-            <p class="b1 font-bold">
+            <p class="b1 font-bold md:pt-[10px]">
               เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
             </p>
           </div>
@@ -617,7 +662,7 @@ onMounted(() => {
             เราขอชวนคุณมาสำรวจ คอนเทนต์ ‘พาดหัวข่าว’ บนเว็บไซต์ข่าวออนไลน์ไทย
             เพื่อหาคำตอบว่า
           </p>
-          <h3 class="b2 font-bold">
+          <h3 class="b2 font-bold md:pb-[20px]">
             2 ปีมานี้ ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟังบ้าง?
           </h3>
         </div>
@@ -653,12 +698,12 @@ onMounted(() => {
             อ่านรายละเอียดเพิ่มเติม
           </button>
           <img
-            src="/image/Warning.svg"
-            alt=""
+            src="/image/intro/Warning.svg"
+            alt="Warning"
             class="absolute -top-6 right-[50%] transform translate-x-[50%]" />
         </div>
 
-        <p class="b3 font-bold px-[20px]">
+        <p class="b3 font-bold px-[20px] md:py-[20px]">
           หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา ‘พาดหัวข่าว’ ที่คุณสนใจ
         </p>
         <div class="flex flex-col lg:flex-row gap-[20px]">

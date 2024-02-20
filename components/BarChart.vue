@@ -7,7 +7,8 @@ const props = defineProps({
   totalMonthData: Array,
   height: Number,
   color: String,
-  isExplore: Boolean
+  isExplore: Boolean,
+  step: Number,
 })
 
 const monthShortTH = [
@@ -71,21 +72,79 @@ const calculateHeight = (count, maxHeigh, category, max) => {
 }
 
 const yAxis = {
-    'การเมือง' : [3000, 2500, 2000, 1500],
-    'สังคมไทย' : [2000, 1500, 1000, 500],
-    'เศรษฐกิจ/การเงิน' : [1000, 800, 600, 400],
-    'ต่างประเทศ' : [1000, 800, 600, 400],
-    'บันเทิง' : [800, 600, 400, 200],
-    'อาชญากรรม' : [700,500,300,100],
-    'กีฬา' : [400,300,200,100],
-    'วิทยาศาสตร์/เทคโนโลยี' : [200,150,100,50],
-    'สิ่งแวดล้อม' : [200,150,100,50]
+  การเมือง: [3000, 2500, 2000, 1500, 1000, 500], //top-24px
+  สังคมไทย: [2500, 2000, 1500, 1000, 500],
+  "เศรษฐกิจ/การเงิน": [1200, 1000, 800, 600, 400, 200],
+  ต่างประเทศ: [1000, 800, 600, 400, 200],
+  บันเทิง: [800, 600, 400, 200], // top 13px height 70%
+  อาชญากรรม: [700, 600, 500, 400, 300, 200, 100], //top -9px
+  กีฬา: [400, 300, 200, 100],
+  "วิทยาศาสตร์/เทคโนโลยี": [200, 150, 100, 50],
+  สิ่งแวดล้อม: [250,200, 150, 100, 50],
 }
+
+const topValue = computed(() => {
+  let width = window.innerWidth
+  if (props.step === 3) {
+    if (width <= 320) {
+      return "-top-[7.2px] h-[77%]"
+    } else {
+      return "-top-[5px] h-[77%]"
+    }
+  } else if (props.step === 4) {
+    if (width <= 320) {
+      return "-top-[20px] h-[75%]"
+    } else if (width >= 770) {
+      return "-top-[25px] h-[75%]"
+    }
+  } else if (props.step === 5) {
+    if (width <= 336) {
+      return "-top-[25px] h-[80%]"
+    } else {
+      return "-top-[27px] h-[80%]"
+    }
+  } else if (props.step === 6) {
+    return "-top-[14px] h-[75%]"
+  } else if (props.step === 7) {
+    if (width <= 320) {
+      return "-top-[0px] h-[65%]"
+    } else {
+      return "top-[9px] h-[70%]"
+    }
+  } else if(props.step === 8) {
+    if (width <= 320) {
+      return "-top-[10px] h-[75%]"
+    } else {
+      return "-top-[9px] h-[75%]"
+    }
+  } else if (props.step === 9) {
+    if (width <= 320) {
+      return "-top-[6px] h-[70%]"
+    } else {
+      return "-top-[0px] h-[70%]"
+    }
+  } else if(props.step === 10) {
+    if (width <= 320) {
+      return "top-[3px] h-[65%]"
+    } else {
+      return "top-[16px] h-[65%]"
+    }
+
+  } else if(props.step === 11){
+    if (width <= 320) {
+      return "-top-[7px] h-[70%]"
+    } else {
+      return "-top-[6px] h-[70%]"
+    }
+  }
+  else {
+    return "-top-[20px] h-[75%]"
+  }
+})
 </script>
 
 <template>
   <div
-
     class="opacity-0 absolute pointer-events-none"
     style="transition: opacity 0.5s ease">
     <p class="text-[#717070] b4 font-bold text-center pb-[10px]">
@@ -101,6 +160,7 @@ const yAxis = {
             v-for="(item, index) in storyData[category]['monthly']"
             :key="index"
             class="group flex flex-col items-center gap-2"
+            :total="item.total"
             :style="{
               width: `${90 / 24}%`,
             }"
@@ -128,20 +188,17 @@ const yAxis = {
             </p>
           </div>
         </div>
-
-        <div
-          class="z-0 absolute bottom-0 w-full h-full md:px-[10px]"
-          style="pointer-events: none">
-          <div class="flex flex-col justify-between h-full p-[6px]">
-            <div>
-              <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][0].toLocaleString() }}</p>
-            </div>
-            <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][1].toLocaleString() }}</p>
-            <p class="b6 border-b border-black border-dotted pl-[5px]">{{ yAxis[category][2].toLocaleString() }}</p>
-            <p class="b6 border-b border-black border-dotted pl-[5px]" >{{ yAxis[category][3].toLocaleString() }}</p>
-            <p></p>
-            <p></p>
-          </div>
+      </div>
+      <div
+        :class="topValue"
+        class="z-0 absolute w-full md:px-[10px]"
+        style="pointer-events: none">
+        <div class="flex flex-col justify-between h-full p-[4px]">
+          <p
+            class="b6 border-b border-black border-dotted pl-[5px]"
+            v-for="(item, i) in yAxis[category]">
+            {{ yAxis[category][i].toLocaleString() }}
+          </p>
         </div>
       </div>
       <div

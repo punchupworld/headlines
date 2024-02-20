@@ -33,7 +33,11 @@ const highlightKeyword = (headline, keyword) => {
   if (props.exploreModeSelected === "หมวดข่าว") {
     const keywordsRegex = new RegExp(
       `(${props.top10Keywords
-        .map((k) => k.keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"))
+        .map((k) =>
+          k.keyword
+            .replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")
+            .replace(/\s+/g, "\\s*")
+        )
         .join("|")})`,
       "gi"
     )
@@ -59,7 +63,7 @@ const highlightKeyword = (headline, keyword) => {
       {{ formatMonth(dataSet[sampleIndex].date) }}
     </p>
     <p
-      class="t4 font-black text-pretty p-[3px]"
+      class="t4 font-black p-[3px] break-all"
       v-html="
         highlightKeyword(dataSet[sampleIndex].headline, inputKeyword)
       "></p>

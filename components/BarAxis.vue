@@ -17,6 +17,22 @@ const findPlaceValue = (num) => {
   return placeValue
 }
 
+// const findYAxisScale = () => {
+//   let num
+//   if (props.exploreModeSelected === "หมวดข่าว") {
+//     num =
+//       props.totalDataEachCategory.find(
+//         (item) => item.category === props.categorySelected
+//       )?.max || "N/A"
+//   } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
+//     num = props.maxOfMonthly
+//   }
+
+//   let placeValue = findPlaceValue(num)
+//   console.log(num)
+//   let yAxisScale = Math.ceil(num / placeValue) * placeValue
+//   return yAxisScale
+// }
 const findYAxisScale = () => {
   let num
   if (props.exploreModeSelected === "หมวดข่าว") {
@@ -29,16 +45,134 @@ const findYAxisScale = () => {
   }
 
   let placeValue = findPlaceValue(num)
-  return Math.floor(num / placeValue) * placeValue
+  console.log(num)
+  // คำนวณ yAxisScale โดยใช้การหารและปัดขึ้นไปยังตัวเลขถัดไปที่ใหญ่กว่า
+  let yAxisScale = Math.ceil(num / placeValue) * placeValue
+  return yAxisScale
 }
+
+const yAxis = {
+  การเมือง: [3000, 2500, 2000, 1500, 1000, 500],
+  สังคมไทย: [2500, 2000, 1500, 1000, 500],
+  "เศรษฐกิจ/การเงิน": [1200, 1000, 800, 600, 400, 200],
+  ต่างประเทศ: [1000, 800, 600, 400, 200],
+  บันเทิง: [800, 600, 400, 200], 
+  อาชญากรรม: [700, 600, 500, 400, 300, 200, 100],
+  กีฬา: [400, 300, 200, 100],
+  "วิทยาศาสตร์/เทคโนโลยี": [200, 150, 100, 50],
+  สิ่งแวดล้อม: [250, 200, 150, 100, 50],
+}
+const styleValue = computed(() => {
+  let width = window.innerWidth
+  if (!props.isExplore) {
+    if (width <= 320) {
+      return "height: 80%; top: 1px"
+    } else if (width <= 375) {
+      return "height: 80%; top: 2px"
+    } else if (width <= 430) {
+      return "height: 80%; top: 6px"
+    } else if (width <= 768) {
+      return "height: 80%; top: 11px"
+    } else {
+      return "height: 80%; top: 11px"
+    }
+  } else if (props.exploreModeSelected === "หมวดข่าว") {
+    if (props.categorySelected.includes("การเมือง")) {
+      if (width <= 320) {
+        return "-top-[9px] h-[77%]"
+      } else {
+        return "-top-[10px] h-[65%]"
+      }
+    } else if (props.categorySelected.includes("สังคมไทย")) {
+      if (width <= 320) {
+        return "-top-[20px] h-[75%]"
+      } else if (width >= 770) {
+        return "-top-[23px] h-[70%]"
+      }
+    } else if (props.categorySelected.includes("เศรษฐกิจ/การเงิน")) {
+      if (width <= 336) {
+        return "-top-[24px] h-[80%]"
+      }else if(width <= 820){
+        return "-top-[31px] h-[80%]"
+      } else {
+        return "-top-[32px] h-[73%]"
+      }
+    } else if (props.categorySelected.includes("ต่างประเทศ")) {
+      if(width >= 1440){
+        return "-top-[15px] h-[65%]"
+      }else if(width <= 820){
+        return "-top-[15px] h-[70%]"
+      }else{
+        return "-top-[12px] h-[75%]"
+      }
+      
+    } else if (props.categorySelected.includes("บันเทิง")) {
+      if (width <= 320) {
+        return "-top-[0px] h-[65%]"
+      }else if(width <= 820){
+        return "-top-[6px] h-[65%]"
+      } else {
+        return "-top-[6px] h-[60%]"
+      }
+    } else if (props.categorySelected.includes("อาชญากรรม")) {
+      if (width <= 320) {
+        return "-top-[11px] h-[75%]"
+      }else if(width <= 820){
+        return "-top-[16px] h-[75%]"
+      } else {
+        return "-top-[16px] h-[70%]"
+      }
+    } else if (props.categorySelected.includes("กีฬา")) {
+      if (width <= 320) {
+        return "-top-[5px] h-[70%]"
+      }else if(width <= 820){
+        return "-top-[5px] h-[65%]"
+      }
+       else {
+        return "-top-[5px] h-[60%]"
+      }
+    } else if (props.categorySelected.includes("วิทยาศาสตร์/เทคโนโลยี")) {
+      if (width <= 320) {
+        return "top-[3px] h-[65%]"
+      } else {
+        return "-top-[2px] h-[60%]"
+      }
+    } else if (props.categorySelected.includes("สิ่งแวดล้อม")) {
+      if (width <= 320) {
+        return "-top-[8px] h-[70%]"
+      } else {
+        return "-top-[17px] h-[65%]"
+      }
+    }
+  } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
+    if(width <= 320){
+      return "h-[96%] bottom-[27px]"
+    }else{
+      return "h-[80%] top-[10px]"
+    }
+      
+  }
+})
 </script>
 
 <template>
   <div
-    class="z-0 absolute bottom-0 w-full h-full"
-    :class="isExplore ? '' : 'md:px-[10px]'"
+    class="z-0 absolute w-full"
+    :class="isExplore ? styleValue : 'md:px-[10px]'"
+    :style="styleValue"
     style="pointer-events: none">
     <div
+      :class="isExplore ? 'p-[2px]' : 'p-[6px]'"
+      class="flex flex-col justify-between h-full p-[4px]"
+      v-if="exploreModeSelected === 'หมวดข่าว'">
+      <p
+        class="b6 border-b border-black border-dotted pl-[5px]"
+        v-for="(item, i) in yAxis[categorySelected]">
+        {{ yAxis[categorySelected][i].toLocaleString() }}
+      </p>
+    </div>
+    <div
+      v-if="exploreModeSelected === 'คีย์เวิร์ด' || !isExplore"
       class="flex flex-col justify-between h-full"
       :class="isExplore ? 'p-[2px]' : 'p-[6px]'">
       <div class="space-y-2">
@@ -78,7 +212,7 @@ const findYAxisScale = () => {
         <span v-else>{{ (2000).toLocaleString() }}</span>
       </p>
       <p v-if="isExplore"></p>
-      <p v-if="isExplore"></p>
+      
       <p></p>
     </div>
   </div>

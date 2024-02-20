@@ -3,7 +3,7 @@ import StoryCard from "/components/StoryCard.vue"
 </script>
 
 <template>
-  <StoryCard id="card1">
+  <StoryCard id="card1" class="z-20">
     <p class="b3">
       ในช่วง 2 ปีที่ผ่านมา<br />
       สื่อออนไลน์กระแสหลัก*ผลิตข่าวให้คนไทยเห็นทั้งหมด
@@ -274,7 +274,7 @@ import StoryCard from "/components/StoryCard.vue"
         <p class="b4 text-[#717070]">
           สัดส่วนข่าวแต่ละหมวดต่อจำนวนข่าวทั้งหมดในแต่ละปี
         </p>
-        <img src="/image/trends/economyChart.svg" alt="" />
+        <img src="/image/trends/economyChart.svg" alt="" class="mx-auto"/>
       </div>
       <div class="b3 py-[10px]">
         <p class="font-bold">Top</p>
@@ -672,7 +672,7 @@ import StoryCard from "/components/StoryCard.vue"
       </div>
       <div class="b3 py-[10px] space-y-[10px]">
         <p>
-          แนมโน้มจำนวนข่าวสิ่งแวดล้อมที่เพิ่มขึ้น
+          แนวโน้มจำนวนข่าวสิ่งแวดล้อมที่เพิ่มขึ้น
           อาจสะท้อนการเพิ่มขึ้นของข่าวร้ายมากกว่าข่าวดี
           เพราะคุณจะพบคำเกี่ยวกับภัยธรรมชาติ
           หรืออุบัติภัยที่มนุษย์ก่อในข่าวหมวดนี้อยู่บ่อยๆ เช่น
