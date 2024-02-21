@@ -325,7 +325,7 @@ const closeModal = () => {
             <div
               id="section1"
               style="opacity: 1; transition: opacity 0.5s ease"
-              class="absolute flex justify-center items-center z-0 pointer-events-none">
+              class="absolute flex justify-center items-center pointer-events-none">
               <div
                 ref="headlineRef"
                 class="relative bg-black p-[10px] max-[375px]:w-[90vw] max-w-[600px] xl:pr-[60px] xl:pl-[20px] flex items-center"

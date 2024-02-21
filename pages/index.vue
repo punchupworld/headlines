@@ -559,6 +559,7 @@ const closeModal = () => {
       >
         <template #item="{ element, index }">
           <div
+            :class="isShowAnswer ? 'pointer-events-none' : ''"
             class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] md:w-[650px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]"
           >
             <div>

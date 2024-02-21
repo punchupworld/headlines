@@ -80,64 +80,62 @@ const yAxis = {
   อาชญากรรม: [700, 600, 500, 400, 300, 200, 100], //top -9px
   กีฬา: [400, 300, 200, 100],
   "วิทยาศาสตร์/เทคโนโลยี": [200, 150, 100, 50],
-  สิ่งแวดล้อม: [250,200, 150, 100, 50],
+  สิ่งแวดล้อม: [250, 200, 150, 100, 50],
 }
 
 const topValue = computed(() => {
   let width = window.innerWidth
   if (props.step === 3) {
-    if (width <= 320) {
+    if (width <= 320 || width <= 768) {
       return "-top-[7.2px] h-[77%]"
     } else {
-      return "-top-[5px] h-[77%]"
+      return "-top-[7px] h-[77%]"
     }
   } else if (props.step === 4) {
-    if (width <= 320) {
+    if (width <= 320 || width <= 768) {
       return "-top-[20px] h-[75%]"
-    } else if (width >= 770) {
+    } else if (width >= 768) {
       return "-top-[25px] h-[75%]"
     }
   } else if (props.step === 5) {
-    if (width <= 336) {
+    if (width <= 336 || width <= 768) {
       return "-top-[25px] h-[80%]"
     } else {
-      return "-top-[27px] h-[80%]"
+      return "-top-[37px] h-[80%]"
     }
   } else if (props.step === 6) {
-    return "-top-[14px] h-[75%]"
+    return "-top-[12px] h-[75%]"
   } else if (props.step === 7) {
-    if (width <= 320) {
-      return "-top-[0px] h-[65%]"
+    if (width <= 320 || width <= 768) {
+      return "top-[2px] h-[65%]"
     } else {
       return "top-[9px] h-[70%]"
     }
-  } else if(props.step === 8) {
-    if (width <= 320) {
+  } else if (props.step === 8) {
+    if (width <= 320 || width <= 768) {
       return "-top-[10px] h-[75%]"
     } else {
       return "-top-[9px] h-[75%]"
     }
   } else if (props.step === 9) {
-    if (width <= 320) {
+    if (width <= 320 || width <= 768) {
       return "-top-[6px] h-[70%]"
     } else {
       return "-top-[0px] h-[70%]"
     }
-  } else if(props.step === 10) {
-    if (width <= 320) {
-      return "top-[3px] h-[65%]"
+  } else if (props.step === 10) {
+    if (width <= 320 || width <= 768) {
+      return "top-[5px] h-[65%]"
     } else {
       return "top-[16px] h-[65%]"
     }
-
-  } else if(props.step === 11){
-    if (width <= 320) {
+  } else if (props.step === 11) {
+    if (width <= 320 || width <= 768) {
       return "-top-[7px] h-[70%]"
     } else {
-      return "-top-[6px] h-[70%]"
+      return "-top-[4px] h-[70%]"
     }
-  }
-  else {
+  } else {
     return "-top-[20px] h-[75%]"
   }
 })

@@ -35,6 +35,7 @@ const findPlaceValue = (num) => {
 // }
 const findYAxisScale = () => {
   let num
+  let yAxisScale
   if (props.exploreModeSelected === "หมวดข่าว") {
     num =
       props.totalDataEachCategory.find(
@@ -45,9 +46,14 @@ const findYAxisScale = () => {
   }
 
   let placeValue = findPlaceValue(num)
-  console.log(num)
-  // คำนวณ yAxisScale โดยใช้การหารและปัดขึ้นไปยังตัวเลขถัดไปที่ใหญ่กว่า
-  let yAxisScale = Math.ceil(num / placeValue) * placeValue
+  console.log('num',num/placeValue)
+  console.log('num minus',Math.floor(num/placeValue))
+  console.log('result',num/placeValue-Math.floor(num/placeValue))
+  if(((num/placeValue)-Math.floor(num/placeValue)) > 0.5){
+    yAxisScale = Math.ceil(num / placeValue) * placeValue
+  }else if(((num/placeValue)-Math.floor(num/placeValue)) <= 0.5){
+    yAxisScale = ((Math.floor(num / placeValue))+0.5) * placeValue
+  }
   return yAxisScale
 }
 
@@ -78,77 +84,87 @@ const styleValue = computed(() => {
     }
   } else if (props.exploreModeSelected === "หมวดข่าว") {
     if (props.categorySelected.includes("การเมือง")) {
-      if (width <= 320) {
+      if (width <= 320 || width < 768) {
         return "-top-[9px] h-[77%]"
-      } else {
-        return "-top-[10px] h-[65%]"
+      } 
+      else if(width >= 768 && width < 1024){
+        return "-top-[14px] h-[77%]"
+      }
+      else {
+        return "-top-[11px] h-[65%]"
       }
     } else if (props.categorySelected.includes("สังคมไทย")) {
-      if (width <= 320) {
-        return "-top-[20px] h-[75%]"
-      } else if (width >= 770) {
-        return "-top-[23px] h-[70%]"
+      if (width <= 320||width<768) {
+        return "-top-[19px] h-[75%]"
+      } else if (width >= 768 && width < 1024) {
+        return "-top-[21px] h-[70%]"
+      }else{
+        return "-top-[27px] h-[70%]"
       }
     } else if (props.categorySelected.includes("เศรษฐกิจ/การเงิน")) {
-      if (width <= 336) {
+      if (width <= 336 || width < 768) {
         return "-top-[24px] h-[80%]"
-      }else if(width <= 820){
+      }else if(width >= 768&& width < 1024){
         return "-top-[31px] h-[80%]"
       } else {
-        return "-top-[32px] h-[73%]"
+        return "-top-[31px] h-[73%]"
       }
     } else if (props.categorySelected.includes("ต่างประเทศ")) {
-      if(width >= 1440){
-        return "-top-[15px] h-[65%]"
-      }else if(width <= 820){
-        return "-top-[15px] h-[70%]"
+      if(width <= 320||width<768){
+        return "-top-[7.5px] h-[70%]"
+      }else if(width >= 768&& width < 1024){
+        return "-top-[14px] h-[70%]"
       }else{
-        return "-top-[12px] h-[75%]"
+        return "-top-[15px] h-[65%]"
       }
       
     } else if (props.categorySelected.includes("บันเทิง")) {
-      if (width <= 320) {
-        return "-top-[0px] h-[65%]"
-      }else if(width <= 820){
+      if (width <= 320||width<768) {
+        return "-top-[1px] h-[67%]"
+      }else if(width >= 768&& width < 1024){
         return "-top-[6px] h-[65%]"
       } else {
         return "-top-[6px] h-[60%]"
       }
     } else if (props.categorySelected.includes("อาชญากรรม")) {
-      if (width <= 320) {
-        return "-top-[11px] h-[75%]"
-      }else if(width <= 820){
-        return "-top-[16px] h-[75%]"
+      if (width <= 320||width<768) {
+        return "-top-[13px] h-[80%]"
+      }else if(width >= 768&& width < 1024){
+        return "-top-[17px] h-[77%]"
       } else {
         return "-top-[16px] h-[70%]"
       }
     } else if (props.categorySelected.includes("กีฬา")) {
-      if (width <= 320) {
-        return "-top-[5px] h-[70%]"
-      }else if(width <= 820){
-        return "-top-[5px] h-[65%]"
+      if (width <= 320||width<768) {
+        return "-top-[7px] h-[70%]"
+      }else if(width >= 768&& width < 1024){
+        return "-top-[12px] h-[69%]"
       }
        else {
-        return "-top-[5px] h-[60%]"
+        return "-top-[7px] h-[60%]"
       }
     } else if (props.categorySelected.includes("วิทยาศาสตร์/เทคโนโลยี")) {
-      if (width <= 320) {
+      if (width <= 320||width<768) {
         return "top-[3px] h-[65%]"
-      } else {
-        return "-top-[2px] h-[60%]"
+      } else if(width >= 768&& width < 1024){
+        return "-top-[3px] h-[64%]"
+      }else {
+        return "-top-[3px] h-[60%]"
       }
     } else if (props.categorySelected.includes("สิ่งแวดล้อม")) {
-      if (width <= 320) {
-        return "-top-[8px] h-[70%]"
-      } else {
-        return "-top-[17px] h-[65%]"
+      if (width <= 320||width<768) {
+        return "-top-[12px] h-[74%]"
+      } else if(width >= 768&& width < 1024){
+        return "-top-[16px] h-[72%]"
+      }else {
+        return "-top-[19px] h-[67%]"
       }
     }
   } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
     if(width <= 320){
       return "h-[96%] bottom-[27px]"
     }else{
-      return "h-[80%] top-[10px]"
+      return "h-[85%] -top-[25px]"
     }
       
   }
