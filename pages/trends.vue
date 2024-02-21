@@ -244,8 +244,8 @@ onMounted(async () => {
         class="relative bg-white w-[90vw] max-w-[900px] max-h-[80vh] h-fit">
         <img
           @click="showRefPopup"
-          src="/image/intro/CanclePink.svg"
-          alt=""
+          src="/image/CanclePink.svg"
+          alt="CanclePinkIcon"
           class="absolute -top-2 -right-2" />
         <div id="ref" class="p-[20px] overflow-y-auto h-full">
           <h1 class="b1 font-bold" ref="reference">

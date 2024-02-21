@@ -104,12 +104,6 @@ const setQuiz = async () => {
       (item) => parseInt(item.id) === parseInt(quizSet.value)
     )
   }
-  // const addFieldToObject = (obj, fieldName, fieldValue) => {
-  //   obj[fieldName] = fieldValue
-  // }
-  // addFieldToObject(quiz.value[0], "no", 1)
-  // addFieldToObject(quiz.value[1], "no", 2)
-  // addFieldToObject(quiz.value[2], "no", 3)
   quiz.value = quiz.value.sort(() => Math.random() - 0.5)
 }
 const restartQuiz = async () => {
@@ -172,7 +166,7 @@ onMounted(() => {
         class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1">
         <img
           @click="showRefPopup"
-          src="/image/intro/CanclePink.svg"
+          src="/image/CanclePink.svg"
           alt="CanclePink"
           class="absolute -top-2 -right-2" />
         <div
@@ -204,7 +198,10 @@ onMounted(() => {
             จึงทำให้เทรนด์ที่พบในงานนี้ได้รับอิทธิพลจากสำนักข่าวที่มีจำนวนข่าวเยอะเป็นพิเศษ
           </p>
           <div class="flex flex-col items-center">
-            <img src="/image/intro/NewsAgency.svg" alt="NewsAgency" class="block lg:hidden" />
+            <img
+              src="/image/intro/NewsAgency.svg"
+              alt="NewsAgency"
+              class="block lg:hidden" />
             <img
               src="/image/intro/NewsAgencyDesktop.svg"
               alt="NewsAgencyDesktop"
@@ -271,7 +268,10 @@ onMounted(() => {
             <div
               class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4">
               <div class="flex flex-col items-center">
-                <img src="/image/intro/news_logo/Thairath.png" alt="Thairath"  class="w-[50px]" />
+                <img
+                  src="/image/intro/news_logo/Thairath.png"
+                  alt="Thairath"
+                  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -307,7 +307,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/intro/news_logo/TODAY.png" alt="TODAY"  class="w-[50px]" />
+                <img
+                  src="/image/intro/news_logo/TODAY.png"
+                  alt="TODAY"
+                  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -333,7 +336,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/intro/news_logo/ThaiPBS.png" alt="ThaiPBS"  class="w-[50px]" />
+                <img
+                  src="/image/intro/news_logo/ThaiPBS.png"
+                  alt="ThaiPBS"
+                  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -379,7 +385,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/intro/news_logo/THESTANDARD.png" alt="THESTANDARD" class="w-[50px]" />
+                <img
+                  src="/image/intro/news_logo/THESTANDARD.png"
+                  alt="THESTANDARD"
+                  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     Politics
@@ -409,7 +418,10 @@ onMounted(() => {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <img src="/image/intro/news_logo/VoiceTV.png" alt="VoiceTV" class="w-[50px]" />
+                <img
+                  src="/image/intro/news_logo/VoiceTV.png"
+                  alt="VoiceTV"
+                  class="w-[50px]" />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -530,14 +542,17 @@ onMounted(() => {
         <button
           @click="restartQuiz"
           class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto b3">
-          <img src="/image/intro/Reset.svg" alt="Reset" />
+          <img src="/image/Reset.svg" alt="Reset" />
           เล่นอีกรอบ
         </button>
         <button
           class="flex flex-col items-center mx-auto"
           @click="scrollToSelection">
           <p class="text-[16px] font-bold b2">เริ่มอ่าน</p>
-          <img src="/image/intro/ArrowDown.svg" alt="ArrowDown" class="w-[20px]" />
+          <img
+            src="/image/intro/ArrowDown.svg"
+            alt="ArrowDown"
+            class="w-[20px]" />
         </button>
       </div>
       <div v-else class="flex flex-col gap-[20px]">
@@ -553,11 +568,7 @@ onMounted(() => {
         </button>
       </div>
     </div>
-    <div
-      id="intro"
-      class="text-center"
-      v-if="isShowContent"
-      ref="intro">
+    <div id="intro" class="text-center" v-if="isShowContent" ref="intro">
       <div id="cover">
         <div class="hidden xl:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
@@ -568,7 +579,10 @@ onMounted(() => {
             <div>
               <div class="grid grid-cols-2">
                 <div>
-                  <img src="/image/intro/DotBg.svg" alt="DotBg" class="h-full w-full" />
+                  <img
+                    src="/image/intro/DotBg.svg"
+                    alt="DotBg"
+                    class="h-full w-full" />
                 </div>
                 <div
                   class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]">
@@ -621,12 +635,108 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          <div
+            class="px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+            <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
+              <div class="flex flex-col items-center justify-center gap-[5px]">
+                <p class="bg-vermillion w-fit text-white px-[10px]">
+                  BREAKING NEWS:
+                </p>
+                <p class="b1 font-bold md:pt-[10px]">
+                  เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
+                </p>
+              </div>
+
+              <p>
+                รายงานข่าวของ Reuters Institute Digital News Report 2023
+                ชี้คนไทยเสพข่าวจากสื่อข่าวออนไลน์มากเป็นอันดับหนึ่ง
+                (รวมถึงข่าวใน Social Media) ผลลัพธ์จากแบบสอบถามในงานศึกษาพบว่า
+              </p>
+              <p class="text-[#5773DC] font-bold">
+                88%
+                ของผู้ตอบแบบสอบถามให้ความเชื่อมั่นและบริโภคข่าวจากสื่อข่าวออนไลน์
+              </p>
+              <p>ในขณะที่ 50% ของผู้ตอบแบบสอบถาม บริโภคข่าวจากสื่อโทรทัศน์</p>
+
+              <ClientOnly>
+                <Vue3Lottie
+                  :animationData="lottie_intro"
+                  class="max-w-[450px]" />
+              </ClientOnly>
+              <p>
+                ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
+                เป็นบทนำในการเล่าเรื่อง ที่ล้วนต้องสั้นกระชับ
+                และเกริ่นใจความสำคัญของคอนเทนต์ข่าวได้แทบครบถ้วน
+              </p>
+              <p>
+                เมื่อ
+                <span class="text-[#5773DC]">#ชีวิตติดคอนเทนต์</span>
+                เราขอชวนคุณมาสำรวจ คอนเทนต์ ‘พาดหัวข่าว’
+                บนเว็บไซต์ข่าวออนไลน์ไทย เพื่อหาคำตอบว่า
+              </p>
+              <h3 class="b2 font-bold md:pb-[20px]">
+                2 ปีมานี้ ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟังบ้าง?
+              </h3>
+            </div>
+            <div
+              class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]">
+              <p class="b3 font-bold text-[#717070]">
+                ที่มาและข้อจำกัดของข้อมูล
+              </p>
+              <p class="b4">
+                ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
+                แต่เลือกมา 5 สำนักข่าว จากทั้งหมด 16 สำนักข่าว
+                จากการจัดอันดับเว็บไซต์ข่าวที่ถูกเข้าถึงมากที่สุดในไทยโดย
+                Reuters Institute for the Study of Journalism ในปี 2023
+                ประกอบด้วย
+              </p>
+              <div
+                class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto">
+                <ol
+                  class="b4 font-bold list-decimal text-start flex flex-col items-start">
+                  <li>ไทยรัฐ ออนไลน์</li>
+                  <li>The Standard</li>
+                  <li>Thai PBS</li>
+                  <li>Voice TV</li>
+                  <li>WorkpointTODAY</li>
+                </ol>
+                <div class="b4 flex flex-col items-end">
+                  <p>55.8 %</p>
+                  <p>21.1 %</p>
+                  <p>12.3 %</p>
+                  <p>7.7 %</p>
+                  <p>3.0 %</p>
+                </div>
+              </div>
+              <button
+                @click="showRefPopup"
+                class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]">
+                อ่านรายละเอียดเพิ่มเติม
+              </button>
+              <img
+                src="/image/intro/Warning.svg"
+                alt="Warning"
+                class="absolute -top-6 right-[50%] transform translate-x-[50%]" />
+            </div>
+
+            <p class="b3 font-bold px-[20px] md:py-[20px]">
+              หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา ‘พาดหัวข่าว’ ที่คุณสนใจ
+            </p>
+            <div class="flex flex-col lg:flex-row gap-[20px]">
+              <SectionBtn link="/trends" />
+              <SectionBtn link="/lifecycle" />
+            </div>
+            <Share :hasMsgerLink="true" />
+          </div>
         </div>
-        <img src="/image/intro/Head.svg" alt="Head" class="w-full xl:hidden block" />
+        <img
+          src="/image/intro/Head.svg"
+          alt="Head"
+          class="w-full xl:hidden block" />
       </div>
 
       <div
-        class="px-[16px] xl:pt-[80px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+        class="xl:hidden block px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
         <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
           <div class="flex flex-col items-center justify-center gap-[5px]">
             <p class="bg-vermillion w-fit text-white px-[10px]">

@@ -230,6 +230,9 @@ const getCategoryBorderColor = (category) => {
 }
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
+  if (count === 0) {
+    return 0
+  }
   const totalHeight = (total * maxHeigh) / max
   const eachHeight = (count * totalHeight) / total
   return Math.ceil(eachHeight)
@@ -386,6 +389,8 @@ const selectSuggestion = (selectedValue) => {
 }
 const searchKeyword = () => {
   dataForKW.value = keywords.value[inputKeyword.value]
+
+  console.log("dataForKW", dataForKW.value)
   showSuggestions.value = false
   if (dataForKW.value) {
     beforeKeyword.value = inputKeyword.value
@@ -468,7 +473,7 @@ onMounted(async () => {
           <div class="flex border-b border-[#939393] w-full">
             <img
               src="/image/trends/Search.svg"
-              alt=""
+              alt="SearchIcon"
               class="w-[16px] m-[5px]" />
             <input
               autocomplete="off"
@@ -487,7 +492,7 @@ onMounted(async () => {
 
           <img
             src="/image/trends/Close.svg"
-            alt=""
+            alt="CloseIcon"
             class="w-[16px] cursor-pointer border-b border-[#939393]"
             @click="clearInput"
             v-if="!isInputFocused" />
@@ -542,7 +547,7 @@ onMounted(async () => {
             <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
           </div>
           <div class="flex items-center justify-end">
-            <img src="/image/trends/Click.svg" alt="" class="w-[20px]" />
+            <img src="/image/trends/Click.svg" alt="ClickIcon" class="w-[20px]" />
             <p class="b5" v-if="exploreModeSelected === 'หมวดข่าว'">
               คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน
             </p>
@@ -602,6 +607,7 @@ onMounted(async () => {
                     class="cursor-pointer relative flex gap-[2px] w-[90vw] md:px-[9vw] justify-center">
                     <div
                       v-for="(item, itemIndex) in dataForKW.montly"
+                      :total="item.total"
                       class="flex flex-col cursor-pointer relative justify-end"
                       :style="{
                         width: `${
@@ -615,6 +621,7 @@ onMounted(async () => {
                           dataForKW.categories_total
                         ).reverse()"
                         :class="getCategoryColorClass(ct)"
+                        :no="item[ct]"
                         :style="{
                           height: `${calculateHeightPerCategory(
                             item.total,
@@ -687,7 +694,7 @@ onMounted(async () => {
               <button
                 @click="handleExploreMounthYear('prev')"
                 class="cursor-pointer">
-                <img src="/image/trends/PreviousBtn.svg" alt="" />
+                <img src="/image/trends/PreviousBtn.svg" alt="PreviousBtn" />
               </button>
               <p class="b3 font-bold">
                 {{ fullMonthAndYear }}
@@ -695,7 +702,7 @@ onMounted(async () => {
               <button
                 @click="handleExploreMounthYear('next')"
                 class="cursor-pointer">
-                <img src="/image/trends/NextBtn.svg" alt="" />
+                <img src="/image/trends/NextBtn.svg" alt="NextBtn" />
               </button>
             </div>
             <p class="b3 text-center py-[5px]">
@@ -766,7 +773,7 @@ onMounted(async () => {
             :inputKeyword="inputKeyword" />
           <button
             class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]">
-            <img src="/image/intro/Reset.svg" alt="" />
+            <img src="/image/Reset.svg" alt="Reset" />
             <p @click="handleNewSample">สุ่มตัวอย่างเพิ่ม</p>
           </button>
           <p class="b5 text-[#717070] text-center pt-[15px]">
