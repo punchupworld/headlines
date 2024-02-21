@@ -1,5 +1,7 @@
-<script setup>
+<script setup lang="ts">
+import { ref, toRefs } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
+import { useScroll } from "@vueuse/core";
 
 const isShowDetailsPopup = ref(false);
 const newsDetailsList = ref([]);
@@ -14,6 +16,10 @@ const selectedTypeOfNewsEn = ref("total");
 const newsName = ref("");
 const currentDate = ref("");
 const isShowScroll = ref(false);
+
+const el = ref<HTMLElement | null>(null);
+const { x, y, isScrolling, arrivedState, directions } = useScroll(el);
+const { left, right, top, bottom } = toRefs(arrivedState);
 
 const news_type_list = ref([
   "การเมือง",
@@ -94,7 +100,6 @@ const fetchData = async () => {
   try {
     const response = await fetch("/data/lifecycle/total_news_list.json");
     const csvText = await response.json();
-    // console.log(csvText);
 
     newsDetailsList.value = csvText;
   } catch (error) {
@@ -218,7 +223,7 @@ function setOpacity(total) {
   else if (selectedTypeOfNews.value == "สิ่งแวดล้อม") rgb = "155,185,90";
 
   if (total == maxOfTotalNews.value) x = "rgba(" + rgb + ",1)";
-  else if (total == 1) x = "rgba(" + rgb + ",0.2)";
+  // else if (total == 1) x = "rgba(" + rgb + ",0.2)";
   else x = "rgba(" + rgb + "," + total / maxOfTotalNews.value + ")";
 
   return x;
@@ -330,7 +335,7 @@ onMounted(() => {
 
     <div class="relative">
       <div
-        class="px-[16px] lg:px-[50px] overflow-x-auto cursor-grab relative"
+        class="px-[16px] lg:px-[50px] overflow-x-scroll cursor-grab relative"
         id="news-list"
       >
         <div class="py-5">
@@ -447,38 +452,46 @@ onMounted(() => {
             </div>
           </div>
 
-          <div
-            class="flex pb-3 overflow-x-auto"
-            id="heatmap-wrapper"
-            v-if="newsDataHeatmap != null"
-          >
+          <div class="relative">
             <div
-              v-for="item in newsDataHeatmap.list"
-              class="heatmap-bar"
-              :date="item.date"
-              :total="item[selectedTypeOfNewsEn]"
-              :class="{
-                'pointer-events-none': item[selectedTypeOfNewsEn] == 0,
-                selected: currentDate == item.date,
-              }"
-              :style="{
-                backgroundColor: setOpacity(item[selectedTypeOfNewsEn]),
-              }"
-              @click="setCurrentDate(item.date)"
-            ></div>
-          </div>
+              ref="el"
+              class="flex overflow-x-scroll"
+              id="heatmap-wrapper"
+              v-if="newsDataHeatmap != null"
+            >
+              <div
+                v-for="item in newsDataHeatmap.list"
+                class="heatmap-bar"
+                :date="item.date"
+                :total="item[selectedTypeOfNewsEn]"
+                :class="{
+                  'pointer-events-none': item[selectedTypeOfNewsEn] == 0,
+                  selected: currentDate == item.date,
+                }"
+                :style="{
+                  backgroundColor: setOpacity(item[selectedTypeOfNewsEn]),
+                }"
+                @click="setCurrentDate(item.date)"
+              ></div>
+            </div>
 
-          <div class="flex justify-end items-center" v-if="isShowScroll">
-            <p class="b5 text-right pr-1">เลื่อน</p>
-            <img src="/image/lifecycle/drag.svg" alt="" class="w-[12px]" />
+            <div
+              class="flex justify-end items-center pointer-events-none absolute right-0 top-0 bottom-0 scroll-box"
+              v-if="!right"
+            >
+              <p class="b5 text-right pr-1">เลื่อน</p>
+              <img src="/image/lifecycle/drag.svg" alt="" class="w-[12px]" />
+            </div>
           </div>
 
           <RandomNews
+            class="pt-3"
             :isInStorytelling="false"
             :hasSelectDate="true"
             :news="newsName"
             :current_date="currentDate"
             :date_list="newsDateHeatmapList"
+            :typeNews="selectedTypeOfNews"
             @changeDate="setCurrentDate"
           />
         </div>
@@ -516,5 +529,13 @@ onMounted(() => {
 
 option:checked {
   font-weight: bold;
+}
+
+.scroll-box {
+  background: linear-gradient(
+    270deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 104.35%
+  );
 }
 </style>

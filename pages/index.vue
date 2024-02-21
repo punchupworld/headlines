@@ -1,76 +1,76 @@
 <script setup>
-import draggable from "vuedraggable"
-import { Vue3Lottie } from "vue3-lottie"
-import lottie_intro from "public/lottie/lottie-0.json"
-import { vOnClickOutside } from "@vueuse/components"
-const isShowAnswer = ref(false)
-const resultTextHead = ref("")
-const resultTextDesc = ref()
-const numOfCorrect = ref(0)
-const isShowContent = ref(false)
-const isShowQuiz = ref(true)
-const isShowRefPopup = ref(false)
-const quizData = ref([])
-const reference = ref(null)
-const quizSet = ref(1)
-const quiz = ref([])
-const intro = ref(null)
+import draggable from "vuedraggable";
+import { Vue3Lottie } from "vue3-lottie";
+import lottie_intro from "public/lottie/lottie-0.json";
+import { vOnClickOutside } from "@vueuse/components";
+const isShowAnswer = ref(false);
+const resultTextHead = ref("");
+const resultTextDesc = ref();
+const numOfCorrect = ref(0);
+const isShowContent = ref(false);
+const isShowQuiz = ref(true);
+const isShowRefPopup = ref(false);
+const quizData = ref([]);
+const reference = ref(null);
+const quizSet = ref(1);
+const quiz = ref([]);
+const intro = ref(null);
 
 const scrollToSelection = () => {
-  intro.value.scrollIntoView({ behavior: "smooth" })
-}
+  intro.value.scrollIntoView({ behavior: "smooth" });
+};
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 const showContent = () => {
-  isShowContent.value = true
-  isShowQuiz.value = false
-}
+  isShowContent.value = true;
+  isShowQuiz.value = false;
+};
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date)
-  })
-})
+    return new Date(a.date) - new Date(b.date);
+  });
+});
 
-const beforeAnswer = ref([])
+const beforeAnswer = ref([]);
 
 const checkAnswer = () => {
-  beforeAnswer.value = [...quiz.value]
+  beforeAnswer.value = [...quiz.value];
   const addFieldToObject = (obj, fieldName, fieldValue) => {
-    obj[fieldName] = fieldValue
-  }
+    obj[fieldName] = fieldValue;
+  };
   quiz.value.forEach((item, index) => {
-    addFieldToObject(item, "index", index + 1)
-  })
+    addFieldToObject(item, "index", index + 1);
+  });
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name
-  }).length
+    return item.name === answer.value[index].name;
+  }).length;
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%"
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
+      "%";
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+      "%";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   }
 
   quiz.value = [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date)
-  })
+    return new Date(a.date) - new Date(b.date);
+  });
 
-  isShowAnswer.value = true
-  isShowContent.value = true
-}
+  isShowAnswer.value = true;
+  isShowContent.value = true;
+};
 
 const formatDate = (inputDate) => {
   const months = [
@@ -86,49 +86,49 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ]
-  const dateObject = new Date(inputDate)
-  const day = dateObject.getDate()
-  const monthIndex = dateObject.getMonth()
-  const year = dateObject.getFullYear() % 100
-  return `${day} ${months[monthIndex]} ${year}`
-}
+  ];
+  const dateObject = new Date(inputDate);
+  const day = dateObject.getDate();
+  const monthIndex = dateObject.getMonth();
+  const year = dateObject.getFullYear() % 100;
+  return `${day} ${months[monthIndex]} ${year}`;
+};
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
-    quizSet.value++
+    );
+    quizSet.value++;
   } else {
-    quizSet.value = 1
+    quizSet.value = 1;
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
+    );
   }
-  quiz.value = quiz.value.sort(() => Math.random() - 0.5)
-}
+  quiz.value = quiz.value.sort(() => Math.random() - 0.5);
+};
 const restartQuiz = async () => {
-  isShowAnswer.value = false
-  isShowContent.value = false
-  await setQuiz()
-}
+  isShowAnswer.value = false;
+  isShowContent.value = false;
+  await setQuiz();
+};
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv")
-    const csvText = await response.text()
+    const response = await fetch("/data/quiz.csv");
+    const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
-      const [id, name, link, date] = line.split(",")
-      return { id, name, link, date }
-    })
-    quizData.value = rows
-    setQuiz()
+      const [id, name, link, date] = line.split(",");
+      return { id, name, link, date };
+    });
+    quizData.value = rows;
+    setQuiz();
   } catch (error) {
-    console.error("Error fetching CSV data:", error)
+    console.error("Error fetching CSV data:", error);
   }
-}
+};
 
-const bgLoopIndex = ref(0)
+const bgLoopIndex = ref(0);
 const bgColor = [
   "bg-vermillion",
   "bg-lightblue",
@@ -139,45 +139,58 @@ const bgColor = [
   "bg-purple",
   "bg-blue",
   "bg-green",
-]
+];
 const startLoop = () => {
   setInterval(() => {
-    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length
-  }, 1000)
-}
+    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length;
+  }, 1000);
+};
 
 const blockCategryStyle =
-  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center"
+  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center";
+
+const website = useWebsiteStore();
+
 onMounted(() => {
-  fetchData()
-  startLoop()
-  quizSet.value = 1
-})
+  fetchData();
+  startLoop();
+  quizSet.value = 1;
+
+  if (website.answer) {
+    isShowQuiz.value = false;
+    isShowContent.value = true;
+  }
+});
 
 const closeModal = () => {
-  isShowRefPopup.value = false
-}
+  isShowRefPopup.value = false;
+};
 </script>
 
 <template>
   <div
-    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center">
+    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
+  >
     <div
       id="refPopup"
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3 text-balance"
-      v-show="isShowRefPopup">
+      v-show="isShowRefPopup"
+    >
       <div
         v-on-click-outside="closeModal"
         id="popUpScroll"
-        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1">
+        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1"
+      >
         <img
           @click="showRefPopup"
           src="/image/CanclePink.svg"
           alt="CanclePink"
-          class="absolute -top-2 -right-2 cursor-pointer" />
+          class="absolute -top-2 -right-2 cursor-pointer"
+        />
         <div
           id="ref"
-          class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full">
+          class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full"
+        >
           <div class="pb-5">
             <h1 class="h5 font-bold pb-[20px]" ref="reference">
               ที่มาและข้อจำกัดของข้อมูล
@@ -207,11 +220,13 @@ const closeModal = () => {
             <img
               src="/image/intro/NewsAgency.svg"
               alt="NewsAgency"
-              class="block lg:hidden" />
+              class="block lg:hidden"
+            />
             <img
               src="/image/intro/NewsAgencyDesktop.svg"
               alt="NewsAgencyDesktop"
-              class="hidden lg:block" />
+              class="hidden lg:block"
+            />
             <div class="flex gap-[5px] py-5 content-center">
               <div>
                 <ol class="b4 font-bold list-decimal text-start">
@@ -242,7 +257,8 @@ const closeModal = () => {
           </p>
           <div class="flex justify-center gap-[5px] py-[20px]">
             <div
-              class="flex flex-col items-center font-bold border border-r-black border-white pr-[5px] b4">
+              class="flex flex-col items-center font-bold border border-r-black border-white pr-[5px] b4"
+            >
               <h3 class="h-[50px] b3 flex items-center">หมวดร่วม</h3>
               <div class="group">
                 <div :class="blockCategryStyle" class="bg-vermillion">
@@ -266,18 +282,21 @@ const closeModal = () => {
                 </div>
                 <div
                   :class="blockCategryStyle"
-                  class="not-use border-b-[1px] !border-[#C5C4C4]">
+                  class="not-use border-b-[1px] !border-[#C5C4C4]"
+                >
                   หมวดอื่นๆที่ไม่ได้ใช้
                 </div>
               </div>
             </div>
             <div
-              class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4">
+              class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4"
+            >
               <div class="flex flex-col items-center">
                 <img
                   src="/image/intro/news_logo/Thairath.png"
                   alt="Thairath"
-                  class="w-[50px]" />
+                  class="w-[50px]"
+                />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -301,13 +320,15 @@ const closeModal = () => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     ความยั่งยืน
                   </div>
                   <div :class="blockCategryStyle" class="not-use">ยานยนต์</div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     พระราชสำนัก
                   </div>
                 </div>
@@ -316,7 +337,8 @@ const closeModal = () => {
                 <img
                   src="/image/intro/news_logo/TODAY.png"
                   alt="TODAY"
-                  class="w-[50px]" />
+                  class="w-[50px]"
+                />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -331,12 +353,14 @@ const closeModal = () => {
                   <div :class="blockCategryStyle" class="bg-blue">Tech</div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     สิ่งแวดล้อม
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     สิทธิมนุษยชน
                   </div>
                 </div>
@@ -345,7 +369,8 @@ const closeModal = () => {
                 <img
                   src="/image/intro/news_logo/ThaiPBS.png"
                   alt="ThaiPBS"
-                  class="w-[50px]" />
+                  class="w-[50px]"
+                />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -377,7 +402,8 @@ const closeModal = () => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     ภัยพิบัติ
                   </div>
                   <div :class="blockCategryStyle" class="not-use">
@@ -385,7 +411,8 @@ const closeModal = () => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     ไลฟ์สไตล์
                   </div>
                 </div>
@@ -394,7 +421,8 @@ const closeModal = () => {
                 <img
                   src="/image/intro/news_logo/THESTANDARD.png"
                   alt="THESTANDARD"
-                  class="w-[50px]" />
+                  class="w-[50px]"
+                />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     Politics
@@ -412,13 +440,15 @@ const closeModal = () => {
                   <div :class="blockCategryStyle" class="bg-blue">Tech</div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     Environment
                   </div>
                   <div :class="blockCategryStyle" class="not-use">LGBTQ+</div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     On this day
                   </div>
                 </div>
@@ -427,7 +457,8 @@ const closeModal = () => {
                 <img
                   src="/image/intro/news_logo/VoiceTV.png"
                   alt="VoiceTV"
-                  class="w-[50px]" />
+                  class="w-[50px]"
+                />
                 <div class="group">
                   <div :class="blockCategryStyle" class="bg-vermillion">
                     การเมือง
@@ -440,18 +471,21 @@ const closeModal = () => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-pink">
+                    class="border-b-[1px] bg-pink"
+                  >
                     บันเทิง
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     คุณภาพชีวิต
                   </div>
                 </div>
               </div>
               <div
-                class="absolute bottom-5 lg:left-1/3 left-10 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]">
+                class="absolute bottom-5 lg:left-1/3 left-10 flex gap-[2px] justify-center items-center p-[10px] text-[#717070]"
+              >
                 <img src="/image/intro/SlideIcon.svg" alt="SlideIcon" />
                 <p>เลื่อน</p>
               </div>
@@ -484,11 +518,13 @@ const closeModal = () => {
     <div
       id="quiz"
       class="flex flex-col py-[30px] max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
-      v-show="isShowQuiz">
+      v-show="isShowQuiz"
+    >
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
         <h5
           :class="numOfCorrect === 0 ? 'bg-[#FF3D00] cream' : 'bg-[#4ADADA]'"
-          class="h5 font-bold mx-auto w-fit">
+          class="h5 font-bold mx-auto w-fit"
+        >
           {{ resultTextHead }}
         </h5>
         <p class="b2" v-if="numOfCorrect !== 0">
@@ -519,10 +555,12 @@ const closeModal = () => {
         :component-data="{ name: 'fade' }"
         :sort="!isShowAnswer"
         :disabled="isShowAnswer"
-        item-key="id">
+        item-key="id"
+      >
         <template #item="{ element, index }">
           <div
-            class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] md:w-[650px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]">
+            class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] md:w-[650px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]"
+          >
             <div>
               <p v-if="isShowAnswer" class="b4">
                 {{ formatDate(element.date) }}
@@ -538,7 +576,8 @@ const closeModal = () => {
                     : 'bg-[#FF3D00]'
                   : 'bg-[#FFF8B5]'
               "
-              class="absolute -top-6 -left-2 b4 md:-left-4 md:-top-7 text-black border rounded-full w-[20px] h-[20px] md:w-[30px] md:h-[30px] text-center border-black flex items-center justify-center">
+              class="absolute -top-6 -left-2 b4 md:-left-4 md:-top-7 text-black border rounded-full w-[20px] h-[20px] md:w-[30px] md:h-[30px] text-center border-black flex items-center justify-center"
+            >
               {{ isShowAnswer ? element.index : index + 1 }}
             </div>
           </div>
@@ -547,12 +586,14 @@ const closeModal = () => {
       <div v-if="isShowAnswer" class="flex flex-col gap-[20px] pb-[40px]">
         <button
           @click="restartQuiz"
-          class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto b3">
+          class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto b3"
+        >
           <img src="/image/Reset.svg" alt="Reset" />
           เล่นอีกรอบ</button
         ><button
           class="flex flex-col items-center mx-auto"
-          @click="scrollToSelection">
+          @click="scrollToSelection"
+        >
           <p class="b2 font-bold">เริ่มอ่าน</p>
           <img src="/image/intro/ArrowDown.svg" alt="" class="w-[20px]" />
         </button>
@@ -560,12 +601,14 @@ const closeModal = () => {
       <div v-else class="flex flex-col gap-[20px]">
         <button
           @click="checkAnswer"
-          class="b3 bg-[#FFF8B5] border border-black px-[20px] py-[10px] w-[200px] h-[40px] mx-auto">
+          class="b3 bg-[#FFF8B5] border border-black px-[20px] py-[10px] w-[200px] h-[40px] mx-auto"
+        >
           ส่งคำตอบ
         </button>
         <button
           @click="showContent"
-          class="b3 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto">
+          class="b3 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto"
+        >
           ข้ามไปอ่านเนื้อหา
         </button>
       </div>
@@ -575,7 +618,8 @@ const closeModal = () => {
         <div class="hidden xl:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
             <div
-              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center">
+              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
+            >
               ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?
             </div>
             <div>
@@ -584,61 +628,75 @@ const closeModal = () => {
                   <img
                     src="/image/intro/DotBg.svg"
                     alt="DotBg"
-                    class="h-full w-full" />
+                    class="h-full w-full"
+                  />
                 </div>
                 <div
-                  class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]">
+                  class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]"
+                >
                   <div
                     class="w-full h-full border-b-[2px] border-black"
-                    :class="bgColor[bgLoopIndex]"></div>
+                    :class="bgColor[bgLoopIndex]"
+                  ></div>
                   <div
-                    class="h5 bg-[#FFF8B5] font-bold py-[40px] px-[20px] flex items-center justify-center">
+                    class="h5 bg-[#FFF8B5] font-bold py-[40px] px-[20px] flex items-center justify-center"
+                  >
                     ย้อนดูเทรนด์ข่าวออนไลน์ไทย ช่วงปี
                   </div>
                 </div>
               </div>
               <div class="grid grid-cols-9 bg-white t3 font-black">
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   0
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   -
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   0
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   3
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+            class="px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]"
+          >
             <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
               <div class="flex flex-col items-center justify-center gap-[5px]">
                 <p class="bg-vermillion w-fit text-white px-[10px]">
@@ -663,7 +721,8 @@ const closeModal = () => {
               <ClientOnly>
                 <Vue3Lottie
                   :animationData="lottie_intro"
-                  class="max-w-[450px]" />
+                  class="max-w-[450px]"
+                />
               </ClientOnly>
               <p>
                 ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
@@ -681,7 +740,8 @@ const closeModal = () => {
               </h3>
             </div>
             <div
-              class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]">
+              class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
+            >
               <p class="b3 font-bold text-[#717070]">
                 ที่มาและข้อจำกัดของข้อมูล
               </p>
@@ -693,9 +753,11 @@ const closeModal = () => {
                 ประกอบด้วย
               </p>
               <div
-                class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto">
+                class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto"
+              >
                 <ol
-                  class="b4 font-bold list-decimal text-start flex flex-col items-start">
+                  class="b4 font-bold list-decimal text-start flex flex-col items-start"
+                >
                   <li>ไทยรัฐ ออนไลน์</li>
                   <li>The Standard</li>
                   <li>Thai PBS</li>
@@ -712,13 +774,15 @@ const closeModal = () => {
               </div>
               <button
                 @click="showRefPopup"
-                class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]">
+                class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]"
+              >
                 อ่านรายละเอียดเพิ่มเติม
               </button>
               <img
                 src="/image/intro/Warning.svg"
                 alt="Warning"
-                class="absolute -top-6 right-[50%] transform translate-x-[50%]" />
+                class="absolute -top-6 right-[50%] transform translate-x-[50%]"
+              />
             </div>
 
             <p class="b3 font-bold px-[20px] md:py-[20px]">
@@ -734,11 +798,13 @@ const closeModal = () => {
         <img
           src="/image/intro/Head.svg"
           alt="Head"
-          class="w-full xl:hidden block" />
+          class="w-full xl:hidden block"
+        />
       </div>
 
       <div
-        class="xl:hidden block px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]">
+        class="xl:hidden block px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]"
+      >
         <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
           <div class="flex flex-col items-center justify-center gap-[5px]">
             <p class="bg-vermillion w-fit text-white px-[10px]">
@@ -779,7 +845,8 @@ const closeModal = () => {
           </h3>
         </div>
         <div
-          class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]">
+          class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
+        >
           <p class="b3 font-bold text-[#717070]">ที่มาและข้อจำกัดของข้อมูล</p>
           <p class="b4">
             ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
@@ -789,7 +856,8 @@ const closeModal = () => {
           </p>
           <div class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto">
             <ol
-              class="b4 font-bold list-decimal text-start flex flex-col items-start">
+              class="b4 font-bold list-decimal text-start flex flex-col items-start"
+            >
               <li>ไทยรัฐ ออนไลน์</li>
               <li>The Standard</li>
               <li>Thai PBS</li>
@@ -806,13 +874,15 @@ const closeModal = () => {
           </div>
           <button
             @click="showRefPopup"
-            class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]">
+            class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]"
+          >
             อ่านรายละเอียดเพิ่มเติม
           </button>
           <img
             src="/image/intro/Warning.svg"
             alt="Warning"
-            class="absolute -top-6 right-[50%] transform translate-x-[50%]" />
+            class="absolute -top-6 right-[50%] transform translate-x-[50%]"
+          />
         </div>
 
         <p class="b3 font-bold px-[20px] md:py-[20px]">

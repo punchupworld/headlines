@@ -4,6 +4,7 @@ const props = defineProps({
   isInStorytelling: Boolean,
   hasSelectDate: Boolean,
   news: String,
+  typeNews: String,
   current_date: String,
   date_list: Array || Object,
 });
@@ -38,11 +39,18 @@ const fetchData = async (cdate) => {
   if (cdate != null) selecteddate = new Date(cdate);
   else selecteddate = new Date(currentDate.value);
 
-  if (props.current_date != null)
-    random_news.value = csvText.filter(
-      (x) => new Date(x.date).toDateString() == selecteddate.toDateString()
-    );
-  else random_news.value = csvText;
+  if (props.current_date != null) {
+    if (props.typeNews == "ทุกหมวด")
+      random_news.value = csvText.filter(
+        (x) => setDate(x.date) == setDate(selecteddate)
+      );
+    else
+      random_news.value = csvText.filter(
+        (x) =>
+          setDate(x.date) == setDate(selecteddate) &&
+          x.category == props.typeNews
+      );
+  } else random_news.value = csvText;
 
   randomNews();
 };
@@ -111,6 +119,13 @@ watch(
 
 watch(
   () => props.current_date,
+  (count, prevCount) => {
+    fetchData();
+  }
+);
+
+watch(
+  () => props.typeNews,
   (count, prevCount) => {
     fetchData();
   }

@@ -11,6 +11,12 @@ const step = ref(0);
 
 const scroller = scrollama();
 
+const website = useWebsiteStore();
+
+const goHome = async () => {
+  website.onSetAnswer();
+};
+
 function selectNews(news) {
   typeOfNews.value = news;
   isSelectNews.value = true;
@@ -48,6 +54,19 @@ function closeModal() {
     class="bg-[#EBE8DE] min-h-screen"
     :class="{ 'bg-black/30': isShowRefPopup }"
   >
+    <NuxtLink to="/">
+      <p
+        class="b5 p-[15px] sm:p-[30px] text-[#FF006B] absolute top-0 left-0 z-10"
+        @click="goHome"
+      >
+        <img
+          src="/image/chevron-r.svg"
+          alt="chevron"
+          class="inline-block pr-1 pb-[1px]"
+        />
+        หน้าหลัก
+      </p>
+    </NuxtLink>
     <div
       class="max-w-[850px] mx-auto text-center px-3 relative min-h-screen py-[40px] flex justify-center items-center"
     >
@@ -202,7 +221,7 @@ function closeModal() {
       <div class="relative">
         <div
           id="tangmo-news-list"
-          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth pt-[20vh] ml-[5vw]"
+          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth sm:pt-[20vh] ml-[5vw]"
           v-if="step > 0 && isSelectNews"
           :class="{ 'mr-[5vw]': step > 7 }"
         >
@@ -320,6 +339,15 @@ function closeModal() {
                   แต่ยังไม่มีทีท่าจะหายไปจากหน้าสื่อ เพราะมีเหตุการณ์ใหม่ๆ
                   คอยหล่อเลี้ยงกระแส
                 </p>
+
+                <hr class="border-[#C5C4C4] my-2" />
+
+                <div class="flex justify-center text-[#717070] items-center">
+                  <div class="bg-[#E3DFCF] p-1 w-fit mr-2">
+                    <p class="b4 font-bold">แถบสี</p>
+                  </div>
+                  <p class="b4">= วันที่มีข่าว</p>
+                </div>
               </div>
             </div>
             <div class="step" data-step="6">
@@ -329,6 +357,15 @@ function closeModal() {
                   ควบคู่ไปกับการเปิดโปงพยานหลักฐานเพิ่มเติมจากตำรวจ
                   และคนใกล้ชิดยังคงดำเนิน<b>ต่อเนื่องไปอีกราว 2 เดือน</b>
                 </p>
+
+                <hr class="border-[#C5C4C4] my-2" />
+
+                <div class="flex justify-center text-[#717070] items-center">
+                  <div class="bg-[#E3DFCF] p-1 w-fit mr-2">
+                    <p class="b4 font-bold">แถบสี</p>
+                  </div>
+                  <p class="b4">= วันที่มีข่าว</p>
+                </div>
               </div>
             </div>
             <div class="step" data-step="7">
@@ -340,6 +377,15 @@ function closeModal() {
                     >แต่แทบทุกเดือนก็ยังมีข่าวเกี่ยวกับเรื่องนี้ให้เห็นอยู่เป็นระยะ</b
                   >
                 </p>
+
+                <hr class="border-[#C5C4C4] my-2" />
+
+                <div class="flex justify-center text-[#717070] items-center">
+                  <div class="bg-[#E3DFCF] p-1 w-fit mr-2">
+                    <p class="b4 font-bold">แถบสี</p>
+                  </div>
+                  <p class="b4">= วันที่มีข่าว</p>
+                </div>
               </div>
             </div>
             <div class="step" data-step="8">
@@ -353,6 +399,14 @@ function closeModal() {
                   *ประกอบด้วย 5 สำนักข่าว คือ ไทยรัฐ ออนไลน์, The Standard, Thai
                   PBS, Voice TV, WorkpointTODAY
                 </p>
+                <hr class="border-[#C5C4C4] my-2" />
+
+                <div class="flex justify-center text-[#717070] items-center">
+                  <div class="bg-[#E3DFCF] p-1 w-fit mr-2">
+                    <p class="b4 font-bold">แถบสี</p>
+                  </div>
+                  <p class="b4">= วันที่มีข่าว</p>
+                </div>
               </div>
             </div>
             <div class="step" data-step="9">
@@ -369,6 +423,14 @@ function closeModal() {
                 <p class="b5 text-[#717070]">
                   *นับเฉพาะวันที่มีข่าวอย่างน้อย 1 ข่าว
                 </p>
+                <hr class="border-[#C5C4C4] my-2" />
+
+                <div class="flex justify-center text-[#717070] items-center">
+                  <div class="bg-[#E3DFCF] p-1 w-fit mr-2">
+                    <p class="b4 font-bold">แถบสี</p>
+                  </div>
+                  <p class="b4">= วันที่มีข่าว</p>
+                </div>
               </div>
             </div>
             <div class="step" data-step="10">
@@ -404,6 +466,7 @@ function closeModal() {
 
         <NuxtLink to="/">
           <p
+            @click="goHome"
             class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer py-5"
           >
             กลับหน้าหลัก

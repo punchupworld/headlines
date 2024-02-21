@@ -40,7 +40,11 @@ function setMarginLeft(date) {
     document.getElementById("tangmo-news-date").style.maxWidth = "100%";
   }
 
-  return x(new Date(date)) + "px";
+  var l = 0;
+
+  //if (date != "2/25/22") l = 10;
+
+  return x(new Date(date)) + l + "px";
 }
 
 function setScrollTangmoNews() {
@@ -79,26 +83,43 @@ function setScrollTangmoNews() {
   }
 }
 
-function onSetHeight(total, date) {
+function onSetHeight(total, date, n) {
   if (props.current_step == 1) {
     nextTick(() => {
       document.getElementById("tangmo-point").style.left = 275 + "px";
       document.getElementById("tangmo-point").style.paddingBottom = 5 + "px";
+      if (date == "2/25/22")
+        document.getElementById("date-" + date).style.backgroundColor =
+          "#E3DFCF";
     });
+
     if (date == "2/25/22") return 2 + "%";
-  }
-  if (props.current_step == 2) {
+  } else if (props.current_step == 2) {
     if (date == "2/25/22")
       return (parseInt(total) / maxHeightChart.value) * 100 + "%";
-  }
-  if (props.current_step == 3) {
+  } else if (props.current_step == 3) {
     nextTick(() => {
       document.getElementById("tangmo-point").style.left = 285 + "px";
+      if (date == "2/25/22" || date == "2/26/22")
+        document.getElementById("date-" + date).style.backgroundColor =
+          "#E3DFCF";
+      else
+        document.getElementById("date-" + date).style.backgroundColor =
+          "transparent";
     });
     if (date == "2/25/22" || date == "2/26/22")
       return (parseInt(total) / maxHeightChart.value) * 100 + "%";
-  } else if (props.current_step > 3)
+  } else if (props.current_step == 4) {
+    if (n < 68) {
+      document.getElementById("date-" + date).style.backgroundColor = "#E3DFCF";
+      return (parseInt(total) / maxHeightChart.value) * 100 + "%";
+    } else
+      document.getElementById("date-" + date).style.backgroundColor =
+        "transparent";
+  } else if (props.current_step > 4) {
+    document.getElementById("date-" + date).style.backgroundColor = "#E3DFCF";
     return (parseInt(total) / maxHeightChart.value) * 100 + "%";
+  }
 }
 
 onMounted(() => {
@@ -114,7 +135,7 @@ watch(
 </script>
 
 <template>
-  <div class="h-[215px] flex items-end relative">
+  <div class="h-[50vh] sm:h-[215px] flex items-end relative">
     <img
       src="/image/point.svg"
       alt=""
@@ -144,7 +165,7 @@ watch(
     ></div>
     <div
       v-for="(item, i) in tangmo_news"
-      class="chart h-full bg-[#E3DFCF]"
+      class="chart h-full"
       :class="{
         'w-1px': props.current_step > 7,
       }"
@@ -153,10 +174,11 @@ watch(
       }"
       :id="'date-' + item.date"
     >
+      <!-- <template v-if="item.date == '2/25/22'"> -->
       <div
         class="box"
         :style="{
-          height: onSetHeight(item.total, item.date),
+          height: onSetHeight(item.total, item.date, i),
         }"
       >
         <div
@@ -183,14 +205,18 @@ watch(
           :class="{
             'bg-rose': item.international != 0,
           }"
-          :style="{ height: (item.international / maxHeightChart) * 100 + '%' }"
+          :style="{
+            height: (item.international / maxHeightChart) * 100 + '%',
+          }"
         ></div>
         <div
           :class="{
             'bg-pink': item.entertainment != 0,
           }"
           F
-          :style="{ height: (item.entertainment / maxHeightChart) * 100 + '%' }"
+          :style="{
+            height: (item.entertainment / maxHeightChart) * 100 + '%',
+          }"
         ></div>
         <div
           :class="{
@@ -210,7 +236,9 @@ watch(
             'bg-blue': item.science_tech != 0,
           }"
           F
-          :style="{ height: (item.science_tech / maxHeightChart) * 100 + '%' }"
+          :style="{
+            height: (item.science_tech / maxHeightChart) * 100 + '%',
+          }"
         ></div>
         <div
           :class="{
@@ -219,6 +247,7 @@ watch(
           :style="{ height: (item.environment / maxHeightChart) * 100 + '%' }"
         ></div>
       </div>
+      <!-- </template> -->
     </div>
   </div>
 </template>
