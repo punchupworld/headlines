@@ -7,6 +7,7 @@ import BarChart from "/components/BarChart.vue"
 import StoryCardSet from "/components/StoryCardSet.vue"
 import BarAxis from "/components/BarAxis.vue"
 import ExplorePart1 from "/components/ExplorePart1.vue"
+import { vOnClickOutside } from "@vueuse/components"
 
 const headlineRef = ref(null)
 const currentIndex = ref(0)
@@ -106,13 +107,6 @@ const fetchSampleHeadlineCategory = async () => {
 
 const showRefPopup = () => {
   isShowRefPopup.value = !isShowRefPopup.value
-
-  if (isShowRefPopup.value === true) {
-    document.body.style.overflow = "hidden"
-  } else if (isShowRefPopup.value === false) {
-    document.body.style.overflow = ""
-  }
-  console.log(isShowRefPopup.value)
 }
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
@@ -171,7 +165,6 @@ const currentText = computed(() => {
   return headlineShow.value[currentIndex.value]
 })
 
-
 const step = ref(0)
 onMounted(async () => {
   console.log(window.innerWidth)
@@ -215,21 +208,11 @@ onMounted(async () => {
     })
   }
   init()
-  if(isShowRefPopup.value === true) {
-     document.addEventListener("click", (event) => {
-      console.log(event)
-    if (isShowRefPopup.value === true) {
-      const popUp = document.getElementById("popUpScroll")
-      const isClickInsidePopup = popUp.contains(event.target)
-      console.log('isClickInsidePopup', isClickInsidePopup)
-      // if (!isClickInsidePopup) {
-      //   isShowRefPopup.value = false
-      // }
-    }
-  })
-  }
-
 })
+
+const closeModal = () => {
+  isShowRefPopup.value = false
+}
 </script>
 
 <template>
@@ -240,13 +223,14 @@ onMounted(async () => {
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
       v-show="isShowRefPopup">
       <div
+        v-on-click-outside="closeModal"
         id="popUpScroll"
         class="relative bg-white w-[90vw] max-w-[900px] max-h-[80vh] h-fit">
         <img
-          @click="showRefPopup"
+          @click="isShowRefPopup = false"
           src="/image/CanclePink.svg"
           alt="CanclePinkIcon"
-          class="absolute -top-2 -right-2" />
+          class="absolute -top-2 -right-2 cursor-pointer" />
         <div id="ref" class="p-[20px] overflow-y-auto h-full">
           <h1 class="b1 font-bold" ref="reference">
             ที่มาและข้อจำกัดของข้อมูล
@@ -318,7 +302,7 @@ onMounted(async () => {
           สำรวจเทรนด์ข่าวรายเดือน พร้อมคีย์เวิร์ดที่ปรากฏบ่อยในช่วง 2 ปี
         </p>
         <p
-          @click="showRefPopup"
+          @click="isShowRefPopup = true"
           class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px] border-[#EBE8DE] cursor-pointer">
           อ่านที่มาและข้อจำกัดของข้อมูล
         </p>
