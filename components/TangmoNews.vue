@@ -118,7 +118,7 @@ watch(
     <img
       src="/image/point.svg"
       alt=""
-      class="absolute w-[30px]"
+      class="absolute w-[30px] z-10"
       id="tangmo-point"
       v-if="props.current_step == 1 || props.current_step == 3"
     />
@@ -144,74 +144,81 @@ watch(
     ></div>
     <div
       v-for="(item, i) in tangmo_news"
-      class="chart"
-      :class="{ 'w-1px': props.current_step > 7 }"
+      class="chart h-full bg-[#E3DFCF]"
+      :class="{
+        'w-1px': props.current_step > 7,
+      }"
       :style="{
         left: setMarginLeft(item.date),
-        height: onSetHeight(item.total, item.date),
       }"
       :id="'date-' + item.date"
-      :data="item.date"
     >
       <div
-        :class="{
-          'bg-vermillion': item.political != 0,
+        class="box"
+        :style="{
+          height: onSetHeight(item.total, item.date),
         }"
-        :style="{ height: (item.political / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-lightblue': item.th_social != 0,
-        }"
-        F
-        :style="{ height: (item.th_social / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-orange': item.economic != 0,
-        }"
-        :style="{ height: (item.economic / maxHeightChart) * 100 + '%' }"
-      ></div>
+      >
+        <div
+          :class="{
+            'bg-vermillion': item.political != 0,
+          }"
+          :style="{ height: (item.political / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-lightblue': item.th_social != 0,
+          }"
+          F
+          :style="{ height: (item.th_social / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-orange': item.economic != 0,
+          }"
+          :style="{ height: (item.economic / maxHeightChart) * 100 + '%' }"
+        ></div>
 
-      <div
-        :class="{
-          'bg-rose': item.international != 0,
-        }"
-        :style="{ height: (item.international / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-pink': item.entertainment != 0,
-        }"
-        F
-        :style="{ height: (item.entertainment / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-brown': item.crime != 0,
-        }"
-        :style="{ height: (item.crime / maxHeightChart) * 100 + '%' }"
-      ></div>
+        <div
+          :class="{
+            'bg-rose': item.international != 0,
+          }"
+          :style="{ height: (item.international / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-pink': item.entertainment != 0,
+          }"
+          F
+          :style="{ height: (item.entertainment / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-brown': item.crime != 0,
+          }"
+          :style="{ height: (item.crime / maxHeightChart) * 100 + '%' }"
+        ></div>
 
-      <div
-        :class="{
-          'bg-purple': item.sport != 0,
-        }"
-        :style="{ height: (item.sport / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-blue': item.science_tech != 0,
-        }"
-        F
-        :style="{ height: (item.science_tech / maxHeightChart) * 100 + '%' }"
-      ></div>
-      <div
-        :class="{
-          'bg-green': item.environment != 0,
-        }"
-        :style="{ height: (item.environment / maxHeightChart) * 100 + '%' }"
-      ></div>
+        <div
+          :class="{
+            'bg-purple': item.sport != 0,
+          }"
+          :style="{ height: (item.sport / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-blue': item.science_tech != 0,
+          }"
+          F
+          :style="{ height: (item.science_tech / maxHeightChart) * 100 + '%' }"
+        ></div>
+        <div
+          :class="{
+            'bg-green': item.environment != 0,
+          }"
+          :style="{ height: (item.environment / maxHeightChart) * 100 + '%' }"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
@@ -220,10 +227,19 @@ watch(
 .chart {
   position: absolute;
   width: 5px;
-  transition: 0.5s;
   display: flex;
   flex-direction: column-reverse;
-  justify-content: flex-start;
+
+  @include mobile {
+    width: 10px;
+  }
+
+  .box {
+    transition: 0.5s;
+    display: flex;
+    flex-direction: column-reverse;
+    // justify-content: flex-end;
+  }
 }
 
 .w-1px {

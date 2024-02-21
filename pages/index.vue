@@ -20,18 +20,18 @@ const scrollToSelection = () => {
 }
 
 const showRefPopup = () => {
-  isShowRefPopup.value = !isShowRefPopup.value
-}
+  isShowRefPopup.value = !isShowRefPopup.value;
+};
 const showContent = () => {
-  isShowContent.value = true
-  isShowQuiz.value = false
-}
+  isShowContent.value = true;
+  isShowQuiz.value = false;
+};
 
 const answer = computed(() => {
   return [...quiz.value].sort((a, b) => {
-    return new Date(a.date) - new Date(b.date)
-  })
-})
+    return new Date(a.date) - new Date(b.date);
+  });
+});
 
 const beforeAnswer = ref([])
 
@@ -44,23 +44,23 @@ const checkAnswer = () => {
     addFieldToObject(item, "index", index + 1)
   })
   numOfCorrect.value = quiz.value.filter((item, index) => {
-    return item.name === answer.value[index].name
-  }).length
+    return item.name === answer.value[index].name;
+  }).length;
   if (numOfCorrect.value === 3) {
     resultTextHead.value =
       "คุณมีความแม่นยำถึง " +
       (numOfCorrect.value * 100) / answer.value.length +
-      "%"
-    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`
+      "%";
+    resultTextDesc.value = `คุณคือนักอ่านข่าวตัวยง ! <br/> และอาจชอบงานชิ้นนี้ของเรา`;
   } else if (numOfCorrect.value === 0) {
-    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+    resultTextHead.value = "คุณเรียงลำดับข่าวผิดหมดเลย";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   } else {
     resultTextHead.value =
       "คุณมีความแม่นยำแค่ " +
       Math.floor((numOfCorrect.value * 100) / answer.value.length) +
-      "%"
-    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`
+      "%";
+    resultTextDesc.value = `จำเป็นต้องอ่านงานเราอย่างยิ่ง !`;
   }
 
   quiz.value = [...quiz.value].sort((a, b) => {
@@ -85,13 +85,13 @@ const formatDate = (inputDate) => {
     "ต.ค.",
     "พ.ย.",
     "ธ.ค.",
-  ]
-  const dateObject = new Date(inputDate)
-  const day = dateObject.getDate()
-  const monthIndex = dateObject.getMonth()
-  const year = dateObject.getFullYear() % 100
-  return `${day} ${months[monthIndex]} ${year}`
-}
+  ];
+  const dateObject = new Date(inputDate);
+  const day = dateObject.getDate();
+  const monthIndex = dateObject.getMonth();
+  const year = dateObject.getFullYear() % 100;
+  return `${day} ${months[monthIndex]} ${year}`;
+};
 const setQuiz = async () => {
   if (quizSet.value !== 10) {
     quiz.value = quizData.value.filter(
@@ -99,23 +99,23 @@ const setQuiz = async () => {
     )
     quizSet.value++
   } else {
-    quizSet.value = 1
+    quizSet.value = 1;
     quiz.value = quizData.value.filter(
       (item) => parseInt(item.id) === parseInt(quizSet.value)
-    )
+    );
   }
   quiz.value = quiz.value.sort(() => Math.random() - 0.5)
 }
 const restartQuiz = async () => {
-  isShowAnswer.value = false
-  isShowContent.value = false
-  await setQuiz()
-}
+  isShowAnswer.value = false;
+  isShowContent.value = false;
+  await setQuiz();
+};
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv")
-    const csvText = await response.text()
+    const response = await fetch("/data/quiz.csv");
+    const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
       const [id, name, link, date] = line.split(",")
       return { id, name, link, date }
@@ -123,11 +123,11 @@ const fetchData = async () => {
     quizData.value = rows
     setQuiz()
   } catch (error) {
-    console.error("Error fetching CSV data:", error)
+    console.error("Error fetching CSV data:", error);
   }
-}
+};
 
-const bgLoopIndex = ref(0)
+const bgLoopIndex = ref(0);
 const bgColor = [
   "bg-vermillion",
   "bg-lightblue",
@@ -138,32 +138,34 @@ const bgColor = [
   "bg-purple",
   "bg-blue",
   "bg-green",
-]
+];
 const startLoop = () => {
   setInterval(() => {
-    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length
-  }, 1000)
-}
+    bgLoopIndex.value = (bgLoopIndex.value + 1) % bgColor.length;
+  }, 1000);
+};
 
 const blockCategryStyle =
-  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center"
+  "border-x border-black border-t-[1px] p-[10px] text-center  flex items-center justify-center";
 onMounted(() => {
-  fetchData()
-  startLoop()
-  quizSet.value = 1
-})
+  fetchData();
+  startLoop();
+  quizSet.value = 1;
+});
 </script>
 
 <template>
   <div
-    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center">
+    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
+  >
     <div
       id="refPopup"
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-10 p-3 text-balance"
       v-show="isShowRefPopup">
       <div
         id="popUpScroll"
-        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1">
+        class="relative bg-white w-[90vw] max-w-[900px] h-[80vh] p-1"
+      >
         <img
           @click="showRefPopup"
           src="/image/CanclePink.svg"
@@ -171,7 +173,8 @@ onMounted(() => {
           class="absolute -top-2 -right-2" />
         <div
           id="ref"
-          class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full">
+          class="p-[20px] lg:p-[40px] text-center overflow-y-auto h-full"
+        >
           <div class="pb-5">
             <h1 class="h5 font-bold pb-[20px]" ref="reference">
               ที่มาและข้อจำกัดของข้อมูล
@@ -236,7 +239,8 @@ onMounted(() => {
           </p>
           <div class="flex justify-center gap-[5px] py-[20px]">
             <div
-              class="flex flex-col items-center font-bold border border-r-black border-white pr-[5px] b4">
+              class="flex flex-col items-center font-bold border border-r-black border-white pr-[5px] b4"
+            >
               <h3 class="h-[50px] b3 flex items-center">หมวดร่วม</h3>
               <div class="group">
                 <div :class="blockCategryStyle" class="bg-vermillion">
@@ -260,13 +264,15 @@ onMounted(() => {
                 </div>
                 <div
                   :class="blockCategryStyle"
-                  class="not-use border-b-[1px] !border-[#C5C4C4]">
+                  class="not-use border-b-[1px] !border-[#C5C4C4]"
+                >
                   หมวดอื่นๆที่ไม่ได้ใช้
                 </div>
               </div>
             </div>
             <div
-              class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4">
+              class="relative flex gap-2 overflow-x-auto overflow-y-hidden scroll-smooth scroll-content b4"
+            >
               <div class="flex flex-col items-center">
                 <img
                   src="/image/intro/news_logo/Thairath.png"
@@ -295,13 +301,15 @@ onMounted(() => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     ความยั่งยืน
                   </div>
                   <div :class="blockCategryStyle" class="not-use">ยานยนต์</div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     พระราชสำนัก
                   </div>
                 </div>
@@ -325,12 +333,14 @@ onMounted(() => {
                   <div :class="blockCategryStyle" class="bg-blue">Tech</div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     สิ่งแวดล้อม
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     สิทธิมนุษยชน
                   </div>
                 </div>
@@ -371,7 +381,8 @@ onMounted(() => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     ภัยพิบัติ
                   </div>
                   <div :class="blockCategryStyle" class="not-use">
@@ -379,7 +390,8 @@ onMounted(() => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     ไลฟ์สไตล์
                   </div>
                 </div>
@@ -406,13 +418,15 @@ onMounted(() => {
                   <div :class="blockCategryStyle" class="bg-blue">Tech</div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-green">
+                    class="border-b-[1px] bg-green"
+                  >
                     Environment
                   </div>
                   <div :class="blockCategryStyle" class="not-use">LGBTQ+</div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     On this day
                   </div>
                 </div>
@@ -434,12 +448,14 @@ onMounted(() => {
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="border-b-[1px] bg-pink">
+                    class="border-b-[1px] bg-pink"
+                  >
                     บันเทิง
                   </div>
                   <div
                     :class="blockCategryStyle"
-                    class="not-use border-b-[1px] !border-[#C5C4C4]">
+                    class="not-use border-b-[1px] !border-[#C5C4C4]"
+                  >
                     คุณภาพชีวิต
                   </div>
                 </div>
@@ -478,11 +494,13 @@ onMounted(() => {
     <div
       id="quiz"
       class="flex flex-col py-[30px] max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
-      v-show="isShowQuiz">
+      v-show="isShowQuiz"
+    >
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
         <h5
           :class="numOfCorrect === 0 ? 'bg-[#FF3D00] cream' : 'bg-[#4ADADA]'"
-          class="h5 font-bold mx-auto w-fit">
+          class="h5 font-bold mx-auto w-fit"
+        >
           {{ resultTextHead }}
         </h5>
         <p class="b2" v-if="numOfCorrect !== 0">
@@ -516,7 +534,8 @@ onMounted(() => {
         item-key="id">
         <template #item="{ element, index }">
           <div
-            class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] md:w-[650px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]">
+            class="t5 text-[#EBE8DE] cursor-grab space-y-[15px] relative bg-black w-[256px] md:w-[650px] lg:w-[850px] p-[10px] mx-auto text-pretty mb-4 hover:bg-[#FF006B] hover:text-[#EBE8DE]"
+          >
             <div>
               <p v-if="isShowAnswer" class="b4">
                 {{ formatDate(element.date) }}
@@ -543,12 +562,6 @@ onMounted(() => {
           @click="restartQuiz"
           class="flex gap-2 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto b3">
           <img src="/image/Reset.svg" alt="Reset" />
-          เล่นอีกรอบ
-        </button>
-        <button
-          class="flex flex-col items-center mx-auto"
-          @click="scrollToSelection">
-          <p class="text-[16px] font-bold b2">เริ่มอ่าน</p>
           <img
             src="/image/intro/ArrowDown.svg"
             alt="ArrowDown"
@@ -558,12 +571,14 @@ onMounted(() => {
       <div v-else class="flex flex-col gap-[20px]">
         <button
           @click="checkAnswer"
-          class="b3 bg-[#FFF8B5] border border-black px-[20px] py-[10px] w-[200px] h-[40px] mx-auto">
+          class="b3 bg-[#FFF8B5] border border-black px-[20px] py-[10px] w-[200px] h-[40px] mx-auto"
+        >
           ส่งคำตอบ
         </button>
         <button
           @click="showContent"
-          class="b3 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto">
+          class="b3 text-[#FF006B] text-sm border border-b-[#FF006B] w-fit mx-auto"
+        >
           ข้ามไปอ่านเนื้อหา
         </button>
       </div>
@@ -573,7 +588,8 @@ onMounted(() => {
         <div class="hidden xl:block h-[75vh]">
           <div class="grid grid-cols-2 p-[20px]">
             <div
-              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center">
+              class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
+            >
               ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?
             </div>
             <div>
@@ -585,51 +601,63 @@ onMounted(() => {
                     class="h-full w-full" />
                 </div>
                 <div
-                  class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]">
+                  class="grid grid-rows-2 border-black border-y-[2px] border-r-[2px]"
+                >
                   <div
                     class="w-full h-full border-b-[2px] border-black"
-                    :class="bgColor[bgLoopIndex]"></div>
+                    :class="bgColor[bgLoopIndex]"
+                  ></div>
                   <div
-                    class="h5 bg-[#FFF8B5] font-bold py-[40px] px-[20px] flex items-center justify-center">
+                    class="h5 bg-[#FFF8B5] font-bold py-[40px] px-[20px] flex items-center justify-center"
+                  >
                     ย้อนดูเทรนด์ข่าวออนไลน์ไทย ช่วงปี
                   </div>
                 </div>
               </div>
               <div class="grid grid-cols-9 bg-white t3 font-black">
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   0
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   -
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   0
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   2
                 </div>
                 <div
-                  class="p-[10px] border-black border-b-[2px] border-r-[2px]">
+                  class="p-[10px] border-black border-b-[2px] border-r-[2px]"
+                >
                   3
                 </div>
               </div>
@@ -777,7 +805,8 @@ onMounted(() => {
           </h3>
         </div>
         <div
-          class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]">
+          class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
+        >
           <p class="b3 font-bold text-[#717070]">ที่มาและข้อจำกัดของข้อมูล</p>
           <p class="b4">
             ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
@@ -787,7 +816,8 @@ onMounted(() => {
           </p>
           <div class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto">
             <ol
-              class="b4 font-bold list-decimal text-start flex flex-col items-start">
+              class="b4 font-bold list-decimal text-start flex flex-col items-start"
+            >
               <li>ไทยรัฐ ออนไลน์</li>
               <li>The Standard</li>
               <li>Thai PBS</li>
@@ -804,7 +834,8 @@ onMounted(() => {
           </div>
           <button
             @click="showRefPopup"
-            class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]">
+            class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]"
+          >
             อ่านรายละเอียดเพิ่มเติม
           </button>
           <img

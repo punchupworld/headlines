@@ -194,7 +194,7 @@ watch(
 
 <style lang="scss" scoped>
 .type-of-news {
-  flex: 0 0 20px;
+  flex: 0 0 10px;
 
   @include mobile {
     flex: 0 0 5px;

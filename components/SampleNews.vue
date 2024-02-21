@@ -6,7 +6,7 @@ const props = defineProps({
   borderColor: String,
   top10Keywords: Array,
   inputKeyword: String,
-})
+});
 const monthShortTH = [
   "ม.ค.",
   "ก.พ.",
@@ -20,14 +20,14 @@ const monthShortTH = [
   "ต.ค.",
   "พ.ย.",
   "ธ.ค.",
-]
+];
 const formatMonth = (inputDate) => {
-  const dateParts = inputDate.split("-")
-  const day = parseInt(dateParts[2])
-  const month = parseInt(dateParts[1])
-  const year = parseInt(dateParts[0])
-  return `${day} ${monthShortTH[month - 1]} ${year}`
-}
+  const dateParts = inputDate.split("-");
+  const day = parseInt(dateParts[2]);
+  const month = parseInt(dateParts[1]);
+  const year = parseInt(dateParts[0]);
+  return `${day} ${monthShortTH[month - 1]} ${year}`;
+};
 
 const highlightKeyword = (headline, keyword) => {
   if (props.exploreModeSelected === "หมวดข่าว") {
@@ -40,25 +40,26 @@ const highlightKeyword = (headline, keyword) => {
         )
         .join("|")})`,
       "gi"
-    )
+    );
     return headline.replace(
       keywordsRegex,
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   } else {
     return headline.replace(
       new RegExp(`(${keyword})`, "gi"),
       '<span class="text-[#FFF8B5]">$1</span>'
-    )
+    );
   }
-}
+};
 </script>
 
 <template>
   <div
     v-if="dataSet"
     :class="borderColor"
-    class="bg-black border-l-[5px] md:border-l-[10px] text-white p-[10px] space-y-[5px] w-[90vw] max-w-[500px]">
+    class="bg-black border-l-[5px] md:border-l-[10px] text-white p-[10px] space-y-[5px] w-[90vw] max-w-[500px]"
+  >
     <p class="b4 font-bold">
       {{ formatMonth(dataSet[sampleIndex].date) }}
     </p>
