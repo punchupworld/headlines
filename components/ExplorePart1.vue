@@ -611,7 +611,8 @@ onMounted(async () => {
                           (parseInt(findAllWidthForGraph('explore')) - 50) / 24
                         }px`,
                       }">
-                      <div
+                      <div  class="hover:outline outline-2 outline-black">
+                        <div
                         v-if="totalDataEachCategory.length > 0"
                         class="group relative"
                         v-for="(ct, ctNo) in Object.keys(
@@ -629,7 +630,7 @@ onMounted(async () => {
                         }">
                         <div
                           id="popupDetail"
-                          :class="itemIndex > 12 ? 'right-0' : 'left-0'"
+                          :class="itemIndex > 12 ? 'right-1/2' : 'left-1/2'"
                           class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]">
                           <p class="font-bold flex b5">
                             {{ monthShortTH[item.month - 1] }}
@@ -658,6 +659,8 @@ onMounted(async () => {
                           </div>
                         </div>
                       </div>
+                      </div>
+                      
                       <p
                         class="text-[#939393] -rotate-90 b5 py-[10px]"
                         style="pointer-events: none">
