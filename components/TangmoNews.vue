@@ -28,35 +28,54 @@ const fetchData = async () => {
 };
 
 function setMarginLeft(date) {
-  let x;
+  const w = window.innerWidth;
+  let datew = 0;
+  let mb = "";
+  if (w > 992) datew = 3600;
+  else {
+    mb = "-mb";
+    datew = 7300;
+  }
+  let x = "";
+
   if (props.current_step < 8) {
-    x = d3.scaleTime([new Date("2022/1/1"), new Date("2023/12/31")], [0, 3650]);
-    document.getElementById("tangmo-news-date").style.maxWidth = "fit-content";
+    x = d3.scaleTime(
+      [new Date("2022/1/1"), new Date("2023/12/31")],
+      [0, datew]
+    );
+    document.getElementById("tangmo-news-date" + mb).style.maxWidth =
+      "fit-content";
   } else {
     x = d3.scaleTime(
       [new Date("2022/1/1"), new Date("2023/12/31")],
-      [0, window.innerWidth]
+      [0, document.getElementById("tangmo-news-date" + mb).clientWidth - 100]
     );
-    document.getElementById("tangmo-news-date").style.maxWidth = "100%";
+
+    document.getElementById("tangmo-news-date" + mb).style.maxWidth =
+      "-webkit-fill-available";
   }
 
   var l = 0;
-
-  //if (date != "2/25/22") l = 10;
 
   return x(new Date(date)) + l + "px";
 }
 
 function setScrollTangmoNews() {
+  const w = window.innerWidth;
+  let datew = 0;
+  if (w > 992) datew = 3600;
+  else datew = 7300;
+
   const x = d3.scaleTime(
     [new Date("2022/1/1"), new Date("2023/12/31")],
-    [0, 3650]
+    [0, datew]
   );
-  const w = window.innerWidth;
+
+  //console.log(props.current_step);
 
   if (props.current_step == 4)
     document.getElementById("tangmo-news-list").scrollLeft = x(
-      new Date("2022/3/1")
+      new Date("2022/2/25")
     );
   else if (props.current_step == 5)
     document.getElementById("tangmo-news-list").scrollLeft = x(
@@ -70,7 +89,7 @@ function setScrollTangmoNews() {
     let date = "";
     if (w > 992) date = "2023/3/12";
     else if (w > 600) date = "2023/4/25";
-    else date = "2023/6/12";
+    else date = "2023/6/29";
 
     nextTick(() => {
       document.getElementById("tangmo-news-list").scrollLeft = x(
@@ -84,9 +103,14 @@ function setScrollTangmoNews() {
 }
 
 function onSetHeight(total, date, n) {
+  const w = window.innerWidth;
+  let datew = 0;
+  if (w > 992) datew = 275;
+  else datew = 550;
+
   if (props.current_step == 1) {
     nextTick(() => {
-      document.getElementById("tangmo-point").style.left = 275 + "px";
+      document.getElementById("tangmo-point").style.left = datew + "px";
       document.getElementById("tangmo-point").style.paddingBottom = 5 + "px";
       if (date == "2/25/22")
         document.getElementById("date-" + date).style.backgroundColor =
@@ -99,7 +123,7 @@ function onSetHeight(total, date, n) {
       return (parseInt(total) / maxHeightChart.value) * 100 + "%";
   } else if (props.current_step == 3) {
     nextTick(() => {
-      document.getElementById("tangmo-point").style.left = 285 + "px";
+      document.getElementById("tangmo-point").style.left = datew + 5 + "px";
       if (date == "2/25/22" || date == "2/26/22")
         document.getElementById("date-" + date).style.backgroundColor =
           "#E3DFCF";
@@ -144,22 +168,22 @@ watch(
       v-if="props.current_step == 1 || props.current_step == 3"
     />
     <div
-      class="border-dashed border-l w-1 absolute left-[625px] h-full border-black"
+      class="border-dashed z-10 border-l w-1 absolute left-[1250px] lg:left-[625px] h-full border-black"
       v-if="props.current_step > 3"
       :class="{ hidden: current_step > 7 }"
     ></div>
     <div
-      class="border-dashed border-l w-1 absolute left-[905px] h-full border-black"
+      class="border-dashed z-10 border-l w-1 absolute left-[1811px] lg:left-[905px] h-full border-black"
       v-if="props.current_step > 4"
       :class="{ hidden: current_step > 7 }"
     ></div>
     <div
-      class="border-dashed border-l w-1 absolute left-[2730px] h-full border-black"
+      class="border-dashed z-10 border-l w-1 absolute left-[5467px] lg:left-[2730px] h-full border-black"
       v-if="props.current_step > 6"
       :class="{ hidden: current_step > 7 }"
     ></div>
     <div
-      class="border-dashed border-l w-1 absolute left-[2885px] h-full border-black"
+      class="border-dashed z-10 border-l w-1 absolute left-[5767px] lg:left-[2885px] h-full border-black"
       v-if="props.current_step > 6"
       :class="{ hidden: current_step > 7 }"
     ></div>
@@ -168,6 +192,7 @@ watch(
       class="chart h-full"
       :class="{
         'w-1px': props.current_step > 7,
+        hide: props.current_step > 7 && item.date == '2/25/22',
       }"
       :style="{
         left: setMarginLeft(item.date),
@@ -273,5 +298,9 @@ watch(
 
 .w-1px {
   width: 1px !important;
+}
+
+.hide {
+  display: none !important;
 }
 </style>

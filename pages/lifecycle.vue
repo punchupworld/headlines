@@ -3,6 +3,7 @@ import scrollama from "scrollama";
 import { Vue3Lottie } from "vue3-lottie";
 import lottie_part2 from "public/lottie/lottie-2.json";
 import { vOnClickOutside } from "@vueuse/components";
+import * as d3 from "d3";
 
 const isShowRefPopup = ref(false);
 const isSelectNews = ref(false);
@@ -30,10 +31,18 @@ function selectNews(news) {
       .onStepEnter((response) => {
         step.value = response.index;
         // { element, index, direction }
-        if (response.index > 0 && response.index < 4) {
-          nextTick(() => {
-            document.getElementById("tangmo-news-list").scrollLeft = 275.377;
-          });
+        if (response.index == 1) {
+          const w = window.innerWidth;
+          let datew = 0;
+          if (w > 992) datew = 265.377;
+          else datew = 540.754;
+
+          setTimeout(() => {
+            // nextTick(() => {
+            // console.log(111);
+            document.getElementById("tangmo-news-list").scrollLeft = datew;
+            // });
+          }, 300);
         }
       })
       .onStepExit((response) => {
@@ -220,22 +229,6 @@ function closeModal() {
     <div class="text-center pb-[40px]" v-if="isSelectNews" id="story">
       <div class="relative">
         <div
-          id="tangmo-news-list"
-          class="sticky top-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth sm:pt-[20vh] ml-[5vw]"
-          v-if="step > 0 && isSelectNews"
-          :class="{ 'mr-[5vw]': step > 7 }"
-        >
-          <TangmoNews :current_step="step" />
-          <div>
-            <img
-              src="/image/lifecycle/date.svg"
-              alt=""
-              class="max-w-fit"
-              id="tangmo-news-date"
-            />
-          </div>
-        </div>
-        <div
           id="main-box"
           class="flex flex-col lg:flex-row max-w-[900px] mx-auto"
         >
@@ -243,7 +236,7 @@ function closeModal() {
             class="content sticky top-0 h-screen flex items-center justify-center w-full lg:w-2/4"
           >
             <div class="max-w-full md:max-w-[500px] px-3">
-              <template v-if="step == 0">
+              <div v-if="step == 0">
                 <img
                   src="/image/lifecycle/tangmo.svg"
                   alt=""
@@ -256,15 +249,15 @@ function closeModal() {
                   alt=""
                   v-else
                 />
-              </template>
-              <template v-if="step < 7 && step > 0">
+              </div>
+              <div v-if="step > 0 && step < 7">
                 <RandomNews
                   :current_step="step"
                   :isInStorytelling="true"
                   :hasSelectDate="false"
                   news="คดีแตงโม-นิดา"
                 />
-              </template>
+              </div>
             </div>
           </div>
           <div
@@ -443,6 +436,30 @@ function closeModal() {
                   >
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sticky bottom-0" v-if="step > 0">
+          <div
+            id="tangmo-news-list"
+            class="absolute -top-[100vh] left-0 right-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth sm:pt-[20vh] ml-[5vw]"
+            :class="{ 'mr-[5vw]': step > 7 }"
+          >
+            <TangmoNews :current_step="step" />
+            <div>
+              <img
+                src="/image/lifecycle/date.svg"
+                alt=""
+                class="max-w-fit hidden lg:block"
+                id="tangmo-news-date"
+              />
+              <img
+                src="/image/lifecycle/date-mb.svg"
+                alt=""
+                class="max-w-fit lg:hidden"
+                id="tangmo-news-date-mb"
+              />
             </div>
           </div>
         </div>

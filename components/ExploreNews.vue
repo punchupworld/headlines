@@ -223,8 +223,13 @@ function setOpacity(total) {
   else if (selectedTypeOfNews.value == "สิ่งแวดล้อม") rgb = "155,185,90";
 
   if (total == maxOfTotalNews.value) x = "rgba(" + rgb + ",1)";
-  // else if (total == 1) x = "rgba(" + rgb + ",0.2)";
-  else x = "rgba(" + rgb + "," + total / maxOfTotalNews.value + ")";
+  else if (total == 1) x = "rgba(" + rgb + ",0.2)";
+  else {
+    let op = (20 + (total - 1)) / (maxOfTotalNews.value - 1);
+    console.log(total, maxOfTotalNews.value);
+
+    x = "rgba(" + rgb + "," + op + ")";
+  }
 
   return x;
 }
