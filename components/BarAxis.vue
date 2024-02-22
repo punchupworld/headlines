@@ -49,13 +49,15 @@ const findYAxisScale = () => {
   console.log('num',num/placeValue)
   console.log('num minus',Math.floor(num/placeValue))
   console.log('result',num/placeValue-Math.floor(num/placeValue))
-  if(((num/placeValue)-Math.floor(num/placeValue)) > 0.5){
-    yAxisScale = Math.ceil(num / placeValue) * placeValue
-  }else if(((num/placeValue)-Math.floor(num/placeValue)) <= 0.5){
-    yAxisScale = ((Math.floor(num / placeValue))+0.5) * placeValue
-  }
+  // if(((num/placeValue)-Math.floor(num/placeValue)) > 0.5){
+  //   yAxisScale = Math.ceil(num / placeValue) * placeValue
+  // }else if(((num/placeValue)-Math.floor(num/placeValue)) <= 0.5){
+  //   yAxisScale = ((Math.floor(num / placeValue))+0.5) * placeValue
+  // }
+  yAxisScale = (num / placeValue) * placeValue
   return yAxisScale
 }
+
 
 const yAxis = {
   การเมือง: [3000, 2500, 2000, 1500, 1000, 500],
@@ -162,9 +164,11 @@ const styleValue = computed(() => {
     }
   } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
     if(width <= 320){
-      return "h-[96%] bottom-[27px]"
-    }else{
-      return "h-[85%] -top-[25px]"
+      return "h-[96%] -top-[14px]"
+    }else if(width >= 768&& width < 1024){
+        return "h-[90%] -top-[21px]"
+      }else{
+      return "h-[81.5%] -top-[20px]"
     }
       
   }
@@ -194,7 +198,7 @@ const styleValue = computed(() => {
       <div class="space-y-2">
         <p class="b6 border-b border-black border-dotted pl-[5px]">
           <span v-if="isExplore">
-            {{ Math.floor((findYAxisScale() * 4) / 4).toLocaleString() }}</span
+            {{ Math.ceil((findYAxisScale() * 4) / 4).toLocaleString() }}</span
           >
           <span v-else>{{ (8000).toLocaleString() }}</span>
         </p>
@@ -211,19 +215,19 @@ const styleValue = computed(() => {
       </div>
       <p class="b6 border-b border-black border-dotted pl-[5px]">
         <span v-if="isExplore">
-          {{ Math.floor((findYAxisScale() * 3) / 4).toLocaleString() }}</span
+          {{ Math.ceil((findYAxisScale() * 3) / 4).toLocaleString() }}</span
         >
         <span v-else>{{ (6000).toLocaleString() }}</span>
       </p>
       <p class="b6 border-b border-black border-dotted pl-[5px]">
         <span v-if="isExplore">
-          {{ Math.floor((findYAxisScale() * 2) / 4).toLocaleString() }}</span
+          {{ Math.ceil((findYAxisScale() * 2) / 4).toLocaleString() }}</span
         >
         <span v-else>{{ (4000).toLocaleString() }}</span>
       </p>
       <p class="b6 border-b border-black border-dotted pl-[5px]">
         <span v-if="isExplore">
-          {{ Math.floor((findYAxisScale() * 1) / 4).toLocaleString() }}</span
+          {{ Math.ceil((findYAxisScale() * 1) / 4).toLocaleString() }}</span
         >
         <span v-else>{{ (2000).toLocaleString() }}</span>
       </p>
