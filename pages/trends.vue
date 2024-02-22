@@ -506,6 +506,9 @@ const closeModal = () => {
 </template>
 
 <style scoped>
+#card {
+  -webkit-transform: translate3d(0, 0, 1px);
+}
 option {
   background-color: white;
 }
