@@ -167,7 +167,6 @@ const currentText = computed(() => {
 
 const step = ref(0)
 onMounted(async () => {
-  console.log(window.innerWidth)
   await fetchSampleHeadlineCategory()
   await fetchExploreCategoryHeadline()
   await summaryData()
@@ -189,7 +188,6 @@ onMounted(async () => {
 
   const handleStepEnter = (response) => {
     step.value = response.index
-    console.log("step", step.value)
     const currentSection = parseInt(response.element.id.replace("card", ""), 10)
     handleSectionOpacity(currentSection, response.direction)
   }

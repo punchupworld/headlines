@@ -175,8 +175,6 @@ const findMaxOfMonthly = () => {
 const selectExploreMode = async (mode) => {
   exploreModeSelected.value = mode
   sampleIndex.value = 0
-  console.log("เปลี่ยนโหมด")
-  console.log(exploreModeSelected.value)
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
     dataForKW.value = await keywords.value[inputKeyword.value]
     findMaxOfMonthly()
@@ -390,7 +388,6 @@ const selectSuggestion = (selectedValue) => {
 const searchKeyword = () => {
   dataForKW.value = keywords.value[inputKeyword.value]
 
-  console.log("dataForKW", dataForKW.value)
   showSuggestions.value = false
   if (dataForKW.value) {
     beforeKeyword.value = inputKeyword.value

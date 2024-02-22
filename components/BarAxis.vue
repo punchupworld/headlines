@@ -17,22 +17,6 @@ const findPlaceValue = (num) => {
   return placeValue
 }
 
-// const findYAxisScale = () => {
-//   let num
-//   if (props.exploreModeSelected === "หมวดข่าว") {
-//     num =
-//       props.totalDataEachCategory.find(
-//         (item) => item.category === props.categorySelected
-//       )?.max || "N/A"
-//   } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
-//     num = props.maxOfMonthly
-//   }
-
-//   let placeValue = findPlaceValue(num)
-//   console.log(num)
-//   let yAxisScale = Math.ceil(num / placeValue) * placeValue
-//   return yAxisScale
-// }
 const findYAxisScale = () => {
   let num
   let yAxisScale
@@ -46,9 +30,6 @@ const findYAxisScale = () => {
   }
 
   let placeValue = findPlaceValue(num)
-  console.log('num',num/placeValue)
-  console.log('num minus',Math.floor(num/placeValue))
-  console.log('result',num/placeValue-Math.floor(num/placeValue))
   // if(((num/placeValue)-Math.floor(num/placeValue)) > 0.5){
   //   yAxisScale = Math.ceil(num / placeValue) * placeValue
   // }else if(((num/placeValue)-Math.floor(num/placeValue)) <= 0.5){
