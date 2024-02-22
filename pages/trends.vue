@@ -210,6 +210,10 @@ onMounted(async () => {
   init()
 })
 
+const website = useWebsiteStore()
+const goHome = async () => {
+  website.onSetAnswer()
+}
 const closeModal = () => {
   isShowRefPopup.value = false
 }
@@ -218,6 +222,17 @@ const closeModal = () => {
 <template>
   <div
     class="bg-[#EBE8DE] max-w-screen-sm md:max-w-full flex flex-col justify-center">
+    <NuxtLink to="/">
+      <p
+        class="b5 p-[15px] sm:p-[30px] text-[#FF006B] absolute top-0 left-0 z-10"
+        @click="goHome">
+        <img
+          src="/image/chevron-r.svg"
+          alt="chevron"
+          class="inline-block pr-1 pb-[1px]" />
+        หน้าหลัก
+      </p>
+    </NuxtLink>
     <div
       id="refPopup"
       class="max-w-screen-sm md:max-w-full fixed top-0 bg-black/30 h-full w-full items-center justify-center flex z-20 p-3"
@@ -319,7 +334,7 @@ const closeModal = () => {
           class="w-[20px] mx-auto mt-[10px] md:mt-[20px]" />
       </div>
       <div class="max-w-[850px] mx-auto">
-        <div id="section" class="h-screen sticky top-0 overflow-hidden z-0">
+        <div id="section" class="h-screen sticky top-0 overflow-hidden">
           <div
             class="flex flex-col items-center xl:items-start h-screen justify-center">
             <div
@@ -479,10 +494,12 @@ const closeModal = () => {
           สำรวจประเด็นที่เหลือ
         </p>
         <SectionBtn link="/lifecycle" />
-        <NuxtLink
-          to="/"
-          class="text-[#FF006B] b4 border-b-1 border-[#FF006B] w-fit mx-auto">
-          <p class="my-[20px]">กลับไปหน้าแรก</p>
+        <NuxtLink to="/">
+          <p
+            @click="goHome"
+            class="text-[#FF006B] b4 w-fit mx-auto underline cursor-pointer py-5">
+            กลับหน้าหลัก
+          </p>
         </NuxtLink>
         <Share :hasMsgerLink="false" />
       </div>

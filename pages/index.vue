@@ -169,7 +169,7 @@ const closeModal = () => {
 
 <template>
   <div
-    class="max-w-screen-sm md:max-w-full bg-[#EBE8DE] flex flex-col justify-center"
+    class="max-w-screen-sm md:max-w-full !bg-[#EBE8DE] flex flex-col justify-center"
   >
     <div
       id="refPopup"
@@ -517,7 +517,7 @@ const closeModal = () => {
     </div>
     <div
       id="quiz"
-      class="flex flex-col py-[30px] max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
+      class="!bg-[#EBE8DE] flex flex-col py-[30px] max-w-[850px] w-[90vw] items-center justify-center mx-auto h-screen"
       v-show="isShowQuiz"
     >
       <div class="text-center space-y-[5px] pb-[30px]" v-if="isShowAnswer">
@@ -614,10 +614,10 @@ const closeModal = () => {
         </button>
       </div>
     </div>
-    <div id="intro" class="text-center" v-if="isShowContent" ref="intro">
+    <div id="intro" class="text-center !bg-[#EBE8DE]" v-if="isShowContent" ref="intro">
       <div id="cover">
-        <div class="hidden xl:block h-[75vh]">
-          <div class="grid grid-cols-2 p-[20px]">
+        <div class="hidden xl:block h-[75vh] !bg-[#EBE8DE]">
+          <div class="grid grid-cols-2 p-[20px] !bg-[#EBE8DE]">
             <div
               class="t1 font-black text-white bg-black p-[40px] flex items-center justify-center"
             >
@@ -695,8 +695,9 @@ const closeModal = () => {
               </div>
             </div>
           </div>
-          <div
-            class="px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:mt-[40px]"
+          <div class="!bg-[#EBE8DE]">
+               <div
+            class=" px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:py-[60px]"
           >
             <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
               <div class="flex flex-col items-center justify-center gap-[5px]">
@@ -795,6 +796,8 @@ const closeModal = () => {
             </div>
             <Share :hasMsgerLink="true" />
           </div>
+          </div>
+       
         </div>
         <img
           src="/image/intro/Head.svg"
