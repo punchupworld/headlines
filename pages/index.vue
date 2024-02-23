@@ -614,7 +614,12 @@ const closeModal = () => {
         </button>
       </div>
     </div>
-    <div id="intro" class="text-center !bg-[#EBE8DE]" v-if="isShowContent" ref="intro">
+    <div
+      id="intro"
+      class="text-center !bg-[#EBE8DE]"
+      v-if="isShowContent"
+      ref="intro"
+    >
       <div id="cover">
         <div class="hidden xl:block h-[75vh] !bg-[#EBE8DE]">
           <div class="grid grid-cols-2 p-[20px] !bg-[#EBE8DE]">
@@ -696,108 +701,109 @@ const closeModal = () => {
             </div>
           </div>
           <div class="!bg-[#EBE8DE]">
-               <div
-            class=" px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:py-[60px]"
-          >
-            <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
-              <div class="flex flex-col items-center justify-center gap-[5px]">
-                <p class="bg-vermillion w-fit text-white px-[10px]">
-                  BREAKING NEWS:
-                </p>
-                <p class="b1 font-bold md:pt-[10px]">
-                  เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
-                </p>
-              </div>
-
-              <p>
-                รายงานข่าวของ Reuters Institute Digital News Report 2023
-                ชี้คนไทยเสพข่าวจากสื่อข่าวออนไลน์มากเป็นอันดับหนึ่ง
-                (รวมถึงข่าวใน Social Media) ผลลัพธ์จากแบบสอบถามในงานศึกษาพบว่า
-              </p>
-              <p class="text-[#5773DC] font-bold">
-                88%
-                ของผู้ตอบแบบสอบถามให้ความเชื่อมั่นและบริโภคข่าวจากสื่อข่าวออนไลน์
-              </p>
-              <p>ในขณะที่ 50% ของผู้ตอบแบบสอบถาม บริโภคข่าวจากสื่อโทรทัศน์</p>
-
-              <ClientOnly>
-                <Vue3Lottie
-                  :animationData="lottie_intro"
-                  class="max-w-[450px]"
-                />
-              </ClientOnly>
-              <p>
-                ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
-                เป็นบทนำในการเล่าเรื่อง ที่ล้วนต้องสั้นกระชับ
-                และเกริ่นใจความสำคัญของคอนเทนต์ข่าวได้แทบครบถ้วน
-              </p>
-              <p>
-                เมื่อ
-                <span class="text-[#5773DC]">#ชีวิตติดคอนเทนต์</span>
-                เราขอชวนคุณมาสำรวจ คอนเทนต์ ‘พาดหัวข่าว’
-                บนเว็บไซต์ข่าวออนไลน์ไทย เพื่อหาคำตอบว่า
-              </p>
-              <h3 class="b2 font-bold md:pb-[20px]">
-                2 ปีมานี้ ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟังบ้าง?
-              </h3>
-            </div>
             <div
-              class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
+              class="px-[16px] py-[40px] space-y-[20px] lg:max-w-4xl lg:mx-auto lg:py-[60px]"
             >
-              <p class="b3 font-bold text-[#717070]">
-                ที่มาและข้อจำกัดของข้อมูล
-              </p>
-              <p class="b4">
-                ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
-                แต่เลือกมา 5 สำนักข่าว จากทั้งหมด 16 สำนักข่าว
-                จากการจัดอันดับเว็บไซต์ข่าวที่ถูกเข้าถึงมากที่สุดในไทยโดย
-                Reuters Institute for the Study of Journalism ในปี 2023
-                ประกอบด้วย
-              </p>
-              <div
-                class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto"
-              >
-                <ol
-                  class="b4 font-bold list-decimal text-start flex flex-col items-start"
+              <div class="b3 space-y-[10px] md:space-y-[20px] text-balance">
+                <div
+                  class="flex flex-col items-center justify-center gap-[5px]"
                 >
-                  <li>ไทยรัฐ ออนไลน์</li>
-                  <li>The Standard</li>
-                  <li>Thai PBS</li>
-                  <li>Voice TV</li>
-                  <li>WorkpointTODAY</li>
-                </ol>
-                <div class="b4 flex flex-col items-end">
-                  <p>55.8 %</p>
-                  <p>21.1 %</p>
-                  <p>12.3 %</p>
-                  <p>7.7 %</p>
-                  <p>3.0 %</p>
+                  <p class="bg-vermillion w-fit text-white px-[10px]">
+                    BREAKING NEWS:
+                  </p>
+                  <p class="b1 font-bold md:pt-[10px]">
+                    เมื่อสื่อข่าวออนไลน์กลายเป็นสื่อกระแสหลัก
+                  </p>
                 </div>
-              </div>
-              <button
-                @click="showRefPopup"
-                class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]"
-              >
-                อ่านรายละเอียดเพิ่มเติม
-              </button>
-              <img
-                src="/image/intro/Warning.svg"
-                alt="Warning"
-                class="absolute -top-6 right-[50%] transform translate-x-[50%]"
-              />
-            </div>
 
-            <p class="b3 font-bold px-[20px] md:py-[20px]">
-              หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา ‘พาดหัวข่าว’ ที่คุณสนใจ
-            </p>
-            <div class="flex flex-col lg:flex-row gap-[20px]">
-              <SectionBtn link="/trends" />
-              <SectionBtn link="/lifecycle" />
+                <p>
+                  รายงานข่าวของ Reuters Institute Digital News Report 2023
+                  ชี้คนไทยเสพข่าวจากสื่อข่าวออนไลน์มากเป็นอันดับหนึ่ง
+                  (รวมถึงข่าวใน Social Media) ผลลัพธ์จากแบบสอบถามในงานศึกษาพบว่า
+                </p>
+                <p class="text-[#5773DC] font-bold">
+                  88%
+                  ของผู้ตอบแบบสอบถามให้ความเชื่อมั่นและบริโภคข่าวจากสื่อข่าวออนไลน์
+                </p>
+                <p>ในขณะที่ 50% ของผู้ตอบแบบสอบถาม บริโภคข่าวจากสื่อโทรทัศน์</p>
+
+                <ClientOnly>
+                  <Vue3Lottie
+                    :animationData="lottie_intro"
+                    class="max-w-[450px]"
+                  />
+                </ClientOnly>
+                <p>
+                  ช่องทางยอดฮิตอย่าง สื่อข่าวออนไลน์ ต้องมี ‘พาดหัวข่าว’
+                  เป็นบทนำในการเล่าเรื่อง ที่ล้วนต้องสั้นกระชับ
+                  และเกริ่นใจความสำคัญของคอนเทนต์ข่าวได้แทบครบถ้วน
+                </p>
+                <p>
+                  เมื่อ
+                  <span class="text-[#5773DC]">#ชีวิตติดคอนเทนต์</span>
+                  เราขอชวนคุณมาสำรวจ คอนเทนต์ ‘พาดหัวข่าว’
+                  บนเว็บไซต์ข่าวออนไลน์ไทย เพื่อหาคำตอบว่า
+                </p>
+                <h3 class="b2 font-bold md:pb-[20px]">
+                  2 ปีมานี้ ‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟังบ้าง?
+                </h3>
+              </div>
+              <div
+                class="relative border-[2px] border-[#C5C4C4] px-[10px] py-[15px] space-y-[10px]"
+              >
+                <p class="b3 font-bold text-[#717070]">
+                  ที่มาและข้อจำกัดของข้อมูล
+                </p>
+                <p class="b4">
+                  ข้อมูลที่ใช้พัฒนางานชิ้นนี้ไม่ได้ครอบคลุมข่าวทั้งหมดในประเทศไทย
+                  แต่เลือกมา 5 สำนักข่าว จากทั้งหมด 16 สำนักข่าว
+                  จากการจัดอันดับเว็บไซต์ข่าวที่ถูกเข้าถึงมากที่สุดในไทยโดย
+                  Reuters Institute for the Study of Journalism ในปี 2023
+                  ประกอบด้วย
+                </p>
+                <div
+                  class="grid grid-cols-2 px-[40px] w-fit content-center mx-auto"
+                >
+                  <ol
+                    class="b4 font-bold list-decimal text-start flex flex-col items-start"
+                  >
+                    <li>ไทยรัฐ ออนไลน์</li>
+                    <li>The Standard</li>
+                    <li>Thai PBS</li>
+                    <li>Voice TV</li>
+                    <li>WorkpointTODAY</li>
+                  </ol>
+                  <div class="b4 flex flex-col items-end">
+                    <p>55.8 %</p>
+                    <p>21.1 %</p>
+                    <p>12.3 %</p>
+                    <p>7.7 %</p>
+                    <p>3.0 %</p>
+                  </div>
+                </div>
+                <button
+                  @click="showRefPopup"
+                  class="text-[#FF006B] b4 border border-b-[#FF006B] w-fit mx-auto mt-[20px]"
+                >
+                  อ่านรายละเอียดเพิ่มเติม
+                </button>
+                <img
+                  src="/image/intro/Warning.svg"
+                  alt="Warning"
+                  class="absolute -top-6 right-[50%] transform translate-x-[50%]"
+                />
+              </div>
+
+              <p class="b3 font-bold px-[20px] md:py-[20px]">
+                หากพร้อมแล้ว คลิกเพื่อสำรวจเนื้อหา ‘พาดหัวข่าว’ ที่คุณสนใจ
+              </p>
+              <div class="flex flex-col lg:flex-row gap-[20px]">
+                <SectionBtn link="/trends" />
+                <SectionBtn link="/lifecycle" />
+              </div>
+              <Share :hasMsgerLink="true" />
             </div>
-            <Share :hasMsgerLink="true" />
           </div>
-          </div>
-       
         </div>
         <img
           src="/image/intro/Head.svg"
@@ -900,6 +906,7 @@ const closeModal = () => {
       </div>
     </div>
   </div>
+  <CookieBanner />
 </template>
 
 <style scoped>

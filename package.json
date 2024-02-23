@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@mahdikhashan/vue3-click-outside": "^0.1.2",
+    "@nuxtjs/plausible": "^0.2.4",
     "@vueuse/components": "^10.7.2",
     "d3": "^7.8.5",
     "intersection-observer": "^0.12.2",
