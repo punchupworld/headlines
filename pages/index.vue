@@ -218,14 +218,14 @@ const closeModal = () => {
           </p>
           <div class="flex flex-col items-center">
             <img
-              src="/image/intro/NewsAgency.svg"
-              alt="NewsAgency"
-              class="block lg:hidden"
+              src="/image/intro/news_chart_mobile.png"
+              alt="news_chart_mobile"
+              class="block lg:hidden w-[248px]"
             />
             <img
-              src="/image/intro/NewsAgencyDesktop.svg"
-              alt="NewsAgencyDesktop"
-              class="hidden lg:block"
+              src="/image/intro/news_chart_desktop.png"
+              alt="news_chart_desktop"
+              class="hidden lg:block w-[450px]"
             />
             <div class="flex gap-[5px] py-5 content-center">
               <div>
