@@ -308,7 +308,7 @@ onMounted(() => {
         <div
           class="w-[8px] h-[8px] bg-[#E3DFCF] border border-[#939393] inline-block mx-1"
         ></div>
-        <span><b>ไม่มีสี </b>= วันที่ไม่มีข่าว</span>
+        <span><b>สีขาว </b>= วันที่ไม่มีข่าว</span>
         <img
           src="/image/lifecycle/many_news.svg"
           class="inline-block mx-1"

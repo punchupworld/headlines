@@ -3,7 +3,7 @@
 const BASE_URL = "https://headlines-3bc.pages.dev/";
 
 export default defineNuxtConfig({
-  modules: ["@vueuse/nuxt", "@pinia/nuxt"],
+  modules: ["@vueuse/nuxt", "@pinia/nuxt", "@nuxtjs/plausible"],
   devtools: { enabled: true },
   ssr: true,
   postcss: {
@@ -96,4 +96,9 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+
+  plausible: {
+    domain: "projects.punchup.world/headlines",
+    apiHost: "https://analytics.punchup.world/",
+  },
 });
