@@ -22,7 +22,6 @@ const monthShortTH = [
   "ธ.ค.",
 ]
 
-
 const formatMonth = (inputDate) => {
   const dateParts = inputDate.split("-")
   const day = parseInt(dateParts[2])
@@ -33,28 +32,20 @@ const formatMonth = (inputDate) => {
 
 const highlightKeyword = (headline) => {
   if (props.exploreModeSelected === "หมวดข่าว") {
-    const keywordWithSpaces = props.dataSet[props.sampleIndex].keyword.replace(
-      /\s+/g,
-      "[-\\s]*"
-    )
-    const regex = new RegExp(`(${keywordWithSpaces})`, "gi")
+    let arrKeyword = props.top10Keywords.map((k) => k.keyword)
+
+    arrKeyword = [...arrKeyword, props.dataSet[props.sampleIndex].keyword]
+
     const keywordsRegex = new RegExp(
-      `(${props.top10Keywords
-        .map(
-          (k) =>
-            k.keyword
-              .replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")
-              .replace(/\s+/g, "[-\\s]*")
+      `(${arrKeyword
+        .map((k) =>
+          k.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&").replace(/\s+/g, "[-\\s]*")
         )
         .join("|")})`,
       "gi"
     )
 
     let highlightedHeadline = headline.replace(
-      regex,
-      '<span class="text-[#FFF8B5]">$1</span>'
-    )
-    highlightedHeadline = highlightedHeadline.replace(
       keywordsRegex,
       '<span class="text-[#FFF8B5]">$1</span>'
     )
