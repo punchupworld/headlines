@@ -2,11 +2,13 @@
 import { ref, toRefs } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
 import { useScroll } from "@vueuse/core";
+import * as d3 from "d3";
 
 const isShowDetailsPopup = ref(false);
 const newsDetailsList = ref([]);
 const newsDetails = ref([]);
 const totalOfTypeOfNews = ref(0);
+const minOfTotalNews = ref(0);
 const maxOfTotalNews = ref(0);
 const newsDataHeatmap = ref([]);
 const typeOfNewsDropdown = ref([]);
@@ -155,8 +157,10 @@ function setDataForHeatmap() {
     return object[selectedTypeOfNewsEn.value];
   });
 
+  let min = Math.min(...arr);
   let max = Math.max(...arr);
 
+  minOfTotalNews.value = min;
   maxOfTotalNews.value = max;
 
   currentDate.value = newsDataHeatmap.value.list[0].date;
@@ -210,6 +214,11 @@ function setOpacity(total) {
   let x = "";
   let rgb = "";
 
+  const a = d3.scaleLinear(
+    [minOfTotalNews.value, maxOfTotalNews.value],
+    [0.2, 1]
+  );
+
   if (selectedTypeOfNews.value == "ทุกหมวด") rgb = "0,0,0";
   else if (selectedTypeOfNews.value == "การเมือง") rgb = "255,61,0";
   else if (selectedTypeOfNews.value == "สังคมไทย") rgb = "74,218,218";
@@ -224,12 +233,7 @@ function setOpacity(total) {
 
   if (total == maxOfTotalNews.value) x = "rgba(" + rgb + ",1)";
   else if (total == 1) x = "rgba(" + rgb + ",0.2)";
-  else {
-    let op = (20 + (total - 1)) / (maxOfTotalNews.value - 1);
-    console.log(total, maxOfTotalNews.value);
-
-    x = "rgba(" + rgb + "," + op + ")";
-  }
+  else x = "rgba(" + rgb + "," + a(total) + ")";
 
   return x;
 }
@@ -306,7 +310,7 @@ onMounted(() => {
         <div class="w-[8px] h-[8px] bg-black inline-block mx-1"></div>
         <span><b>มีสี </b>= วันที่มีข่าว</span>
         <div
-          class="w-[8px] h-[8px] bg-[#E3DFCF] border border-[#939393] inline-block mx-1"
+          class="w-[8px] h-[8px] bg-white border border-white inline-block mx-1"
         ></div>
         <span><b>ไม่มีสี </b>= วันที่ไม่มีข่าว</span>
         <img
@@ -480,13 +484,15 @@ onMounted(() => {
               ></div>
             </div>
 
-            <div
-              class="flex justify-end items-center pointer-events-none absolute right-0 top-0 bottom-0 scroll-box"
-              v-if="!right"
-            >
-              <p class="b5 text-right pr-1">เลื่อน</p>
-              <img src="/image/lifecycle/drag.svg" alt="" class="w-[12px]" />
-            </div>
+            <template v-if="isShowScroll">
+              <div
+                class="flex justify-end items-center pointer-events-none absolute right-0 top-0 bottom-0 scroll-box"
+                v-if="!right"
+              >
+                <p class="b5 text-right pr-1">เลื่อน</p>
+                <img src="/image/lifecycle/drag.svg" alt="" class="w-[12px]" />
+              </div>
+            </template>
           </div>
 
           <RandomNews
