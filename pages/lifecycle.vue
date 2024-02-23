@@ -490,6 +490,7 @@ function closeModal() {
       </div>
     </div>
   </div>
+  <CookieBanner />
 </template>
 
 <style lang="scss" scoped>
