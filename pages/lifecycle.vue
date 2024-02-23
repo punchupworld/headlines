@@ -3,7 +3,6 @@ import scrollama from "scrollama";
 import { Vue3Lottie } from "vue3-lottie";
 import lottie_part2 from "public/lottie/lottie-2.json";
 import { vOnClickOutside } from "@vueuse/components";
-import * as d3 from "d3";
 
 const isShowRefPopup = ref(false);
 const isSelectNews = ref(false);
@@ -38,10 +37,7 @@ function selectNews(news) {
           else datew = 540.754;
 
           setTimeout(() => {
-            // nextTick(() => {
-            // console.log(111);
             document.getElementById("tangmo-news-list").scrollLeft = datew;
-            // });
           }, 300);
         }
       })
@@ -440,7 +436,7 @@ function closeModal() {
           </div>
         </div>
 
-        <div class="sticky bottom-0" v-if="step > 0">
+        <div class="sticky bottom-0 pointer-events-none" v-if="step > 0">
           <div
             id="tangmo-news-list"
             class="absolute -top-[100vh] left-0 right-0 h-screen flex overflow-x-auto chart-wrapper flex-col scroll-smooth sm:pt-[20vh] ml-[5vw]"
