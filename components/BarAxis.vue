@@ -25,7 +25,6 @@ const findYAxisScale = () => {
       props.totalDataEachCategory.find(
         (item) => item.category === props.categorySelected
       )?.max || "N/A"
-    console.log("num", num)
   } else if (props.exploreModeSelected === "คีย์เวิร์ด") {
     num = props.maxOfMonthly
   }
@@ -171,7 +170,6 @@ const getYAxisHeight = () => {
   }
 }
 watchEffect(() => {
-  console.log(props.maxOfMonthly)
   getYAxisHeight()
 })
 </script>

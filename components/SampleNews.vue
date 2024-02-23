@@ -21,39 +21,7 @@ const monthShortTH = [
   "พ.ย.",
   "ธ.ค.",
 ]
-// const related_keyword = ref([])
-// const filteredRelatedKeyword = ref([])
-// function convertHighlightedWordsToArray(highlightedWordsString) {
-//   const wordsArray = highlightedWordsString.trim().split(",")
-//   const trimmedWordsArray = wordsArray.map((word) => word.trim())
-//   return trimmedWordsArray
-// }
-// const fetchRelatedKeyword = async () => {
-//   const response = await fetch("/data/trends/related_keyword.json")
-//   const data = await response.json()
-//   related_keyword.value = data
-//   related_keyword.value.forEach((obj) => {
-//     obj.highlighted_words = convertHighlightedWordsToArray(
-//       obj.highlighted_words
-//     )
-//   })
-//   filterRelatedKeyword()
-// }
 
-// const filterRelatedKeyword = () => {
-//   if (props.exploreModeSelected === "หมวดข่าว") {
-//     if (related_keyword.value.length > 0) {
-//       filteredRelatedKeyword.value = related_keyword.value.filter((obj) => {
-//         return (
-//           obj.news_category ===
-//             props.dataSet[props.sampleIndex].news_category &&
-//           obj.year === props.dataSet[props.sampleIndex].Year &&
-//           obj.month === props.dataSet[props.sampleIndex].Month
-//         )
-//       })
-//     }
-//   }
-// }
 
 const formatMonth = (inputDate) => {
   const dateParts = inputDate.split("-")
@@ -99,18 +67,6 @@ const highlightKeyword = (headline) => {
     )
   }
 }
-// onMounted(async () => {
-//   watch(
-//     () => props.dataSet,
-//     async (newDataSet) => {
-//       if (newDataSet !== null) {
-//         await fetchRelatedKeyword()
-//         filterRelatedKeyword()
-//       }
-//     },
-//     { immediate: true }
-//   )
-// })
 </script>
 
 <template>
