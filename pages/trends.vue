@@ -263,7 +263,7 @@ const closeModal = () => {
                   >
                   เพื่อตัดคำในพาดหัวข่าว และเครื่องมือ
                   <a
-                    href="https://doi.nrct.go.th//ListDoi/listDetail?Resolve_DOI=10.14456/nuej.2022.14"
+                    href="https://ph01.tci-thaijo.org/index.php/nuej/article/view/249603"
                     target="_blank"
                     class="underline"
                     >LCS</a

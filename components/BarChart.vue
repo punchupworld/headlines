@@ -106,9 +106,11 @@ const topValue = computed(() => {
   } else if (props.step === 6) {
     return "-top-[12px] h-[75%]"
   } else if (props.step === 7) {
-    if (width <= 320 || width <= 768) {
+    if (width <= 320 ) {
       return "top-[2px] h-[65%]"
-    } else {
+    } else if(width>320|| width <= 768){
+      return "top-[5px] h-[70%]"
+    }else {
       return "top-[9px] h-[70%]"
     }
   } else if (props.step === 8) {
@@ -118,15 +120,20 @@ const topValue = computed(() => {
       return "-top-[9px] h-[75%]"
     }
   } else if (props.step === 9) {
-    if (width <= 320 || width <= 768) {
+    if (width <= 320 ) {
       return "-top-[6px] h-[70%]"
-    } else {
+    } else if(width>320|| width <= 768){
+      return "-top-[2px] h-[70%]"
+    }
+    else {
       return "-top-[0px] h-[70%]"
     }
   } else if (props.step === 10) {
-    if (width <= 320 || width <= 768) {
+    if (width <= 320) {
       return "top-[5px] h-[65%]"
-    } else {
+    } else if(width>320|| width <= 768){
+      return "top-[10px] h-[65%]"
+    }else {
       return "top-[16px] h-[65%]"
     }
   } else if (props.step === 11) {
