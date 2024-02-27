@@ -22,7 +22,7 @@ const fetchData = async (cdate) => {
   currentDate.value = cdate != null ? cdate : props.current_date;
 
   const response = await fetch(
-    "/data/lifecycle/" + props.news + "-newslist.json"
+    "data/lifecycle/" + props.news + "-newslist.json"
   );
   const csvText = await response.json();
 
@@ -75,7 +75,7 @@ function randomNews() {
 
 function setDate(date) {
   let formatdate = new Date(date).toLocaleString("th-TH", {
-    year: "2-digit",
+    year: "numeric",
     month: "short",
     day: "numeric",
   });
@@ -85,7 +85,7 @@ function setDate(date) {
     " " +
     formatdate.split(" ")[1] +
     " " +
-    (parseInt(formatdate.split(" ")[2]) - 43);
+    (parseInt(formatdate.split(" ")[2]) - 543);
 
   return formatdate;
 }

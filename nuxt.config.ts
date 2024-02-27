@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const BASE_URL = "https://headlines-3bc.pages.dev/";
+const BASE_URL = "https://projects.punchup.world/headlines/";
+const path = require("path");
 
 export default defineNuxtConfig({
   modules: ["@vueuse/nuxt", "@pinia/nuxt", "@nuxtjs/plausible"],
@@ -13,6 +14,7 @@ export default defineNuxtConfig({
     },
   },
   app: {
+    baseURL: "/headlines/",
     head: {
       title: "‘พาดหัวข่าว’ เล่าอะไรให้คนไทยฟัง?",
       meta: [
@@ -70,9 +72,18 @@ export default defineNuxtConfig({
         },
       ],
       htmlAttrs: { lang: "en" },
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.svg" }],
+      link: [
+        { rel: "icon", type: "image/x-icon", href: BASE_URL + "favicon.svg" },
+      ],
     },
   },
+
+  nitro: {
+    output: {
+      publicDir: path.join(__dirname, ".output/headlines"),
+    },
+  },
+
   css: [
     "~/assets/styles/main.scss", // you should add main.scss somewhere in your app
   ],

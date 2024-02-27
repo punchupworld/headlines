@@ -4,6 +4,8 @@ import { vOnClickOutside } from "@vueuse/components";
 import { useScroll } from "@vueuse/core";
 import * as d3 from "d3";
 
+const config = useRuntimeConfig();
+const baseURL = config.app.baseURL;
 const isShowDetailsPopup = ref(false);
 const newsDetailsList = ref([]);
 const newsDetails = ref([]);
@@ -57,50 +59,50 @@ const news_list = ref([
   {
     id: 4,
     name: "ลุงพล-น้องชมพู่-ป้าแต๋น",
-    date: "8 มี.ค. 22 - 30 ธ.ค. 23",
+    date: "8 มี.ค. 2022 - 30 ธ.ค. 2023",
     img: "pol.svg",
   },
   {
     id: 5,
     name: "จัดตั้งรัฐบาล",
-    date: "18 มี.ค. 22 - 15 ก.ย. 23",
+    date: "18 มี.ค. 2022 - 15 ก.ย. 2023",
     img: "gov-alliance.svg",
   },
   {
     id: 6,
     name: "ปริญญ์คุกคามทางเพศ",
-    date: "14 เม.ย. 22 - 14 ธ.ค. 23",
+    date: "14 เม.ย. 2022 - 14 ธ.ค. 2023",
     img: "prin.svg",
   },
   {
     id: 7,
     name: "อิสราเอล-ปาเลสไตน์",
-    date: "15 เม.ย. 22 - 31 ธ.ค. 23",
+    date: "15 เม.ย. 2022 - 31 ธ.ค. 2023",
     img: "israeli-palestine.svg",
   },
   {
     id: 8,
     name: "หลวงปู่แสง",
-    date: "21 เม.ย. 22 - 27 มิ.ย. 23",
+    date: "21 เม.ย. 2022 - 27 มิ.ย. 2023",
     img: "sang.svg",
   },
   {
     id: 9,
     name: "โตโน่ว่ายน้ำ",
-    date: "30 ก.ค. 22 - 1 พ.ค. 23",
+    date: "30 ก.ค. 2022 - 1 พ.ค. 2023",
     img: "tono.svg",
   },
   {
     id: 10,
     name: "กำนันนก",
-    date: "7 ก.ย. 23 - 18 ธ.ค. 23",
+    date: "7 ก.ย. 2023 - 18 ธ.ค. 2023",
     img: "nok.svg",
   },
 ]);
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/lifecycle/total_news_list.json");
+    const response = await fetch("data/lifecycle/total_news_list.json");
     const csvText = await response.json();
 
     newsDetailsList.value = csvText;
@@ -110,7 +112,7 @@ const fetchData = async () => {
 };
 
 const fetchDataHeatmap = async (name) => {
-  const response = await fetch("/data/lifecycle/" + name + ".json");
+  const response = await fetch("data/lifecycle/" + name + ".json");
   const csvText = await response.json();
 
   newsDataHeatmap.value = csvText[0];
@@ -195,7 +197,7 @@ function onCheckScrollOnHeatmap() {
 
 function setDate(date) {
   let formatdate = new Date(date).toLocaleString("th-TH", {
-    year: "2-digit",
+    year: "numeric",
     month: "short",
     day: "numeric",
   });
@@ -205,7 +207,7 @@ function setDate(date) {
     " " +
     formatdate.split(" ")[1] +
     " " +
-    (parseInt(formatdate.split(" ")[2]) - 43);
+    (parseInt(formatdate.split(" ")[2]) - 543);
 
   return formatdate;
 }
@@ -365,7 +367,7 @@ onMounted(() => {
                 <p class="b4 text-[#717070]">{{ item.date }}</p>
               </div>
               <img
-                :src="'/image/lifecycle/timeline_chart/' + item.img"
+                :src="baseURL + 'image/lifecycle/timeline_chart/' + item.img"
                 class="max-w-fit pb-3"
                 alt=""
               />

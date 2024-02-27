@@ -47,7 +47,7 @@ const category = [
 ];
 
 const fetchExploreCategoryHeadline = async () => {
-  const response = await fetch("/data/trends/sample_news_headlines.json");
+  const response = await fetch("data/trends/sample_news_headlines.json");
   const data = await response.json();
   exploreCategoryHeadlineData.value = data;
 };
@@ -97,7 +97,7 @@ const summaryData = async () => {
 };
 
 const fetchSampleHeadlineCategory = async () => {
-  const response = await fetch("/data/trends/HeadlinesSample.json");
+  const response = await fetch("data/trends/HeadlinesSample.json");
   const data = await response.json();
   sampleHeadlineCategory.value = data;
   headlineShow.value = sampleHeadlineCategory.value

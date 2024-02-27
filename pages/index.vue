@@ -115,7 +115,7 @@ const restartQuiz = async () => {
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/quiz.csv");
+    const response = await fetch("data/quiz.csv");
     const csvText = await response.text();
     const rows = csvText.split("\n").map((line) => {
       const [id, name, link, date] = line.split(",");

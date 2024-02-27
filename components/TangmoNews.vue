@@ -10,7 +10,7 @@ const maxHeightChart = ref(0);
 
 const fetchData = async () => {
   try {
-    const response = await fetch("/data/lifecycle/คดีแตงโม-นิดา.json");
+    const response = await fetch("data/lifecycle/คดีแตงโม-นิดา.json");
     const csvText = await response.json();
 
     tangmo_news.value = csvText[0].list;

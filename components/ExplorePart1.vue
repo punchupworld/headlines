@@ -1,25 +1,25 @@
 <script setup>
-import { sum, max } from "d3"
-import SampleNews from "/components/SampleNews.vue"
-import BarAxis from "/components/BarAxis.vue"
+import { sum, max } from "d3";
+import SampleNews from "/components/SampleNews.vue";
+import BarAxis from "/components/BarAxis.vue";
 
-const headlineShow = ref([])
-const exploreModeSelected = ref("หมวดข่าว")
-const categoryIndex = ref(0)
-const categorySelected = ref("การเมือง")
-const maxOfMonthCategory = ref(0)
-const inputKeyword = ref("แซ่บ")
-const showSuggestions = ref(false)
-const isInputFocused = ref(false)
-const keywords = ref()
-const sampleHeadlineCategory = ref()
-const filteredSampleHeadlineCategory = ref()
-const exploreCategoryHeadlineData = ref()
-const totalDataEachMonth = ref([])
-const totalDataEachCategory = ref([])
-const dataForKW = ref()
-const maxOfMonthly = ref(0)
-const exploreRef = ref(null)
+const headlineShow = ref([]);
+const exploreModeSelected = ref("หมวดข่าว");
+const categoryIndex = ref(0);
+const categorySelected = ref("การเมือง");
+const maxOfMonthCategory = ref(0);
+const inputKeyword = ref("แซ่บ");
+const showSuggestions = ref(false);
+const isInputFocused = ref(false);
+const keywords = ref();
+const sampleHeadlineCategory = ref();
+const filteredSampleHeadlineCategory = ref();
+const exploreCategoryHeadlineData = ref();
+const totalDataEachMonth = ref([]);
+const totalDataEachCategory = ref([]);
+const dataForKW = ref();
+const maxOfMonthly = ref(0);
+const exploreRef = ref(null);
 
 const monthTH = [
   "มกราคม",
@@ -34,7 +34,7 @@ const monthTH = [
   "ตุลาคม",
   "พฤศจิกายน",
   "ธันวาคม",
-]
+];
 
 const monthShortTH = [
   "ม.ค.",
@@ -49,7 +49,7 @@ const monthShortTH = [
   "ต.ค.",
   "พ.ย.",
   "ธ.ค.",
-]
+];
 
 const monthShortEN = [
   "Jan",
@@ -64,7 +64,7 @@ const monthShortEN = [
   "Oct",
   "Nov",
   "Dec",
-]
+];
 
 const category = [
   { name: "การเมือง", color: "bg-vermillion" },
@@ -76,135 +76,135 @@ const category = [
   { name: "กีฬา", color: "bg-purple" },
   { name: "วิทยาศาสตร์/เทคโนโลยี", color: "bg-blue" },
   { name: "สิ่งแวดล้อม", color: "bg-green" },
-]
+];
 const fetchExploreCategoryHeadline = async () => {
-  const response = await fetch("/data/trends/sample_news_headlines.json")
-  const data = await response.json()
-  exploreCategoryHeadlineData.value = data
-}
+  const response = await fetch("data/trends/sample_news_headlines.json");
+  const data = await response.json();
+  exploreCategoryHeadlineData.value = data;
+};
 
 const summaryData = async () => {
-  const year = [2022, 2023]
-  const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-  const arrTotalEachMonth = []
-  const arrSumEachCategory = []
+  const year = [2022, 2023];
+  const month = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const arrTotalEachMonth = [];
+  const arrSumEachCategory = [];
 
-  let allArr = []
+  let allArr = [];
   for (const category in exploreCategoryHeadlineData.value) {
-    const monthly = exploreCategoryHeadlineData.value[category].monthly
+    const monthly = exploreCategoryHeadlineData.value[category].monthly;
 
     monthly.forEach((item) => {
-      allArr.push({ ...item, category: category })
-    })
+      allArr.push({ ...item, category: category });
+    });
   }
 
   year.forEach((year) => {
     month.forEach((month) => {
       let nowAllArr = allArr.filter(
         (item) => item.year === year && item.month === month
-      )
+      );
       arrTotalEachMonth.push({
         year,
         month,
         total: sum(nowAllArr, (d) => d.total),
-      })
-    })
-  })
+      });
+    });
+  });
   category.forEach((ct) => {
-    const groupByCategory = allArr.filter((item) => item.category === ct.name)
+    const groupByCategory = allArr.filter((item) => item.category === ct.name);
     arrSumEachCategory.push({
       category: ct.name,
       total: sum(groupByCategory, (d) => d.total),
       max: max(groupByCategory, (d) => d.total),
-    })
-  })
+    });
+  });
   arrSumEachCategory.push({
     category: "Total",
     total: sum(arrSumEachCategory, (d) => d.total),
-  })
-  maxOfMonthCategory.value = max(arrTotalEachMonth, (d) => d.total)
-  totalDataEachCategory.value = arrSumEachCategory
-  totalDataEachMonth.value = arrTotalEachMonth
-}
+  });
+  maxOfMonthCategory.value = max(arrTotalEachMonth, (d) => d.total);
+  totalDataEachCategory.value = arrSumEachCategory;
+  totalDataEachMonth.value = arrTotalEachMonth;
+};
 
 const filterSampleHeadlineCategory = async (category) => {
-  let year
-  const categoryToCompare = category.toLowerCase()
+  let year;
+  const categoryToCompare = category.toLowerCase();
   filteredSampleHeadlineCategory.value =
     await sampleHeadlineCategory.value.filter((item) => {
       if (categoryIndex.value >= 12) {
-        year = 2023
-        let cateIndex = categoryIndex.value - 12
+        year = 2023;
+        let cateIndex = categoryIndex.value - 12;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[cateIndex]
-        )
+        );
       } else {
-        year = 2022
+        year = 2022;
         return (
           item.news_category.toLowerCase().includes(categoryToCompare) &&
           item.Year === year &&
           item.Month === monthShortEN[categoryIndex.value]
-        )
+        );
       }
-    })
-}
+    });
+};
 const fetchSampleHeadlineCategory = async () => {
-  const response = await fetch("/data/trends/HeadlinesSample.json")
-  const data = await response.json()
-  sampleHeadlineCategory.value = data
-  await filterSampleHeadlineCategory(categorySelected.value)
+  const response = await fetch("data/trends/HeadlinesSample.json");
+  const data = await response.json();
+  sampleHeadlineCategory.value = data;
+  await filterSampleHeadlineCategory(categorySelected.value);
   headlineShow.value = sampleHeadlineCategory.value
     .map((item) => item.headline)
-    .slice(0, 10)
-}
+    .slice(0, 10);
+};
 
 const fetchAggregateKW = async () => {
-  const response = await fetch("/data/trends/aggregate_keywords.json")
-  const data = await response.json()
-  keywords.value = await data
-  suggestionsKW.value = Object.keys(keywords.value)
-}
+  const response = await fetch("data/trends/aggregate_keywords.json");
+  const data = await response.json();
+  keywords.value = await data;
+  suggestionsKW.value = Object.keys(keywords.value);
+};
 
 const findMaxOfMonthly = () => {
-  let dataValues = dataForKW.value.montly
-  let maxValue = Math.max(...dataValues.map((d) => d.total))
-  maxOfMonthly.value = maxValue
-}
+  let dataValues = dataForKW.value.montly;
+  let maxValue = Math.max(...dataValues.map((d) => d.total));
+  maxOfMonthly.value = maxValue;
+};
 const selectExploreMode = async (mode) => {
-  exploreModeSelected.value = mode
-  sampleIndex.value = 0
+  exploreModeSelected.value = mode;
+  sampleIndex.value = 0;
   if (exploreModeSelected.value === "คีย์เวิร์ด") {
-    dataForKW.value = await keywords.value[inputKeyword.value]
-    findMaxOfMonthly()
+    dataForKW.value = await keywords.value[inputKeyword.value];
+    findMaxOfMonthly();
   }
-}
+};
 
 const getCategoryColorClass = (category) => {
   switch (true) {
     case category.includes("การเมือง"):
-      return "bg-vermillion"
+      return "bg-vermillion";
     case category.includes("สังคมไทย"):
-      return "bg-lightblue"
+      return "bg-lightblue";
     case category.includes("เศรษฐกิจ"):
-      return "bg-orange"
+      return "bg-orange";
     case category.includes("ต่างประเทศ"):
-      return "bg-rose"
+      return "bg-rose";
     case category.includes("บันเทิง"):
-      return "bg-pink"
+      return "bg-pink";
     case category.includes("อาชญากรรม"):
-      return "bg-brown"
+      return "bg-brown";
     case category.includes("กีฬา"):
-      return "bg-purple"
+      return "bg-purple";
     case category.includes("วิทยาศาสตร์"):
-      return "bg-blue"
+      return "bg-blue";
     case category.includes("สิ่งแวดล้อม"):
-      return "bg-green"
+      return "bg-green";
     default:
-      return ""
+      return "";
   }
-}
+};
 
 const categoryBorderColorMap = {
   การเมือง: "border-[#FF3D00]",
@@ -216,249 +216,253 @@ const categoryBorderColorMap = {
   กีฬา: "border-[#AA92E3]",
   วิทยาศาสตร์: "border-[#257DCC]",
   สิ่งแวดล้อม: "border-[#9BB95A]",
-}
+};
 
 const getCategoryBorderColor = (category) => {
   for (const key in categoryBorderColorMap) {
     if (category.includes(key)) {
-      return categoryBorderColorMap[key]
+      return categoryBorderColorMap[key];
     }
   }
-  return ""
-}
+  return "";
+};
 
 const calculateHeightPerCategory = (total, count, maxHeigh, max) => {
   if (count === 0) {
-    return 0
+    return 0;
   }
-  const totalHeight = (total * maxHeigh) / max
-  const eachHeight = (count * totalHeight) / total
-  return Math.ceil(eachHeight)
-}
+  const totalHeight = (total * maxHeigh) / max;
+  const eachHeight = (count * totalHeight) / total;
+  return Math.ceil(eachHeight);
+};
 
 const calculateHeight = (count, maxHeigh, category, max) => {
   if (category === "Total") {
     if (totalDataEachMonth.value.length > 0) {
       let maxValueOfAll = Math.max(
         ...totalDataEachMonth.value.map((d) => d.total)
-      )
-      let scalePercent = (count * 100) / maxValueOfAll
-      let scale = Math.ceil((scalePercent * maxHeigh) / 100)
-      return scale
+      );
+      let scalePercent = (count * 100) / maxValueOfAll;
+      let scale = Math.ceil((scalePercent * maxHeigh) / 100);
+      return scale;
     } else {
-      return 0
+      return 0;
     }
   } else {
-    let scalePercent = (count * 100) / max
-    let scale = Math.ceil((scalePercent * maxHeigh) / 100)
-    return scale
+    let scalePercent = (count * 100) / max;
+    let scale = Math.ceil((scalePercent * maxHeigh) / 100);
+    return scale;
   }
-}
+};
 
 const handleCurrentIndex = (index) => {
-  categoryIndex.value = index
-  filterCategoryKeyword(categorySelected.value)
-  filterSampleHeadlineCategory(categorySelected.value)
+  categoryIndex.value = index;
+  filterCategoryKeyword(categorySelected.value);
+  filterSampleHeadlineCategory(categorySelected.value);
   // scrollToSection()
-}
+};
 
 const scrollToSection = () => {
-  exploreRef.value.scrollIntoView({ behavior: "smooth" })
-}
+  exploreRef.value.scrollIntoView({ behavior: "smooth" });
+};
 
-const top10KeywordsData = ref()
+const top10KeywordsData = ref();
 const fetchExploreData10Keyword = async () => {
-  const response = await fetch("/data/trends/Top10Keyword.json")
-  const data = await response.json()
-  top10KeywordsData.value = data
-}
-const top10Keywords = ref()
+  const response = await fetch("data/trends/Top10Keyword.json");
+  const data = await response.json();
+  top10KeywordsData.value = data;
+};
+const top10Keywords = ref();
 const filterCategoryKeyword = async (category) => {
-  let year
+  let year;
   top10Keywords.value = await top10KeywordsData.value.filter((item) => {
-    const itemMonths = item.month.split(",").map((m) => m.toLowerCase())
-    const categoryToCompare = category.toLowerCase()
+    const itemMonths = item.month.split(",").map((m) => m.toLowerCase());
+    const categoryToCompare = category.toLowerCase();
     if (categoryIndex.value >= 12) {
-      year = 2023
-      let cateIndex = categoryIndex.value - 12
+      year = 2023;
+      let cateIndex = categoryIndex.value - 12;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[cateIndex].toLowerCase()) &&
         item.year === year
-      )
+      );
     } else {
-      year = 2022
+      year = 2022;
       return (
         item.news_category.toLowerCase().includes(categoryToCompare) &&
         itemMonths.includes(monthShortEN[categoryIndex.value].toLowerCase()) &&
         item.year === year
-      )
+      );
     }
-  })
-}
+  });
+};
 const handleExploreMounthYear = (action) => {
   if (action === "prev") {
     if (categoryIndex.value !== 0) {
-      categoryIndex.value -= 1
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value -= 1;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     } else if (categoryIndex.value === 0) {
-      categoryIndex.value = 23
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value = 23;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     }
   } else if (action === "next") {
     if (categoryIndex.value !== 23) {
-      categoryIndex.value += 1
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value += 1;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     } else if (categoryIndex.value === 23) {
-      categoryIndex.value = 0
-      filterCategoryKeyword(categorySelected.value)
-      filterSampleHeadlineCategory(categorySelected.value)
+      categoryIndex.value = 0;
+      filterCategoryKeyword(categorySelected.value);
+      filterSampleHeadlineCategory(categorySelected.value);
     }
   }
-}
+};
 const selectCategory = (category) => {
-  categorySelected.value = category
-  filterCategoryKeyword(category)
-  filterSampleHeadlineCategory(categorySelected.value)
-}
+  categorySelected.value = category;
+  filterCategoryKeyword(category);
+  filterSampleHeadlineCategory(categorySelected.value);
+};
 
 const fullMonthAndYear = computed(() => {
   if (categoryIndex.value >= 12) {
     return `${monthTH[categoryIndex.value - 12]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   } else {
     return `${monthTH[categoryIndex.value]} ${
       categoryIndex.value >= 12 ? 2023 : 2022
-    }`
+    }`;
   }
-})
+});
 
 const findAllWidthForGraph = (el) => {
-  const elFocus = document.getElementById(el)
+  const elFocus = document.getElementById(el);
   if (elFocus) {
-    const width = elFocus.offsetWidth
-    return width
+    const width = elFocus.offsetWidth;
+    return width;
   } else {
-    return 0
+    return 0;
   }
-}
+};
 
-const suggestionsKW = ref([])
+const suggestionsKW = ref([]);
 
 const filteredSuggestions = computed(() => {
   const filtered = suggestionsKW.value.filter((suggestion) =>
     suggestion.toLowerCase().includes(inputKeyword.value.toLowerCase())
-  )
-  return filtered.slice(0, 6)
-})
+  );
+  return filtered.slice(0, 6);
+});
 
-const beforeKeyword = ref("")
+const beforeKeyword = ref("");
 const showTheSuggestion = () => {
-  showSuggestions.value = true
-  inputKeyword.value = ""
-  handleInputFocus()
-}
+  showSuggestions.value = true;
+  inputKeyword.value = "";
+  handleInputFocus();
+};
 
 const handleInputFocus = () => {
-  isInputFocused.value = !isInputFocused.value
-}
+  isInputFocused.value = !isInputFocused.value;
+};
 const clearInput = () => {
-  inputKeyword.value = ""
-  showSuggestions.value = false
-}
+  inputKeyword.value = "";
+  showSuggestions.value = false;
+};
 
 const handleInput = () => {
-  showSuggestions.value = true
-  isInputFocused.value = true
-}
+  showSuggestions.value = true;
+  isInputFocused.value = true;
+};
 
 const hideSuggestions = () => {
-  showSuggestions.value = false
-  isInputFocused.value = false
-  inputKeyword.value = beforeKeyword.value
-}
+  showSuggestions.value = false;
+  isInputFocused.value = false;
+  inputKeyword.value = beforeKeyword.value;
+};
 
 const selectSuggestion = (selectedValue) => {
-  inputKeyword.value = selectedValue
-}
+  inputKeyword.value = selectedValue;
+};
 const searchKeyword = () => {
-  dataForKW.value = keywords.value[inputKeyword.value]
+  dataForKW.value = keywords.value[inputKeyword.value];
 
-  showSuggestions.value = false
+  showSuggestions.value = false;
   if (dataForKW.value) {
-    beforeKeyword.value = inputKeyword.value
+    beforeKeyword.value = inputKeyword.value;
   }
-  handleInputFocus()
-  findMaxOfMonthly()
-}
+  handleInputFocus();
+  findMaxOfMonthly();
+};
 
 const handleTyping = () => {
-  isInputFocused.value = true
-}
+  isInputFocused.value = true;
+};
 const handleSuggestionMouseDown = (selectedValue) => {
-  selectSuggestion(selectedValue)
-  searchKeyword()
-  showSuggestions.value = false
-  isInputFocused.value = false
-}
+  selectSuggestion(selectedValue);
+  searchKeyword();
+  showSuggestions.value = false;
+  isInputFocused.value = false;
+};
 
 const highlightMatchedText = (suggestion) => {
-  const typedText = inputKeyword.value.toLowerCase()
-  const suggestionLower = suggestion.toLowerCase()
-  const index = suggestionLower.indexOf(typedText)
+  const typedText = inputKeyword.value.toLowerCase();
+  const suggestionLower = suggestion.toLowerCase();
+  const index = suggestionLower.indexOf(typedText);
 
   const highlightedText =
     suggestion.substring(0, index) +
     "<b>" +
     suggestion.substring(index, index + typedText.length) +
     "</b>" +
-    suggestion.substring(index + typedText.length)
+    suggestion.substring(index + typedText.length);
 
-  return highlightedText
-}
+  return highlightedText;
+};
 
-const sampleIndex = ref(0)
+const sampleIndex = ref(0);
 const handleNewSample = () => {
   if (sampleIndex.value === 9) {
-    sampleIndex.value = 0
+    sampleIndex.value = 0;
   }
-  sampleIndex.value += 1
-}
+  sampleIndex.value += 1;
+};
 
 onMounted(async () => {
-  await fetchExploreData10Keyword()
-  await filterCategoryKeyword(categorySelected.value)
-  await fetchAggregateKW()
-  await fetchSampleHeadlineCategory()
-  await fetchExploreCategoryHeadline()
-  await summaryData()
-})
+  await fetchExploreData10Keyword();
+  await filterCategoryKeyword(categorySelected.value);
+  await fetchAggregateKW();
+  await fetchSampleHeadlineCategory();
+  await fetchExploreCategoryHeadline();
+  await summaryData();
+});
 </script>
 
 <template>
   <div
     id="explore"
-    class="py-[40px] bg-[#EBE8DE] z-10 relative max-w-[850px] mx-auto">
+    class="py-[40px] bg-[#EBE8DE] z-10 relative max-w-[850px] mx-auto"
+  >
     <h1 class="h5 font-bold text-center">
       สำรวจเทรนด์ข่าวในปี<br />
       2022-2023 ด้วยตัวเอง ผ่าน
     </h1>
     <div
-      class="b1 font-bold flex justify-center border-collapse pt-[10px] mb-[5px] w-full">
+      class="b1 font-bold flex justify-center border-collapse pt-[10px] mb-[5px] w-full"
+    >
       <button
         :class="exploreModeSelected === 'หมวดข่าว' ? 'bg-black cream' : ''"
         class="border-black border p-[5px] w-full"
-        @click="selectExploreMode('หมวดข่าว')">
+        @click="selectExploreMode('หมวดข่าว')"
+      >
         หมวดข่าว
       </button>
       <button
         :class="exploreModeSelected === 'คีย์เวิร์ด' ? 'bg-black cream' : ''"
         class="border-black border p-[5px] w-full"
-        @click="selectExploreMode('คีย์เวิร์ด')">
+        @click="selectExploreMode('คีย์เวิร์ด')"
+      >
         คีย์เวิร์ด
       </button>
     </div>
@@ -466,12 +470,14 @@ onMounted(async () => {
       <div v-if="exploreModeSelected === 'คีย์เวิร์ด'" class="relative">
         <div
           :class="{ 'bg-white': isInputFocused }"
-          class="group-focus:bg-white bg-[#EBE8DE] flex justify-between w-full h-full">
+          class="group-focus:bg-white bg-[#EBE8DE] flex justify-between w-full h-full"
+        >
           <div class="flex border-b border-[#939393] w-full">
             <img
               src="/image/trends/Search.svg"
               alt="SearchIcon"
-              class="w-[16px] m-[5px]" />
+              class="w-[16px] m-[5px]"
+            />
             <input
               autocomplete="off"
               type="text"
@@ -484,7 +490,8 @@ onMounted(async () => {
               @keydown.down="handleTyping"
               v-model="inputKeyword"
               @input="handleInput"
-              class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]" />
+              class="group text-black bg-[#EBE8DE]/0 b2 font-bold focus:outline-none w-full pl-3 py-[5px]"
+            />
           </div>
 
           <img
@@ -492,37 +499,43 @@ onMounted(async () => {
             alt="CloseIcon"
             class="w-[16px] cursor-pointer border-b border-[#939393]"
             @click="clearInput"
-            v-if="!isInputFocused" />
+            v-if="!isInputFocused"
+          />
           <button
             v-else
             class="border border-[#FF006B] text-[#FF006B] b4 px-[10px] flex items-center cursor-pointer"
-            @mousedown.prevent="searchKeyword">
+            @mousedown.prevent="searchKeyword"
+          >
             ค้นหา
           </button>
         </div>
         <ul
           v-if="showSuggestions && filteredSuggestions.length > 0"
-          class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0">
+          class="w-full absolute bg-white p-[10px] b2 space-y-[10px] z-10 ml-0"
+        >
           <li
             v-for="(suggestion, index) in filteredSuggestions"
             :key="index"
             @mousedown="handleSuggestionMouseDown(suggestion)"
             @click.stop="hideSuggestions"
-            class="cursor-pointer">
+            class="cursor-pointer"
+          >
             <span v-html="highlightMatchedText(suggestion)"></span>
           </li>
         </ul>
       </div>
       <div
         class="flex items-center pb-[10px] w-full"
-        v-if="exploreModeSelected === 'หมวดข่าว'">
+        v-if="exploreModeSelected === 'หมวดข่าว'"
+      >
         <p class="b4">หมวด</p>
         <select
           v-model="categorySelected"
           @change="selectCategory($event.target.value)"
           name=""
           id=""
-          class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4 focus:outline-none">
+          class="b2 font-bold bg-[#EBE8DE] border-b-black border w-full px-4 focus:outline-none"
+        >
           <option value="การเมือง">การเมือง</option>
           <option value="สังคมไทย">สังคมไทย</option>
           <option value="เศรษฐกิจ/การเงิน">เศรษฐกิจ/การเงิน</option>
@@ -538,13 +551,18 @@ onMounted(async () => {
         v-if="
           (exploreModeSelected === 'คีย์เวิร์ด' && dataForKW) ||
           exploreModeSelected === 'หมวดข่าว'
-        ">
+        "
+      >
         <div class="grid grid-cols-2 my-[10px]">
           <div class="flex items-center">
             <p class="b5 font-bold">จำนวนพาดหัวข่าวรายเดือน</p>
           </div>
           <div class="flex items-center justify-end">
-            <img src="/image/trends/Click.svg" alt="ClickIcon" class="w-[20px]" />
+            <img
+              src="/image/trends/Click.svg"
+              alt="ClickIcon"
+              class="w-[20px]"
+            />
             <p class="b5" v-if="exploreModeSelected === 'หมวดข่าว'">
               คลิกแต่ละแท่งเพื่อเปลี่ยนเดือน
             </p>
@@ -555,7 +573,8 @@ onMounted(async () => {
           <div class="relative items-end justify-center w-full mt-6">
             <div class="relative w-full" id="exploreGraph">
               <div
-                class="z-10 flex items-end gap-[2px] justify-center lg:w-full">
+                class="z-10 flex items-end gap-[2px] justify-center lg:w-full"
+              >
                 <div
                   v-if="
                     exploreModeSelected === 'หมวดข่าว' &&
@@ -570,7 +589,8 @@ onMounted(async () => {
                     width: `${
                       (parseInt(findAllWidthForGraph('exploreGraph')) - 50) / 24
                     }px`,
-                  }">
+                  }"
+                >
                   <div
                     v-if="totalDataEachCategory.length > 0"
                     @click="handleCurrentIndex(index)"
@@ -590,18 +610,22 @@ onMounted(async () => {
                           item.category.includes(categorySelected)
                         ).max
                       )}px`,
-                    }"></div>
+                    }"
+                  ></div>
                   <p
                     class="text-[#939393] -rotate-90 b6"
-                    style="pointer-events: none">
+                    style="pointer-events: none"
+                  >
                     {{ monthShortTH[item.month - 1] }}
                   </p>
                 </div>
                 <div
                   v-if="exploreModeSelected === 'คีย์เวิร์ด'"
-                  class="flex flex-col items-end">
+                  class="flex flex-col items-end"
+                >
                   <div
-                    class="cursor-pointer relative flex gap-[2px] w-[90vw] md:px-[9vw] justify-center">
+                    class="cursor-pointer relative flex gap-[2px] w-[90vw] md:px-[9vw] justify-center"
+                  >
                     <div
                       v-for="(item, itemIndex) in dataForKW.montly"
                       :total="item.total"
@@ -610,60 +634,67 @@ onMounted(async () => {
                         width: `${
                           (parseInt(findAllWidthForGraph('explore')) - 50) / 24
                         }px`,
-                      }">
-                      <div  class="hover:outline outline-2 outline-black">
+                      }"
+                    >
+                      <div class="hover:outline outline-2 outline-black">
                         <div
-                        v-if="totalDataEachCategory.length > 0"
-                        class="group relative"
-                        v-for="(ct, ctNo) in Object.keys(
-                          dataForKW.categories_total
-                        ).reverse()"
-                        :class="getCategoryColorClass(ct)"
-                        :no="item[ct]"
-                        :style="{
-                          height: `${calculateHeightPerCategory(
-                            item.total,
-                            item[ct],
-                            200,
-                            maxOfMonthly
-                          )}px`,
-                        }">
-                        <div
-                          id="popupDetail"
-                          :class="itemIndex > 12 ? 'right-1/2' : 'left-1/2'"
-                          class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]">
-                          <p class="font-bold flex b5">
-                            {{ monthShortTH[item.month - 1] }}
-                            {{ item.year % 100 }}
-                          </p>
-                          <p class="b5">
-                            <span class="b3 font-bold">{{
-                              parseInt(item.total).toLocaleString()
-                            }}</span>
-                            พาดหัวข่าว
-                          </p>
-                          <div class="b4 flex flex-wrap gap-[5px]">
-                            <div
-                              v-for="(cate, cateNo) in Object.keys(
-                                dataForKW.categories_total
-                              )">
+                          v-if="totalDataEachCategory.length > 0"
+                          class="group relative"
+                          v-for="(ct, ctNo) in Object.keys(
+                            dataForKW.categories_total
+                          ).reverse()"
+                          :class="getCategoryColorClass(ct)"
+                          :no="item[ct]"
+                          :style="{
+                            height: `${calculateHeightPerCategory(
+                              item.total,
+                              item[ct],
+                              200,
+                              maxOfMonthly
+                            )}px`,
+                          }"
+                        >
+                          <div
+                            id="popupDetail"
+                            :class="itemIndex > 12 ? 'right-1/2' : 'left-1/2'"
+                            class="absolute bg-white p-[5px] top-0 hidden group-hover:inline-block z-20 w-[85px] lg:w-[120px]"
+                          >
+                            <p class="font-bold flex b5">
+                              {{ monthShortTH[item.month - 1] }}
+                              {{ item.year % 100 }}
+                            </p>
+                            <p class="b5">
+                              <span class="b3 font-bold">{{
+                                parseInt(item.total).toLocaleString()
+                              }}</span>
+                              พาดหัวข่าว
+                            </p>
+                            <div class="b4 flex flex-wrap gap-[5px]">
                               <div
-                                class="flex items-center gap-[2px]"
-                                v-if="item[cate] > 0">
+                                v-for="(cate, cateNo) in Object.keys(
+                                  dataForKW.categories_total
+                                )"
+                              >
                                 <div
-                                  class="w-[10px] h-[10px] bg-orange"
-                                  :class="getCategoryColorClass(cate)"></div>
-                                <p>{{ item[cate] }}</p>
+                                  class="flex items-center gap-[2px]"
+                                  v-if="item[cate] > 0"
+                                >
+                                  <div
+                                    class="w-[10px] h-[10px] bg-orange"
+                                    :class="getCategoryColorClass(cate)"
+                                  ></div>
+                                  <p>{{ item[cate] }}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                      </div>
-                      
+
                       <p
                         class="text-[#939393] -rotate-90 b5 py-[10px]"
-                        style="pointer-events: none">
+                        style="pointer-events: none"
+                      >
                         {{ monthShortTH[item.month - 1] }}
                       </p>
                     </div>
@@ -676,16 +707,19 @@ onMounted(async () => {
               :isExplore="true"
               :totalDataEachCategory="totalDataEachCategory"
               :exploreModeSelected="exploreModeSelected"
-              :categorySelected="categorySelected" />
+              :categorySelected="categorySelected"
+            />
             <div
-              class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[5px] lg:pt-[30px] lg:mb-[10px] font-bold">
+              class="b5 text-[#939393] grid grid-cols-2 place-items-center pt-[5px] lg:pt-[30px] lg:mb-[10px] font-bold"
+            >
               <p>2022</p>
               <p>2023</p>
             </div>
           </div>
           <div
             class="absolute top-0 right-[50%] w-full h-full border-r-[2px] border-[#C5C4C4]"
-            style="pointer-events: none"></div>
+            style="pointer-events: none"
+          ></div>
         </div>
 
         <div class="flex flex-col justify-center items-center" ref="exploreRef">
@@ -693,7 +727,8 @@ onMounted(async () => {
             <div class="flex justify-center items-center">
               <button
                 @click="handleExploreMounthYear('prev')"
-                class="cursor-pointer">
+                class="cursor-pointer"
+              >
                 <img src="/image/trends/PreviousBtn.svg" alt="PreviousBtn" />
               </button>
               <p class="b3 font-bold">
@@ -701,7 +736,8 @@ onMounted(async () => {
               </p>
               <button
                 @click="handleExploreMounthYear('next')"
-                class="cursor-pointer">
+                class="cursor-pointer"
+              >
                 <img src="/image/trends/NextBtn.svg" alt="NextBtn" />
               </button>
             </div>
@@ -722,10 +758,12 @@ onMounted(async () => {
               และมักพบ 10 คำ*เหล่านี้อยู่บ่อยๆ
             </p>
             <div
-              class="flex flex-wrap justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center">
+              class="flex flex-wrap justify-center gap-[5px] text-[#FFF8B5] w-fit mx-auto justify-items-center"
+            >
               <div
                 v-for="(kw, index) in top10Keywords"
-                class="bg-black flex items-center gap-[2px] px-[5px] justify-center text-center w-fit">
+                class="bg-black flex items-center gap-[2px] px-[5px] justify-center text-center w-fit"
+              >
                 <p class="b3 font-bold">{{ kw.keyword }}</p>
                 <p class="b4">({{ kw.frequency }})</p>
               </div>
@@ -739,9 +777,11 @@ onMounted(async () => {
               พาดหัวข่าว โดยอยู่ในหมวด
             </p>
             <div
-              class="flex flex-wrap items-center justify-center gap-[5px] py-[5px]">
+              class="flex flex-wrap items-center justify-center gap-[5px] py-[5px]"
+            >
               <div
-                v-for="(ct, index) in Object.keys(dataForKW.categories_total)">
+                v-for="(ct, index) in Object.keys(dataForKW.categories_total)"
+              >
                 <p :class="getCategoryColorClass(ct)" class="b3 px-2">
                   <span class="font-bold"> {{ ct }}</span>
                   <span class="b4">
@@ -758,7 +798,8 @@ onMounted(async () => {
             :sampleIndex="sampleIndex"
             :exploreModeSelected="exploreModeSelected"
             :borderColor="getCategoryBorderColor(categorySelected)"
-            :top10Keywords="top10Keywords" />
+            :top10Keywords="top10Keywords"
+          />
           <SampleNews
             v-if="exploreModeSelected === 'คีย์เวิร์ด'"
             :dataSet="dataForKW.sample_headlines"
@@ -770,9 +811,11 @@ onMounted(async () => {
               )
             "
             :top10Keywords="top10Keywords"
-            :inputKeyword="inputKeyword" />
+            :inputKeyword="inputKeyword"
+          />
           <button
-            class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]">
+            class="text-[#FF006B] b4 w-fit mx-auto mt-[20px] border-[#EBE8DE] flex gap-[5px]"
+          >
             <img src="/image/Reset.svg" alt="Reset" />
             <p @click="handleNewSample">สุ่มตัวอย่างเพิ่ม</p>
           </button>
