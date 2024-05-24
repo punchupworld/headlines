@@ -192,7 +192,6 @@ watch(
       class="chart h-full"
       :class="{
         'w-1px': props.current_step > 7,
-        hide: props.current_step > 7 && item.date == '2/25/22',
       }"
       :style="{
         left: setMarginLeft(item.date),
