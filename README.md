@@ -12,7 +12,6 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 | Name       | URL                                       | Host/Pipeline    |
 | ---------- | ----------------------------------------- | ---------------- |
 | Production | https://projects.punchup.world/headlines/ | Cloudflare Pages |
-| Staging    | https://headlines-3bc.pages.dev/          | Cloudflare Pages |
 
 ## 🍟 Setup
 
